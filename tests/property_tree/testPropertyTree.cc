@@ -9,13 +9,7 @@ namespace pt = boost::property_tree;
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2)
-    {
-        std::cerr << "USAGE:  " << argv[0] << " <input filename> ";
-        return (-1);
-    }
-
-    std::string input_filename = argv[1];
+    std::string input_filename("test.json");
 
     // Create a root
     pt::ptree troot;
@@ -23,7 +17,7 @@ int main(int argc, char* argv[])
     // Load the json file in this ptree
     pt::read_json(input_filename, troot);
 
-    std::cout << "Reading test.json..." << std::endl;
+    std::cout << "Reading " << input_filename << std::endl;
 
     pt::ptree& spA  = troot.get_child("SpeciesA");
     pt::ptree& liqA = spA.get_child("PhaseL");

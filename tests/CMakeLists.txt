@@ -5,4 +5,4 @@ add_executable(testPropertyTree
 
 add_test(NAME testPropertyTree
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testPropertyTree
-         ${CMAKE_SOURCE_DIR}/tests/property_tree/test.json)
+         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/tests/property_tree)
