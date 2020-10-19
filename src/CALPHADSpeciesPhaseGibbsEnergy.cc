@@ -37,14 +37,10 @@ void read_optional(pt::ptree& db, const std::string key,
     }
 }
 
-CALPHADSpeciesPhaseGibbsEnergy::CALPHADSpeciesPhaseGibbsEnergy(
-    const std::string& name)
-    : name_(name)
+void CALPHADSpeciesPhaseGibbsEnergy::initialize(
+    const std::string& name, pt::ptree& db)
 {
-}
-
-void CALPHADSpeciesPhaseGibbsEnergy::initialize(pt::ptree& db)
-{
+    name_ = name;
     for (pt::ptree::value_type& tc : db.get_child("Tc"))
     {
         tc_.push_back(tc.second.get_value<double>());

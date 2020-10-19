@@ -17,11 +17,11 @@ private:
     std::vector<CALPHADSpeciesPhaseGibbsEnergyExpansion> expansion_;
 
 public:
-    CALPHADSpeciesPhaseGibbsEnergy(const std::string& name);
+    CALPHADSpeciesPhaseGibbsEnergy(){};
 
     std::string name() const { return name_; }
 
-    void initialize(boost::property_tree::ptree& db);
+    void initialize(const std::string& name, boost::property_tree::ptree& db);
 
     double fenergy(const double T); // expect T in Kelvin
     void plotFofT(

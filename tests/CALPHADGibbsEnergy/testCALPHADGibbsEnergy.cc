@@ -75,16 +75,16 @@ TEST_CASE("CALPHAD Gibbs energy", "[gibbs energy]")
     }
 
     // liquid
-    CALPHADSpeciesPhaseGibbsEnergy energyNiLiquid("NiL");
-    energyNiLiquid.initialize(liqB);
+    CALPHADSpeciesPhaseGibbsEnergy energyNiLiquid;
+    energyNiLiquid.initialize("NiL", liqB);
 
     double el = energyNiLiquid.fenergy(temperature);
     std::cout << "Ni liquid, Energy at T = " << temperature << " : " << el
               << std::endl;
 
     // solid
-    CALPHADSpeciesPhaseGibbsEnergy energyNiSolid("NiS");
-    energyNiSolid.initialize(solB);
+    CALPHADSpeciesPhaseGibbsEnergy energyNiSolid;
+    energyNiSolid.initialize("NiS", solB);
 
     double es = energyNiSolid.fenergy(temperature);
     std::cout << "Ni solid, Energy at T = " << temperature << " : " << es
