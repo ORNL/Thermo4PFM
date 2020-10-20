@@ -2,7 +2,7 @@
 
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 
-#include "../catch.hpp"
+#include "catch.hpp"
 
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
@@ -25,7 +25,7 @@ TEST_CASE("CALPHAD Gibbs energy", "[gibbs energy]")
     double temperature = 1728.;
 
     // read calphad database
-    std::string calphad_filename("../../thermodynamic_data/calphadAuNi.json");
+    std::string calphad_filename("../thermodynamic_data/calphadAuNi.json");
     pt::ptree calphad_db;
     std::cout << "Read " << calphad_filename << std::endl;
     try
@@ -91,7 +91,7 @@ TEST_CASE("CALPHAD Gibbs energy", "[gibbs energy]")
               << std::endl;
 
     // at the meting temperature, energies in liquid and solid should be equal
-    REQUIRE(es == Approx(el).epsilon(0.2));
+    CHECK(es == Approx(el).margin(0.2));
 
     double belowT = temperature - 1.;
     el            = energyNiLiquid.fenergy(belowT);
@@ -103,7 +103,7 @@ TEST_CASE("CALPHAD Gibbs energy", "[gibbs energy]")
 
     // below  the meting temperature, energies in solid should be lower than
     // in liquid
-    REQUIRE(es < el - 10.);
+    CHECK(es < el - 10.);
 
     double aboveT = temperature + 1.;
     el            = energyNiLiquid.fenergy(aboveT);
@@ -112,5 +112,5 @@ TEST_CASE("CALPHAD Gibbs energy", "[gibbs energy]")
     es = energyNiSolid.fenergy(aboveT);
     std::cout << "Ni solid, Energy at T = " << aboveT << " : " << es
               << std::endl;
-    REQUIRE(el < es - 8.);
+    CHECK(el < es - 8.);
 }

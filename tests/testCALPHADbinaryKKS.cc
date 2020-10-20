@@ -23,8 +23,6 @@ TEST_CASE("CALPHAD binary KKS", "[binary kks]")
 
     double temperature = 1450.;
 
-    std::string conc_avg_func_type = "a";
-
     std::cout << " Read CALPHAD database..." << std::endl;
     pt::ptree calphad_db;
     try
@@ -72,5 +70,5 @@ TEST_CASE("CALPHAD binary KKS", "[binary kks]")
     cafe.computeDerivFreeEnergy(temperature, &sol[1], pi1, &derivS);
     std::cout << "   dfS/dcS = " << derivS << std::endl;
 
-    REQUIRE(derivS == Approx(derivL).epsilon(1.e-5));
+    REQUIRE(derivS == Approx(derivL).margin(1.e-5));
 }

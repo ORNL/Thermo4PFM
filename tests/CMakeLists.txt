@@ -12,7 +12,7 @@ add_executable(testCALPHADFunctions
                ${CMAKE_SOURCE_DIR}/src/xlogx.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc )
 add_executable(testCALPHADGibbsEnergy
-               ${TEST_DIR}/CALPHADGibbsEnergy/testCALPHADGibbsEnergy.cc
+               ${TEST_DIR}/testCALPHADGibbsEnergy.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergy.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergyExpansion.cc
                )
@@ -53,7 +53,7 @@ add_test(NAME testCALPHADFunctions
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADFunctions)
 add_test(NAME testCALPHADGibbsEnergy
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADGibbsEnergy
-         WORKING_DIRECTORY ${TEST_DIR}/CALPHADGibbsEnergy)
+         WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testCALPHADbinaryKKS
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADbinaryKKS
          WORKING_DIRECTORY ${TEST_DIR})
