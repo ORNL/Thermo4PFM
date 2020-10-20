@@ -30,6 +30,20 @@ add_executable(testCALPHADbinaryKKS
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+add_executable(testCALPHADbinaryEquilibrium
+               ${TEST_DIR}/testCALPHADbinaryEquilibrium.cc
+               ${CMAKE_SOURCE_DIR}/src/functions.cc
+               ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverBinary.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergy.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergyExpansion.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
+               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
+               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
+               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
+               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
 
 add_test(NAME testPropertyTree
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testPropertyTree
@@ -42,4 +56,7 @@ add_test(NAME testCALPHADGibbsEnergy
          WORKING_DIRECTORY ${TEST_DIR}/CALPHADGibbsEnergy)
 add_test(NAME testCALPHADbinaryKKS
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADbinaryKKS
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testCALPHADbinaryEquilibrium
+         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADbinaryEquilibrium
          WORKING_DIRECTORY ${TEST_DIR})
