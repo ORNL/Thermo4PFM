@@ -64,6 +64,15 @@ add_executable(testKKSdiluteBinaryEquilibrium
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+add_executable(testCALPHADJacobianTernary
+               ${TEST_DIR}/testCALPHADJacobianTernary.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADEqPhaseConcSolverTernary.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverTernary.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
+               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
+               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
+               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
+               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
 
 add_test(NAME testPropertyTree
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testPropertyTree
@@ -85,4 +94,7 @@ add_test(NAME testKKSdiluteBinaryKKS
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testKKSdiluteBinaryEquilibrium
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testKKSdiluteBinaryEquilibrium
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testCALPHADJacobianTernary
+         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADJacobianTernary
          WORKING_DIRECTORY ${TEST_DIR})
