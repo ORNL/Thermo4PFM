@@ -110,8 +110,8 @@ public:
         const double phi, const double eta, double* x);
     void energyVsPhiAndC(const double temperature, const double* const ceq,
         const bool found_ceq, const double phi_well_scale,
-        const std::string& phi_well_type, const int npts_phi = 51,
-        const int npts_c = 50); // # of compositions to use (>1)
+        const int npts_phi = 51,
+        const int npts_c   = 50); // # of compositions to use (>1)
     void printEnergyVsComposition(
         const double temperature, const int npts = 100);
     double fchem(const double phi, const double eta, const double* const conc,
@@ -120,11 +120,11 @@ public:
         const int nc, const double cmin, const double cmax, const double slopec,
         std::ostream& os) const;
     void printEnergyVsPhi(const double* const conc, const double temperature,
-        const double phi_well_scale, const std::string& phi_well_type,
-        const int npts, const double slopec, std::ostream& os);
+        const double phi_well_scale, const int npts, const double slopec,
+        std::ostream& os);
     void printEnergyVsEta(const double* const conc, const double temperature,
-        const double eta_well_scale, const std::string& eta_well_type,
-        const int npts, const double slopec, std::ostream& os);
+        const double eta_well_scale, const int npts, const double slopec,
+        std::ostream& os);
 
     // empty default implementation to avoid downcasting
     virtual double computePenalty(const PhaseIndex, const double)

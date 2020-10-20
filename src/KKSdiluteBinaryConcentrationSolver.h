@@ -33,48 +33,38 @@
 // IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef included_FreeEnergyFunctions
-#define included_FreeEnergyFunctions
+#ifndef included_KKSdiluteBinaryConcentrationSolver
+#define included_KKSdiluteBinaryConcentrationSolver
 
-#include "Phases.h"
+#include "DampedNewtonSolver.h"
 
-#include <string>
-#include <vector>
-
-class FreeEnergyFunctions
+class KKSdiluteBinaryConcentrationSolver : public DampedNewtonSolver
 {
 public:
-    FreeEnergyFunctions(){};
+    KKSdiluteBinaryConcentrationSolver();
 
-    virtual ~FreeEnergyFunctions(){};
+    ~KKSdiluteBinaryConcentrationSolver(){};
 
-    virtual void energyVsPhiAndC(const double temperature,
-        const double* const ceq, const bool found_ceq,
-        const double phi_well_scale, const int npts_phi = 51,
-        const int npts_c = 50)
-        = 0;
-    virtual void printEnergyVsComposition(
-        const double temperature, const int npts = 100)
-        = 0;
+    int ComputeConcentration(double* const conc, const double c0,
+        const double hphi, const double RTinv, const double fA,
+        const double fB);
 
-    virtual void computeSecondDerivativeFreeEnergy(const double temp,
-        const double* const conc, const PhaseIndex pi,
-        std::vector<double>& d2fdc2)
-        = 0;
+private:
+    /*
+     * number of coexisting phases
+     */
+    int d_N;
 
-    virtual bool computeCeqT(const double temperature, const PhaseIndex pi0,
-        const PhaseIndex pi1, double* ceq, const int maxits,
-        const bool verbose = false)
-    {
-        (void)temperature;
-        (void)pi0;
-        (void)pi1;
-        (void)ceq;
-        (void)maxits;
-        (void)verbose;
+    double d_fA;
+    double d_fB;
 
-        return false;
-    };
+    void RHS(const double* const x, double* const fvec);
+
+    void Jacobian(const double* const x, double** const fjac);
+
+    double d_c0;
+    double d_hphi;
+    double d_heta;
 };
 
 #endif

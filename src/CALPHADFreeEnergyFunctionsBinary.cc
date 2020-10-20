@@ -616,7 +616,7 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
 
 void CALPHADFreeEnergyFunctionsBinary::energyVsPhiAndC(const double temperature,
     const double* const ceq, const bool found_ceq, const double phi_well_scale,
-    const std::string& phi_well_type, const int npts_phi, const int npts_c)
+    const int npts_phi, const int npts_c)
 {
     std::cout << "CALPHADFreeEnergyFunctionsBinary::energyVsPhiAndC()..."
               << std::endl;
@@ -655,8 +655,8 @@ void CALPHADFreeEnergyFunctionsBinary::energyVsPhiAndC(const double temperature,
     for (int i = 0; i < npts_c; i++)
     {
         double conc = cmin + deltac * i;
-        printEnergyVsPhi(&conc, temperature, phi_well_scale, phi_well_type,
-            npts_phi, slopec, tfile);
+        printEnergyVsPhi(
+            &conc, temperature, phi_well_scale, npts_phi, slopec, tfile);
     }
 }
 
@@ -687,8 +687,8 @@ void CALPHADFreeEnergyFunctionsBinary::printEnergyVsPhiHeader(
 
 void CALPHADFreeEnergyFunctionsBinary::printEnergyVsPhi(
     const double* const conc, const double temperature,
-    const double phi_well_scale, const std::string& phi_well_type,
-    const int npts, const double slopec, std::ostream& os)
+    const double phi_well_scale, const int npts, const double slopec,
+    std::ostream& os)
 {
     // std::cout << "CALPHADFreeEnergyFunctionsBinary::printEnergyVsPhi()..." <<
     // std::endl;
@@ -714,8 +714,8 @@ void CALPHADFreeEnergyFunctionsBinary::printEnergyVsPhi(
 
 void CALPHADFreeEnergyFunctionsBinary::printEnergyVsEta(
     const double* const conc, const double temperature,
-    const double eta_well_scale, const std::string& eta_well_type,
-    const int npts, const double slopec, std::ostream& os)
+    const double eta_well_scale, const int npts, const double slopec,
+    std::ostream& os)
 {
     // std::cout << "CALPHADFreeEnergyFunctionsBinary::printEnergyVsEta()..." <<
     // std::endl;

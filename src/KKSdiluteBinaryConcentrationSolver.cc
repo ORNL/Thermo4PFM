@@ -33,48 +33,61 @@
 // IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 //
-#ifndef included_FreeEnergyFunctions
-#define included_FreeEnergyFunctions
+#include "KKSdiluteBinaryConcentrationSolver.h"
+#include "xlogx.h"
 
-#include "Phases.h"
+#include <cassert>
+#include <cmath>
+#include <iostream>
 
-#include <string>
-#include <vector>
+//=======================================================================
 
-class FreeEnergyFunctions
+KKSdiluteBinaryConcentrationSolver::KKSdiluteBinaryConcentrationSolver()
 {
-public:
-    FreeEnergyFunctions(){};
+    d_N = 2;
+}
 
-    virtual ~FreeEnergyFunctions(){};
+//=======================================================================
 
-    virtual void energyVsPhiAndC(const double temperature,
-        const double* const ceq, const bool found_ceq,
-        const double phi_well_scale, const int npts_phi = 51,
-        const int npts_c = 50)
-        = 0;
-    virtual void printEnergyVsComposition(
-        const double temperature, const int npts = 100)
-        = 0;
+// solve for c=(c_L, c_A)
+void KKSdiluteBinaryConcentrationSolver::RHS(
+    const double* const c, double* const fvec)
+{
+    fvec[0] = -d_c0 + (1.0 - d_hphi) * c[0] + d_hphi * c[1];
+    fvec[1] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[1])
+              + xlogx_deriv(1. - c[1]) - (d_fA - d_fB);
+}
 
-    virtual void computeSecondDerivativeFreeEnergy(const double temp,
-        const double* const conc, const PhaseIndex pi,
-        std::vector<double>& d2fdc2)
-        = 0;
+//=======================================================================
 
-    virtual bool computeCeqT(const double temperature, const PhaseIndex pi0,
-        const PhaseIndex pi1, double* ceq, const int maxits,
-        const bool verbose = false)
-    {
-        (void)temperature;
-        (void)pi0;
-        (void)pi1;
-        (void)ceq;
-        (void)maxits;
-        (void)verbose;
+void KKSdiluteBinaryConcentrationSolver::Jacobian(
+    const double* const c, double** const fjac)
+{
+    fjac[0][0] = (1.0 - d_hphi);
+    fjac[0][1] = d_hphi;
 
-        return false;
-    };
-};
+    fjac[1][0] = xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]);
+    fjac[1][1] = -xlogx_deriv2(c[1]) - xlogx_deriv2(1. - c[1]);
+}
 
-#endif
+/*
+ ********************************************************************
+ * conc: initial guess and final solution (concentration in each phase)
+ * c0: local composition
+ ********************************************************************
+ */
+int KKSdiluteBinaryConcentrationSolver::ComputeConcentration(double* const conc,
+    const double c0, const double hphi, const double RTinv, const double fA,
+    const double fB)
+{
+    (void)RTinv;
+
+    // std::cout<<"KKSdiluteBinaryConcentrationSolver::ComputeConcentration()"<<endl;
+    d_c0   = c0;
+    d_hphi = hphi;
+    d_fA   = fA;
+    d_fB   = fB;
+
+    int ret = NewtonSolver::ComputeSolution(conc, d_N);
+    return ret;
+}

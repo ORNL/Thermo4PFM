@@ -44,6 +44,16 @@ add_executable(testCALPHADbinaryEquilibrium
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+add_executable(testKKSdiluteBinaryKKS
+               ${TEST_DIR}/testKKSdiluteBinaryKKS.cc
+               ${CMAKE_SOURCE_DIR}/src/functions.cc
+               ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
+               ${CMAKE_SOURCE_DIR}/src/KKSFreeEnergyFunctionDiluteBinary.cc
+               ${CMAKE_SOURCE_DIR}/src/KKSdiluteBinaryConcentrationSolver.cc
+               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
+               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
+               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
+               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
 
 add_test(NAME testPropertyTree
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testPropertyTree
@@ -59,4 +69,7 @@ add_test(NAME testCALPHADbinaryKKS
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testCALPHADbinaryEquilibrium
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADbinaryEquilibrium
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testKKSdiluteBinaryKKS
+         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testKKSdiluteBinaryKKS
          WORKING_DIRECTORY ${TEST_DIR})
