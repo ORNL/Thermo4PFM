@@ -33,43 +33,52 @@
 // IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
 //
-#include "CALPHADSpeciesPhaseGibbsEnergyExpansion.h"
+#ifndef included_CALPHADEqConcSolverTernary
+#define included_CALPHADEqConcSolverTernary
 
-#include <iostream>
-#include <math.h>
+#include "DampedNewtonSolver.h"
 
-CALPHADSpeciesPhaseGibbsEnergyExpansion::
-    CALPHADSpeciesPhaseGibbsEnergyExpansion(const double a, const double b,
-        const double c, const double d2, const double d3, const double d4,
-        const double d7, const double dm1, const double dm9)
-    : a_(a),
-      b_(b),
-      c_(c),
-      d2_(d2),
-      d3_(d3),
-      d4_(d4),
-      d7_(d7),
-      dm1_(dm1),
-      dm9_(dm9)
+class CALPHADEqConcentrationSolverTernary : public DampedNewtonSolver
 {
-}
+public:
+    CALPHADEqConcentrationSolverTernary();
 
-double CALPHADSpeciesPhaseGibbsEnergyExpansion::value(
-    const double temperature) const
-{
-    const double t2 = temperature * temperature;
-    const double t4 = t2 * t2;
-    // std::cout<<"a="<<a_<<std::endl;
-    // std::cout<<"b="<<b_<<std::endl;
-    // std::cout<<"c="<<c_<<std::endl;
-    // std::cout<<"d2="<<d2_<<std::endl;
-    // std::cout<<"d3="<<d3_<<std::endl;
-    // std::cout<<"d4="<<d4_<<std::endl;
-    // std::cout<<"d7="<<d7_<<std::endl;
-    // std::cout<<"dm1="<<dm1_<<std::endl;
+    virtual ~CALPHADEqConcentrationSolverTernary(){};
 
-    return a_ + b_ * temperature + c_ * temperature * log(temperature)
-           + d2_ * t2 + d3_ * t2 * temperature + d4_ * t4
-           + d7_ * t4 * t2 * temperature + dm1_ / temperature
-           + dm9_ / (t4 * t4 * temperature);
-}
+    int ComputeConcentration(double* const conc, const double RTinv,
+        const double* const L_AB_L, const double* const L_AC_L,
+        const double* const L_BC_L, const double* const L_AB_S,
+        const double* const L_AC_S, const double* const L_BC_S,
+        const double* const L_ABC_L, const double* const L_ABC_S,
+        const double* const fA, const double* const fB, const double* const fC);
+
+protected:
+    virtual void RHS(const double* const x, double* const fvec);
+
+    virtual void Jacobian(const double* const x, double** const fjac);
+
+    double d_RTinv;
+    double d_RT;
+    double d_c0;
+    double d_hphi;
+
+    // energies of 3 species, in two phase each
+    double d_fA[2];
+    double d_fB[2];
+    double d_fC[2];
+
+    // L coefficients for 2 possible phases (L and S)
+    double d_L_AB_L[4];
+    double d_L_AC_L[4];
+    double d_L_BC_L[4];
+
+    double d_L_ABC_L[3];
+
+    double d_L_AB_S[4];
+    double d_L_AC_S[4];
+    double d_L_BC_S[4];
+
+    double d_L_ABC_S[3];
+};
+
+#endif
