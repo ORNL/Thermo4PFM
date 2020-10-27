@@ -82,7 +82,7 @@ void CALPHADSpeciesPhaseGibbsEnergy::initialize(
     read_optional(db, "d3", d3, nintervals);
 
     std::vector<double> d4;
-    read_optional(db, "d3", d4, nintervals);
+    read_optional(db, "d4", d4, nintervals);
 
     std::vector<double> d7;
     read_optional(db, "d7", d7, nintervals);
