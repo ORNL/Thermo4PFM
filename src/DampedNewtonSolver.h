@@ -45,13 +45,14 @@ public:
 
     virtual ~DampedNewtonSolver(){};
 
-    void SetDamping(const double alpha) { d_alpha = alpha; }
+    void SetDamping(const double alpha) { alpha_ = alpha; }
 
     virtual void UpdateSolution(
         double* const x, const double* const fvec, double** const fjac);
 
 private:
-    double d_alpha; // damping factor
+    // damping factor
+    double alpha_;
 };
 
 #endif

@@ -43,7 +43,7 @@
 
 //=======================================================================
 
-DampedNewtonSolver::DampedNewtonSolver() : NewtonSolver(), d_alpha(1.){};
+DampedNewtonSolver::DampedNewtonSolver() : NewtonSolver(), alpha_(1.){};
 
 //=======================================================================
 // note: sizes to accomodate up to ternary alloys
@@ -94,9 +94,8 @@ void DampedNewtonSolver::UpdateSolution(
         // std::cout << "del[" << jj << "] = " << del[jj] << std::endl;
     }
 
-    double w = d_alpha;
     for (int ii = 0; ii < nn; ii++)
     {
-        c[ii] = c[ii] - w * del[ii];
+        c[ii] = c[ii] - alpha_ * del[ii];
     }
 }
