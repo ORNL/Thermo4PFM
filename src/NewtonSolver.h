@@ -47,11 +47,11 @@ public:
 
     virtual int ComputeSolution(double* const conc, const int N);
 
-    void SetTolerance(const double t) { d_tolerance = t; }
+    void SetTolerance(const double t) { tolerance_ = t; }
 
-    void SetMaxIterations(const int m) { d_max_iters = m; }
+    void SetMaxIterations(const int m) { max_iters_ = m; }
 
-    void SetVerbose(const bool verbose) { d_verbose = verbose; }
+    void SetVerbose(const bool verbose) { verbose_ = verbose; }
 
     double Determinant(double** const mat);
 
@@ -75,9 +75,9 @@ private:
      */
     static int s_N;
 
-    int d_max_iters;
-    double d_tolerance;
-    bool d_verbose;
+    int max_iters_;
+    double tolerance_;
+    bool verbose_;
 };
 
 #endif

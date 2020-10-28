@@ -52,7 +52,7 @@ int NewtonSolver::s_N = 0;
 //=======================================================================
 
 NewtonSolver::NewtonSolver()
-    : d_max_iters(50), d_tolerance(1.0e-8), d_verbose(false){};
+    : max_iters_(50), tolerance_(1.0e-8), verbose_(false){};
 
 //=======================================================================
 
@@ -60,7 +60,7 @@ bool NewtonSolver::CheckTolerance(const double* const fvec)
 {
     for (int ii = 0; ii < s_N; ii++)
     {
-        if (std::abs(fvec[ii]) >= d_tolerance) return false;
+        if (std::abs(fvec[ii]) >= tolerance_) return false;
     }
     return true;
 }
@@ -69,7 +69,7 @@ bool NewtonSolver::CheckTolerance(const double* const fvec)
 
 bool NewtonSolver::CheckToleranceFirstEq(const double* const fvec)
 {
-    if (std::abs(fvec[0]) >= d_tolerance) return false;
+    if (std::abs(fvec[0]) >= tolerance_) return false;
     return true;
 }
 
@@ -160,7 +160,7 @@ void NewtonSolver::UpdateSolution(
 // conc: initial guess and output solution
 int NewtonSolver::ComputeSolution(double* const conc, const int N)
 {
-    assert(d_max_iters > 1);
+    assert(max_iters_ > 1);
     for (int ii = 0; ii < N; ii++)
         assert(conc[ii] == conc[ii]);
 
@@ -220,7 +220,7 @@ int NewtonSolver::ComputeSolution(double* const conc, const int N)
             break;
         }
 
-        if (iterations == d_max_iters) break;
+        if (iterations == max_iters_) break;
 
         Jacobian(conc, fjac);
 
