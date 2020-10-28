@@ -88,6 +88,21 @@ add_executable(testCALPHADternaryKKS
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+add_executable(testCALPHADternaryEquilibrium
+               ${TEST_DIR}/testCALPHADternaryEquilibrium.cc
+               ${CMAKE_SOURCE_DIR}/src/functions.cc
+               ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsTernary.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverTernary.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverTernary.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADEqPhaseConcSolverTernary.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergy.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergyExpansion.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
+               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
+               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
+               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
+               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
 
 add_test(NAME testPropertyTree
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testPropertyTree
@@ -115,4 +130,7 @@ add_test(NAME testCALPHADJacobianTernary
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testCALPHADternaryKKS
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADternaryKKS
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testCALPHADternaryEquilibrium
+         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADternaryEquilibrium
          WORKING_DIRECTORY ${TEST_DIR})
