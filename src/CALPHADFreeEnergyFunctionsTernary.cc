@@ -148,39 +148,39 @@ CALPHADFreeEnergyFunctionsTernary::CALPHADFreeEnergyFunctionsTernary(
     pt::ptree& calphad_db, boost::optional<pt::ptree&> newton_db,
     const EnergyInterpolationType energy_interp_func_type,
     const ConcInterpolationType conc_interp_func_type)
-    : d_energy_interp_func_type(energy_interp_func_type),
-      d_conc_interp_func_type(conc_interp_func_type)
+    : energy_interp_func_type_(energy_interp_func_type),
+      conc_interp_func_type_(conc_interp_func_type)
 {
-    d_fA[0] = std::nan("");
-    d_fA[1] = std::nan("");
-    d_fB[0] = std::nan("");
-    d_fB[1] = std::nan("");
-    d_fC[0] = std::nan("");
-    d_fC[1] = std::nan("");
+    fA_[0] = std::nan("");
+    fA_[1] = std::nan("");
+    fB_[0] = std::nan("");
+    fB_[1] = std::nan("");
+    fC_[0] = std::nan("");
+    fC_[1] = std::nan("");
 
-    d_L_AB_L[0] = std::nan("");
-    d_L_AB_L[1] = std::nan("");
-    d_L_AC_L[0] = std::nan("");
-    d_L_AC_L[2] = std::nan("");
-    d_L_BC_L[0] = std::nan("");
+    L_AB_L_[0] = std::nan("");
+    L_AB_L_[1] = std::nan("");
+    L_AC_L_[0] = std::nan("");
+    L_AC_L_[2] = std::nan("");
+    L_BC_L_[0] = std::nan("");
 
-    d_L_AB_S[0] = std::nan("");
-    d_L_BC_S[0] = std::nan("");
-    d_L_BC_S[3] = std::nan("");
+    L_AB_S_[0] = std::nan("");
+    L_BC_S_[0] = std::nan("");
+    L_BC_S_[3] = std::nan("");
 
-    d_L_ABC_L[0] = std::nan("");
-    d_L_ABC_L[1] = std::nan("");
-    d_L_ABC_L[2] = std::nan("");
-    d_L_ABC_S[0] = std::nan("");
-    d_L_ABC_S[1] = std::nan("");
-    d_L_ABC_S[2] = std::nan("");
+    L_ABC_L_[0] = std::nan("");
+    L_ABC_L_[1] = std::nan("");
+    L_ABC_L_[2] = std::nan("");
+    L_ABC_S_[0] = std::nan("");
+    L_ABC_S_[1] = std::nan("");
+    L_ABC_S_[2] = std::nan("");
 
-    d_fenergy_diag_filename = "energy.vtk";
+    fenergy_diag_filename_ = "energy.vtk";
 
-    d_ceq_l[0] = -1;
-    d_ceq_l[1] = -1;
-    d_ceq_s[0] = -1;
-    d_ceq_s[1] = -1;
+    ceq_l_[0] = -1;
+    ceq_l_[1] = -1;
+    ceq_s_[0] = -1;
+    ceq_s_[1] = -1;
 
     readParameters(calphad_db);
 
@@ -194,7 +194,7 @@ void CALPHADFreeEnergyFunctionsTernary::setupSolver(
 {
     std::clog << "CALPHADFreeEnergyFunctionsTernary::setupSolver()..."
               << std::endl;
-    d_solver = new CALPHADConcentrationSolverTernary();
+    solver_ = new CALPHADConcentrationSolverTernary();
 
     if (newton_db) readNewtonparameters(newton_db.get());
 }
@@ -209,10 +209,10 @@ void CALPHADFreeEnergyFunctionsTernary::readNewtonparameters(
     int maxits         = newton_db.get<int>("max_its", 20);
     const bool verbose = newton_db.get<bool>("verbose", false);
 
-    d_solver->SetTolerance(tol);
-    d_solver->SetMaxIterations(maxits);
-    d_solver->SetDamping(alpha);
-    d_solver->SetVerbose(verbose);
+    solver_->SetTolerance(tol);
+    solver_->SetMaxIterations(maxits);
+    solver_->SetDamping(alpha);
+    solver_->SetVerbose(verbose);
 }
 
 //=======================================================================
@@ -222,93 +222,93 @@ void CALPHADFreeEnergyFunctionsTernary::readParameters(pt::ptree& calphad_db)
     pt::ptree& species0_db = calphad_db.get_child("SpeciesA");
     std::string name       = species0_db.get<std::string>("name", "unknown");
     std::string dbnameL("PhaseL");
-    d_g_species_phaseL[0].initialize(name, species0_db.get_child(dbnameL));
+    g_species_phaseL_[0].initialize(name, species0_db.get_child(dbnameL));
     std::string dbnameA("PhaseA");
-    d_g_species_phaseA[0].initialize(name, species0_db.get_child(dbnameA));
+    g_species_phaseA_[0].initialize(name, species0_db.get_child(dbnameA));
 
     pt::ptree& speciesB_db = calphad_db.get_child("SpeciesB");
     name                   = speciesB_db.get<std::string>("name", "unknown");
-    d_g_species_phaseL[1].initialize(name, speciesB_db.get_child(dbnameL));
-    d_g_species_phaseA[1].initialize(name, speciesB_db.get_child(dbnameA));
+    g_species_phaseL_[1].initialize(name, speciesB_db.get_child(dbnameL));
+    g_species_phaseA_[1].initialize(name, speciesB_db.get_child(dbnameA));
 
     pt::ptree& speciesC_db = calphad_db.get_child("SpeciesC");
     name                   = speciesC_db.get<std::string>("name", "unknown");
-    d_g_species_phaseL[2].initialize(name, speciesC_db.get_child(dbnameL));
-    d_g_species_phaseA[2].initialize(name, speciesC_db.get_child(dbnameA));
+    g_species_phaseL_[2].initialize(name, speciesC_db.get_child(dbnameL));
+    g_species_phaseA_[2].initialize(name, speciesC_db.get_child(dbnameA));
 
     // read Lmix coefficients
 
     // AB
     {
         pt::ptree& Lmix0_db = calphad_db.get_child("LmixABPhaseL");
-        readLmixBinaryParameters(Lmix0_db, d_LmixABPhaseL);
+        readLmixBinaryParameters(Lmix0_db, LmixABPhaseL_);
 
         pt::ptree& Lmix1_db = calphad_db.get_child("LmixABPhaseA");
-        readLmixBinaryParameters(Lmix1_db, d_LmixABPhaseA);
+        readLmixBinaryParameters(Lmix1_db, LmixABPhaseA_);
     }
 
     // AC
     {
         pt::ptree& Lmix0_db = calphad_db.get_child("LmixACPhaseL");
-        readLmixBinaryParameters(Lmix0_db, d_LmixACPhaseL);
+        readLmixBinaryParameters(Lmix0_db, LmixACPhaseL_);
 
         pt::ptree& Lmix1_db = calphad_db.get_child("LmixACPhaseA");
-        readLmixBinaryParameters(Lmix1_db, d_LmixACPhaseA);
+        readLmixBinaryParameters(Lmix1_db, LmixACPhaseA_);
     }
 
     // BC
     {
         pt::ptree& Lmix0_db = calphad_db.get_child("LmixBCPhaseL");
-        readLmixBinaryParameters(Lmix0_db, d_LmixBCPhaseL);
+        readLmixBinaryParameters(Lmix0_db, LmixBCPhaseL_);
 
         pt::ptree& Lmix1_db = calphad_db.get_child("LmixBCPhaseA");
-        readLmixBinaryParameters(Lmix1_db, d_LmixBCPhaseA);
+        readLmixBinaryParameters(Lmix1_db, LmixBCPhaseA_);
     }
 
     // ABC
     {
         // default values
-        d_LmixABCPhaseL[0][0] = 0.0;
-        d_LmixABCPhaseL[0][1] = 0.0;
-        d_LmixABCPhaseL[1][0] = 0.0;
-        d_LmixABCPhaseL[1][1] = 0.0;
-        d_LmixABCPhaseL[2][0] = 0.0;
-        d_LmixABCPhaseL[2][1] = 0.0;
+        LmixABCPhaseL_[0][0] = 0.0;
+        LmixABCPhaseL_[0][1] = 0.0;
+        LmixABCPhaseL_[1][0] = 0.0;
+        LmixABCPhaseL_[1][1] = 0.0;
+        LmixABCPhaseL_[2][0] = 0.0;
+        LmixABCPhaseL_[2][1] = 0.0;
 
         std::string dbnamemixL("LmixABCPhaseL");
         if (calphad_db.get_child_optional(dbnamemixL))
         {
             pt::ptree& Lmix0_db = calphad_db.get_child(dbnamemixL);
-            readLmixTernaryParameters(Lmix0_db, d_LmixABCPhaseL);
+            readLmixTernaryParameters(Lmix0_db, LmixABCPhaseL_);
         }
 
-        assert(d_LmixABCPhaseL[0][0] == d_LmixABCPhaseL[0][0]);
-        assert(d_LmixABCPhaseL[0][1] == d_LmixABCPhaseL[0][1]);
-        assert(d_LmixABCPhaseL[1][0] == d_LmixABCPhaseL[1][0]);
-        assert(d_LmixABCPhaseL[1][1] == d_LmixABCPhaseL[1][1]);
-        assert(d_LmixABCPhaseL[2][0] == d_LmixABCPhaseL[2][0]);
-        assert(d_LmixABCPhaseL[2][1] == d_LmixABCPhaseL[2][1]);
+        assert(LmixABCPhaseL_[0][0] == LmixABCPhaseL_[0][0]);
+        assert(LmixABCPhaseL_[0][1] == LmixABCPhaseL_[0][1]);
+        assert(LmixABCPhaseL_[1][0] == LmixABCPhaseL_[1][0]);
+        assert(LmixABCPhaseL_[1][1] == LmixABCPhaseL_[1][1]);
+        assert(LmixABCPhaseL_[2][0] == LmixABCPhaseL_[2][0]);
+        assert(LmixABCPhaseL_[2][1] == LmixABCPhaseL_[2][1]);
 
         std::string dbnamemixA("LmixABCPhaseA");
         // default values
-        d_LmixABCPhaseA[0][0] = 0.0;
-        d_LmixABCPhaseA[0][1] = 0.0;
-        d_LmixABCPhaseA[1][0] = 0.0;
-        d_LmixABCPhaseA[1][1] = 0.0;
-        d_LmixABCPhaseA[2][0] = 0.0;
-        d_LmixABCPhaseA[2][1] = 0.0;
+        LmixABCPhaseA_[0][0] = 0.0;
+        LmixABCPhaseA_[0][1] = 0.0;
+        LmixABCPhaseA_[1][0] = 0.0;
+        LmixABCPhaseA_[1][1] = 0.0;
+        LmixABCPhaseA_[2][0] = 0.0;
+        LmixABCPhaseA_[2][1] = 0.0;
         if (calphad_db.get_child_optional(dbnamemixA))
         {
             pt::ptree& Lmix1_db = calphad_db.get_child(dbnamemixA);
-            readLmixTernaryParameters(Lmix1_db, d_LmixABCPhaseA);
+            readLmixTernaryParameters(Lmix1_db, LmixABCPhaseA_);
         }
 
-        assert(d_LmixABCPhaseA[0][0] == d_LmixABCPhaseA[0][0]);
-        assert(d_LmixABCPhaseA[0][1] == d_LmixABCPhaseA[0][1]);
-        assert(d_LmixABCPhaseA[1][0] == d_LmixABCPhaseA[1][0]);
-        assert(d_LmixABCPhaseA[1][1] == d_LmixABCPhaseA[1][1]);
-        assert(d_LmixABCPhaseA[2][0] == d_LmixABCPhaseA[2][0]);
-        assert(d_LmixABCPhaseA[2][1] == d_LmixABCPhaseA[2][1]);
+        assert(LmixABCPhaseA_[0][0] == LmixABCPhaseA_[0][0]);
+        assert(LmixABCPhaseA_[0][1] == LmixABCPhaseA_[0][1]);
+        assert(LmixABCPhaseA_[1][0] == LmixABCPhaseA_[1][0]);
+        assert(LmixABCPhaseA_[1][1] == LmixABCPhaseA_[1][1]);
+        assert(LmixABCPhaseA_[2][0] == LmixABCPhaseA_[2][0]);
+        assert(LmixABCPhaseA_[2][1] == LmixABCPhaseA_[2][1]);
     }
 
     // print database just read
@@ -343,10 +343,10 @@ double CALPHADFreeEnergyFunctionsTernary::computeFreeEnergy(
     switch (pi)
     {
         case PhaseIndex::phaseL:
-            g_species = &d_g_species_phaseL[0];
+            g_species = &g_species_phaseL_[0];
             break;
         case PhaseIndex::phaseA:
-            g_species = &d_g_species_phaseA[0];
+            g_species = &g_species_phaseA_[0];
             break;
         default:
             std::cout << "CALPHADFreeEnergyFunctionsTernary::"
@@ -399,10 +399,10 @@ void CALPHADFreeEnergyFunctionsTernary::computeDerivFreeEnergy(
     switch (pi)
     {
         case PhaseIndex::phaseL:
-            g_species = &d_g_species_phaseL[0];
+            g_species = &g_species_phaseL_[0];
             break;
         case PhaseIndex::phaseA:
-            g_species = &d_g_species_phaseA[0];
+            g_species = &g_species_phaseA_[0];
             break;
         default:
             std::cout << "CALPHADFreeEnergyFunctionsTernary::"
@@ -466,42 +466,42 @@ void CALPHADFreeEnergyFunctionsTernary::computeSecondDerivativeFreeEnergy(
 
 void CALPHADFreeEnergyFunctionsTernary::setupValuesL(const double temperature)
 {
-    d_L_AB_L[0]  = lmix0ABPhaseL(temperature);
-    d_L_AB_L[1]  = lmix1ABPhaseL(temperature);
-    d_L_AB_L[2]  = lmix2ABPhaseL(temperature);
-    d_L_AB_L[3]  = lmix3ABPhaseL(temperature);
-    d_L_AC_L[0]  = lmix0ACPhaseL(temperature);
-    d_L_AC_L[1]  = lmix1ACPhaseL(temperature);
-    d_L_AC_L[2]  = lmix2ACPhaseL(temperature);
-    d_L_AC_L[3]  = lmix3ACPhaseL(temperature);
-    d_L_BC_L[0]  = lmix0BCPhaseL(temperature);
-    d_L_BC_L[1]  = lmix1BCPhaseL(temperature);
-    d_L_BC_L[2]  = lmix2BCPhaseL(temperature);
-    d_L_BC_L[3]  = lmix3BCPhaseL(temperature);
-    d_L_ABC_L[0] = lmix0ABCPhaseL(temperature);
-    d_L_ABC_L[1] = lmix1ABCPhaseL(temperature);
-    d_L_ABC_L[2] = lmix2ABCPhaseL(temperature);
+    L_AB_L_[0]  = lmix0ABPhaseL(temperature);
+    L_AB_L_[1]  = lmix1ABPhaseL(temperature);
+    L_AB_L_[2]  = lmix2ABPhaseL(temperature);
+    L_AB_L_[3]  = lmix3ABPhaseL(temperature);
+    L_AC_L_[0]  = lmix0ACPhaseL(temperature);
+    L_AC_L_[1]  = lmix1ACPhaseL(temperature);
+    L_AC_L_[2]  = lmix2ACPhaseL(temperature);
+    L_AC_L_[3]  = lmix3ACPhaseL(temperature);
+    L_BC_L_[0]  = lmix0BCPhaseL(temperature);
+    L_BC_L_[1]  = lmix1BCPhaseL(temperature);
+    L_BC_L_[2]  = lmix2BCPhaseL(temperature);
+    L_BC_L_[3]  = lmix3BCPhaseL(temperature);
+    L_ABC_L_[0] = lmix0ABCPhaseL(temperature);
+    L_ABC_L_[1] = lmix1ABCPhaseL(temperature);
+    L_ABC_L_[2] = lmix2ABCPhaseL(temperature);
 }
 
 //=======================================================================
 
 void CALPHADFreeEnergyFunctionsTernary::setupValuesS(const double temperature)
 {
-    d_L_AB_S[0]  = lmix0ABPhaseA(temperature);
-    d_L_AB_S[1]  = lmix1ABPhaseA(temperature);
-    d_L_AB_S[2]  = lmix2ABPhaseA(temperature);
-    d_L_AB_S[3]  = lmix3ABPhaseA(temperature);
-    d_L_AC_S[0]  = lmix0ACPhaseA(temperature);
-    d_L_AC_S[1]  = lmix1ACPhaseA(temperature);
-    d_L_AC_S[2]  = lmix2ACPhaseA(temperature);
-    d_L_AC_S[3]  = lmix3ACPhaseA(temperature);
-    d_L_BC_S[0]  = lmix0BCPhaseA(temperature);
-    d_L_BC_S[1]  = lmix1BCPhaseA(temperature);
-    d_L_BC_S[2]  = lmix2BCPhaseA(temperature);
-    d_L_BC_S[3]  = lmix3BCPhaseA(temperature);
-    d_L_ABC_S[0] = lmix0ABCPhaseA(temperature);
-    d_L_ABC_S[1] = lmix1ABCPhaseA(temperature);
-    d_L_ABC_S[2] = lmix2ABCPhaseA(temperature);
+    L_AB_S_[0]  = lmix0ABPhaseA(temperature);
+    L_AB_S_[1]  = lmix1ABPhaseA(temperature);
+    L_AB_S_[2]  = lmix2ABPhaseA(temperature);
+    L_AB_S_[3]  = lmix3ABPhaseA(temperature);
+    L_AC_S_[0]  = lmix0ACPhaseA(temperature);
+    L_AC_S_[1]  = lmix1ACPhaseA(temperature);
+    L_AC_S_[2]  = lmix2ACPhaseA(temperature);
+    L_AC_S_[3]  = lmix3ACPhaseA(temperature);
+    L_BC_S_[0]  = lmix0BCPhaseA(temperature);
+    L_BC_S_[1]  = lmix1BCPhaseA(temperature);
+    L_BC_S_[2]  = lmix2BCPhaseA(temperature);
+    L_BC_S_[3]  = lmix3BCPhaseA(temperature);
+    L_ABC_S_[0] = lmix0ABCPhaseA(temperature);
+    L_ABC_S_[1] = lmix1ABCPhaseA(temperature);
+    L_ABC_S_[2] = lmix2ABCPhaseA(temperature);
 }
 
 //=======================================================================
@@ -517,18 +517,18 @@ void CALPHADFreeEnergyFunctionsTernary::setupValuesForTwoPhasesSolver(
         {
 
             case PhaseIndex::phaseL:
-                d_fA[i] = d_g_species_phaseL[0].fenergy(temperature);
-                d_fB[i] = d_g_species_phaseL[1].fenergy(temperature);
-                d_fC[i] = d_g_species_phaseL[2].fenergy(temperature);
+                fA_[i] = g_species_phaseL_[0].fenergy(temperature);
+                fB_[i] = g_species_phaseL_[1].fenergy(temperature);
+                fC_[i] = g_species_phaseL_[2].fenergy(temperature);
 
                 setupValuesL(temperature);
 
                 break;
 
             case PhaseIndex::phaseA:
-                d_fA[i] = d_g_species_phaseA[0].fenergy(temperature);
-                d_fB[i] = d_g_species_phaseA[1].fenergy(temperature);
-                d_fC[i] = d_g_species_phaseA[2].fenergy(temperature);
+                fA_[i] = g_species_phaseA_[0].fenergy(temperature);
+                fB_[i] = g_species_phaseA_[1].fenergy(temperature);
+                fC_[i] = g_species_phaseA_[2].fenergy(temperature);
 
                 setupValuesS(temperature);
 
@@ -546,14 +546,14 @@ void CALPHADFreeEnergyFunctionsTernary::setupValuesForTwoPhasesSolver(
 
 void CALPHADFreeEnergyFunctionsTernary::setup(const double temperature)
 {
-    d_fA[0] = d_g_species_phaseL[0].fenergy(temperature);
-    d_fA[1] = d_g_species_phaseA[0].fenergy(temperature);
+    fA_[0] = g_species_phaseL_[0].fenergy(temperature);
+    fA_[1] = g_species_phaseA_[0].fenergy(temperature);
 
-    d_fB[0] = d_g_species_phaseL[1].fenergy(temperature);
-    d_fB[1] = d_g_species_phaseA[1].fenergy(temperature);
+    fB_[0] = g_species_phaseL_[1].fenergy(temperature);
+    fB_[1] = g_species_phaseA_[1].fenergy(temperature);
 
-    d_fC[0] = d_g_species_phaseL[2].fenergy(temperature);
-    d_fC[1] = d_g_species_phaseA[2].fenergy(temperature);
+    fC_[0] = g_species_phaseL_[2].fenergy(temperature);
+    fC_[1] = g_species_phaseA_[2].fenergy(temperature);
 
     setupValuesL(temperature);
     setupValuesS(temperature);
@@ -573,15 +573,14 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(const double temperature,
 
     setupValuesForTwoPhasesSolver(temperature, pi0, pi1);
 
-    assert(d_L_ABC_L[0] == d_L_ABC_L[0]);
+    assert(L_ABC_L_[0] == L_ABC_L_[0]);
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
     CALPHADEqConcentrationSolverTernary eq_solver;
     eq_solver.SetMaxIterations(maxits);
 
-    int ret = eq_solver.ComputeConcentration(ceq, RTinv, d_L_AB_L, d_L_AC_L,
-        d_L_BC_L, d_L_AB_S, d_L_AC_S, d_L_BC_S, d_L_ABC_L, d_L_ABC_S, d_fA,
-        d_fB, d_fC);
+    int ret = eq_solver.ComputeConcentration(ceq, RTinv, L_AB_L_, L_AC_L_,
+        L_BC_L_, L_AB_S_, L_AC_S_, L_BC_S_, L_ABC_L_, L_ABC_S_, fA_, fB_, fC_);
 
     if (ret >= 0)
     {
@@ -593,10 +592,10 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(const double temperature,
             std::cout << "CALPHAD, c1 phase1=" << ceq[3] << std::endl;
         }
 
-        d_ceq_l[0] = ceq[0];
-        d_ceq_l[1] = ceq[1];
-        d_ceq_s[0] = ceq[2];
-        d_ceq_s[1] = ceq[3];
+        ceq_l_[0] = ceq[0];
+        ceq_l_[1] = ceq[1];
+        ceq_s_[0] = ceq[2];
+        ceq_s_[1] = ceq[3];
     }
     else
     {
@@ -622,9 +621,8 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(const double temperature,
     CALPHADEqPhaseConcentrationSolverTernary eq_solver(c0, c1);
     eq_solver.SetMaxIterations(maxits);
 
-    int ret = eq_solver.ComputeConcentration(ceq, RTinv, d_L_AB_L, d_L_AC_L,
-        d_L_BC_L, d_L_AB_S, d_L_AC_S, d_L_BC_S, d_L_ABC_L, d_L_ABC_S, d_fA,
-        d_fB, d_fC);
+    int ret = eq_solver.ComputeConcentration(ceq, RTinv, L_AB_L_, L_AC_L_,
+        L_BC_L_, L_AB_S_, L_AC_S_, L_BC_S_, L_ABC_L_, L_ABC_S_, fA_, fB_, fC_);
 
     if (ret >= 0)
     {
@@ -636,10 +634,10 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(const double temperature,
             std::cout << "CALPHAD, c1 phase1=" << ceq[3] << std::endl;
         }
 
-        d_ceq_l[0] = ceq[0];
-        d_ceq_l[1] = ceq[1];
-        d_ceq_s[0] = ceq[2];
-        d_ceq_s[1] = ceq[3];
+        ceq_l_[0] = ceq[0];
+        ceq_l_[1] = ceq[1];
+        ceq_s_[0] = ceq[2];
+        ceq_s_[1] = ceq[3];
     }
     else
     {
@@ -661,21 +659,21 @@ void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
 
     double cauxilliary[4] = { conc0, conc1, conc0, conc1 };
 
-    // std::cout<<"d_ceq_l="<<d_ceq_l<<endl;
+    // std::cout<<"ceq_l_="<<ceq_l_<<endl;
     // std::cout<<"d_ceq_a="<<d_ceq_a<<endl;
-    if (d_ceq_l[0] >= 0.) cauxilliary[0] = d_ceq_l[0];
-    if (d_ceq_l[1] >= 0.) cauxilliary[1] = d_ceq_l[1];
-    if (d_ceq_s[0] >= 0.) cauxilliary[2] = d_ceq_s[0];
-    if (d_ceq_s[1] >= 0.) cauxilliary[3] = d_ceq_s[1];
+    if (ceq_l_[0] >= 0.) cauxilliary[0] = ceq_l_[0];
+    if (ceq_l_[1] >= 0.) cauxilliary[1] = ceq_l_[1];
+    if (ceq_s_[0] >= 0.) cauxilliary[2] = ceq_s_[0];
+    if (ceq_s_[1] >= 0.) cauxilliary[3] = ceq_s_[1];
 
     setup(temperature);
 
-    assert(d_fC[0] == d_fC[0]);
+    assert(fC_[0] == fC_[0]);
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
-    int ret = d_solver->ComputeConcentration(cauxilliary, conc0, conc1, hphi,
-        RTinv, d_L_AB_L, d_L_AC_L, d_L_BC_L, d_L_AB_S, d_L_AC_S, d_L_BC_S,
-        d_L_ABC_L, d_L_ABC_S, d_fA, d_fB, d_fC);
+    int ret = solver_->ComputeConcentration(cauxilliary, conc0, conc1, hphi,
+        RTinv, L_AB_L_, L_AC_L_, L_BC_L_, L_AB_S_, L_AC_S_, L_BC_S_, L_ABC_L_,
+        L_ABC_S_, fA_, fB_, fC_);
 
     if (ret < 0)
     {
@@ -702,7 +700,6 @@ void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
 int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
     const double temperature, const double* const conc, const double phi,
     const double eta, double* x)
-
 {
     (void)eta;
 
@@ -718,60 +715,60 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
 
     const double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
 
-    d_fA[0] = getFenergyPhaseL(0, temperature);
-    d_fA[1] = getFenergyPhaseA(0, temperature);
+    fA_[0] = getFenergyPhaseL(0, temperature);
+    fA_[1] = getFenergyPhaseA(0, temperature);
 
-    d_fB[0] = getFenergyPhaseL(1, temperature);
-    d_fB[1] = getFenergyPhaseA(1, temperature);
+    fB_[0] = getFenergyPhaseL(1, temperature);
+    fB_[1] = getFenergyPhaseA(1, temperature);
 
-    d_fC[0] = getFenergyPhaseL(2, temperature);
-    d_fC[1] = getFenergyPhaseA(2, temperature);
-    assert(d_fC[0] == d_fC[0]);
+    fC_[0] = getFenergyPhaseL(2, temperature);
+    fC_[1] = getFenergyPhaseA(2, temperature);
+    assert(fC_[0] == fC_[0]);
 
-    d_L_AB_L[0] = lmix0ABPhaseL(temperature);
-    d_L_AB_L[1] = lmix1ABPhaseL(temperature);
-    d_L_AB_L[2] = lmix2ABPhaseL(temperature);
-    d_L_AB_L[3] = lmix3ABPhaseL(temperature);
+    L_AB_L_[0] = lmix0ABPhaseL(temperature);
+    L_AB_L_[1] = lmix1ABPhaseL(temperature);
+    L_AB_L_[2] = lmix2ABPhaseL(temperature);
+    L_AB_L_[3] = lmix3ABPhaseL(temperature);
 
-    d_L_AB_S[0] = lmix0ABPhaseA(temperature);
-    d_L_AB_S[1] = lmix1ABPhaseA(temperature);
-    d_L_AB_S[2] = lmix2ABPhaseA(temperature);
-    d_L_AB_S[3] = lmix3ABPhaseA(temperature);
+    L_AB_S_[0] = lmix0ABPhaseA(temperature);
+    L_AB_S_[1] = lmix1ABPhaseA(temperature);
+    L_AB_S_[2] = lmix2ABPhaseA(temperature);
+    L_AB_S_[3] = lmix3ABPhaseA(temperature);
 
-    d_L_AC_L[0] = lmix0ACPhaseL(temperature);
-    d_L_AC_L[1] = lmix1ACPhaseL(temperature);
-    d_L_AC_L[2] = lmix2ACPhaseL(temperature);
-    d_L_AC_L[3] = lmix3ACPhaseL(temperature);
+    L_AC_L_[0] = lmix0ACPhaseL(temperature);
+    L_AC_L_[1] = lmix1ACPhaseL(temperature);
+    L_AC_L_[2] = lmix2ACPhaseL(temperature);
+    L_AC_L_[3] = lmix3ACPhaseL(temperature);
 
-    d_L_AC_S[0] = lmix0ACPhaseA(temperature);
-    d_L_AC_S[1] = lmix1ACPhaseA(temperature);
-    d_L_AC_S[2] = lmix2ACPhaseA(temperature);
-    d_L_AC_S[3] = lmix3ACPhaseA(temperature);
+    L_AC_S_[0] = lmix0ACPhaseA(temperature);
+    L_AC_S_[1] = lmix1ACPhaseA(temperature);
+    L_AC_S_[2] = lmix2ACPhaseA(temperature);
+    L_AC_S_[3] = lmix3ACPhaseA(temperature);
 
-    d_L_BC_L[0] = lmix0BCPhaseL(temperature);
-    d_L_BC_L[1] = lmix1BCPhaseL(temperature);
-    d_L_BC_L[2] = lmix2BCPhaseL(temperature);
-    d_L_BC_L[3] = lmix3BCPhaseL(temperature);
+    L_BC_L_[0] = lmix0BCPhaseL(temperature);
+    L_BC_L_[1] = lmix1BCPhaseL(temperature);
+    L_BC_L_[2] = lmix2BCPhaseL(temperature);
+    L_BC_L_[3] = lmix3BCPhaseL(temperature);
 
-    d_L_BC_S[0] = lmix0BCPhaseA(temperature);
-    d_L_BC_S[1] = lmix1BCPhaseA(temperature);
-    d_L_BC_S[2] = lmix2BCPhaseA(temperature);
-    d_L_BC_S[3] = lmix3BCPhaseA(temperature);
+    L_BC_S_[0] = lmix0BCPhaseA(temperature);
+    L_BC_S_[1] = lmix1BCPhaseA(temperature);
+    L_BC_S_[2] = lmix2BCPhaseA(temperature);
+    L_BC_S_[3] = lmix3BCPhaseA(temperature);
 
-    d_L_ABC_L[0] = lmix0ABCPhaseL(temperature);
-    d_L_ABC_L[1] = lmix1ABCPhaseL(temperature);
-    d_L_ABC_L[2] = lmix2ABCPhaseL(temperature);
+    L_ABC_L_[0] = lmix0ABCPhaseL(temperature);
+    L_ABC_L_[1] = lmix1ABCPhaseL(temperature);
+    L_ABC_L_[2] = lmix2ABCPhaseL(temperature);
 
-    d_L_ABC_S[0] = lmix0ABCPhaseA(temperature);
-    d_L_ABC_S[1] = lmix1ABCPhaseA(temperature);
-    d_L_ABC_S[2] = lmix2ABCPhaseA(temperature);
+    L_ABC_S_[0] = lmix0ABCPhaseA(temperature);
+    L_ABC_S_[1] = lmix1ABCPhaseA(temperature);
+    L_ABC_S_[2] = lmix2ABCPhaseA(temperature);
 
-    const char interp_func_type = concInterpChar(d_conc_interp_func_type);
+    const char interp_func_type = concInterpChar(conc_interp_func_type_);
     const double hphi           = interp_func(phi, interp_func_type);
 
     double heta = 0.0;
     // std::cout<<"d_ceq_a="<<d_ceq_a<<endl;
-    // x[0] = ( d_ceq_l>=0. ) ? d_ceq_l : 0.5;
+    // x[0] = ( ceq_l_>=0. ) ? ceq_l_ : 0.5;
     // x[1] = ( d_ceq_a>=0. ) ? d_ceq_a : 0.5;
 
     // conc could be outside of [0.,1.] in a trial step
@@ -780,9 +777,9 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
     double c1 = conc1 >= 0. ? conc1 : 0.;
     c1        = c1 <= 1. ? c1 : 1.;
 
-    int ret = d_solver->ComputeConcentration(x, c0, c1, hphi, RTinv, d_L_AB_L,
-        d_L_AC_L, d_L_BC_L, d_L_AB_S, d_L_AC_S, d_L_BC_S, d_L_ABC_L, d_L_ABC_S,
-        d_fA, d_fB, d_fC);
+    int ret = solver_->ComputeConcentration(x, c0, c1, hphi, RTinv, L_AB_L_,
+        L_AC_L_, L_BC_L_, L_AB_S_, L_AC_S_, L_BC_S_, L_ABC_L_, L_ABC_S_, fA_,
+        fB_, fC_);
     if (ret == -1)
     {
         std::cerr << "ERROR, "
@@ -851,7 +848,7 @@ void CALPHADFreeEnergyFunctionsTernary::energyVsPhiAndC(
         std::clog << "Range for c0: " << c0min << " to " << c0max << std::endl;
         std::clog << "Range for c1: " << c1min << " to " << c1max << std::endl;
 
-        std::ofstream tfile(d_fenergy_diag_filename.data(), std::ios::out);
+        std::ofstream tfile(fenergy_diag_filename_.data(), std::ios::out);
 
         printEnergyVsPhiHeader(temperature, npts_phi, npts_c, npts_c, c0min,
             c0max, c1min, c1max, tfile);
@@ -930,7 +927,7 @@ double CALPHADFreeEnergyFunctionsTernary::fchem(const double phi,
 
     (void)eta;
 
-    const char interp_func_type = concInterpChar(d_conc_interp_func_type);
+    const char interp_func_type = concInterpChar(conc_interp_func_type_);
     const double hcphi          = interp_func(phi, interp_func_type);
 
     const double tol = 1.e-8;
@@ -955,7 +952,7 @@ double CALPHADFreeEnergyFunctionsTernary::fchem(const double phi,
         }
     }
 
-    const char interpf = energyInterpChar(d_energy_interp_func_type);
+    const char interpf = energyInterpChar(energy_interp_func_type_);
     const double hfphi = interp_func(phi, interpf);
 
     return (1.0 - hfphi) * fl + hfphi * fa;
@@ -969,8 +966,8 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
     const double dc = 1.0 / (double)(npts - 1);
 
     std::string filename1("Fl");
-    filename1 += d_g_species_phaseL[0].name();
-    filename1 += d_g_species_phaseL[2].name();
+    filename1 += g_species_phaseL_[0].name();
+    filename1 += g_species_phaseL_[2].name();
     filename1 += ".dat";
     std::ofstream os1(filename1.c_str(), std::ios::out);
     os1 << "#phi=0, c1=0, temperature=" << temperature << std::endl;
@@ -986,8 +983,8 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
     os1 << std::endl;
 
     std::string filename2("Fs");
-    filename2 += d_g_species_phaseA[0].name();
-    filename2 += d_g_species_phaseA[2].name();
+    filename2 += g_species_phaseA_[0].name();
+    filename2 += g_species_phaseA_[2].name();
     filename2 += ".dat";
     std::ofstream os2(filename2.c_str(), std::ios::out);
     os2 << "#phi=1, c1=0, temperature=" << temperature << std::endl;
@@ -1003,8 +1000,8 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
     os2 << std::endl;
 
     std::string filename3("Fl");
-    filename3 += d_g_species_phaseL[1].name();
-    filename3 += d_g_species_phaseL[2].name();
+    filename3 += g_species_phaseL_[1].name();
+    filename3 += g_species_phaseL_[2].name();
     filename3 += ".dat";
     std::ofstream os3(filename3.c_str(), std::ios::out);
     os3 << "#phi=0, c0=0, temperature=" << temperature << std::endl;
@@ -1020,8 +1017,8 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
     os3 << std::endl;
 
     std::string filename4("Fs");
-    filename4 += d_g_species_phaseA[1].name();
-    filename4 += d_g_species_phaseA[2].name();
+    filename4 += g_species_phaseA_[1].name();
+    filename4 += g_species_phaseA_[2].name();
     filename4 += ".dat";
     std::ofstream os4(filename4.c_str(), std::ios::out);
     os4 << "#phi=1, c0=0, temperature=" << temperature << std::endl;
@@ -1037,8 +1034,8 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
     os4 << std::endl;
 
     std::string filename5("Fl");
-    filename5 += d_g_species_phaseL[0].name();
-    filename5 += d_g_species_phaseL[1].name();
+    filename5 += g_species_phaseL_[0].name();
+    filename5 += g_species_phaseL_[1].name();
     filename5 += ".dat";
     std::ofstream os5(filename5.c_str(), std::ios::out);
     os5 << "#phi=0, temperature=" << temperature << std::endl;
@@ -1054,8 +1051,8 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
     os5 << std::endl;
 
     std::string filename6("Fs");
-    filename6 += d_g_species_phaseA[0].name();
-    filename6 += d_g_species_phaseA[1].name();
+    filename6 += g_species_phaseA_[0].name();
+    filename6 += g_species_phaseA_[1].name();
     filename6 += ".dat";
     std::ofstream os6(filename6.c_str(), std::ios::out);
     os6 << "#phi=1, temperature=" << temperature << std::endl;
