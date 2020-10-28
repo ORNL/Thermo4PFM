@@ -46,13 +46,13 @@ public:
     CALPHADEqConcentrationSolverBinary()
     {
         for (unsigned i = 0; i < 3; i++)
-            d_L0[i] = NAN;
+            d_L0[i] = std::nan("");
         for (unsigned i = 0; i < 3; i++)
-            d_L1[i] = NAN;
+            d_L1[i] = std::nan("");
         for (unsigned i = 0; i < 3; i++)
-            d_L2[i] = NAN;
+            d_L2[i] = std::nan("");
         for (unsigned i = 0; i < 3; i++)
-            d_L3[i] = NAN;
+            d_L3[i] = std::nan("");
     };
 
     virtual ~CALPHADEqConcentrationSolverBinary(){};
