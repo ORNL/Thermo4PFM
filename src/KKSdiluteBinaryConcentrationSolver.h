@@ -53,18 +53,18 @@ private:
     /*
      * number of coexisting phases
      */
-    int d_N;
+    int N_;
 
-    double d_fA;
-    double d_fB;
+    double fA_;
+    double fB_;
 
     void RHS(const double* const x, double* const fvec);
 
     void Jacobian(const double* const x, double** const fjac);
 
-    double d_c0;
-    double d_hphi;
-    double d_heta;
+    double c0_;
+    double hphi_;
+    double heta_;
 };
 
 #endif

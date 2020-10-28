@@ -44,7 +44,7 @@
 
 KKSdiluteBinaryConcentrationSolver::KKSdiluteBinaryConcentrationSolver()
 {
-    d_N = 2;
+    N_ = 2;
 }
 
 //=======================================================================
@@ -53,9 +53,9 @@ KKSdiluteBinaryConcentrationSolver::KKSdiluteBinaryConcentrationSolver()
 void KKSdiluteBinaryConcentrationSolver::RHS(
     const double* const c, double* const fvec)
 {
-    fvec[0] = -d_c0 + (1.0 - d_hphi) * c[0] + d_hphi * c[1];
+    fvec[0] = -c0_ + (1.0 - hphi_) * c[0] + hphi_ * c[1];
     fvec[1] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[1])
-              + xlogx_deriv(1. - c[1]) - (d_fA - d_fB);
+              + xlogx_deriv(1. - c[1]) - (fA_ - fB_);
 }
 
 //=======================================================================
@@ -63,8 +63,8 @@ void KKSdiluteBinaryConcentrationSolver::RHS(
 void KKSdiluteBinaryConcentrationSolver::Jacobian(
     const double* const c, double** const fjac)
 {
-    fjac[0][0] = (1.0 - d_hphi);
-    fjac[0][1] = d_hphi;
+    fjac[0][0] = (1.0 - hphi_);
+    fjac[0][1] = hphi_;
 
     fjac[1][0] = xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]);
     fjac[1][1] = -xlogx_deriv2(c[1]) - xlogx_deriv2(1. - c[1]);
@@ -83,11 +83,11 @@ int KKSdiluteBinaryConcentrationSolver::ComputeConcentration(double* const conc,
     (void)RTinv;
 
     // std::cout<<"KKSdiluteBinaryConcentrationSolver::ComputeConcentration()"<<endl;
-    d_c0   = c0;
-    d_hphi = hphi;
-    d_fA   = fA;
-    d_fB   = fB;
+    c0_   = c0;
+    hphi_ = hphi;
+    fA_   = fA;
+    fB_   = fB;
 
-    int ret = NewtonSolver::ComputeSolution(conc, d_N);
+    int ret = NewtonSolver::ComputeSolution(conc, N_);
     return ret;
 }
