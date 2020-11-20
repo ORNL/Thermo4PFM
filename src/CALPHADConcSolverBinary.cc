@@ -9,6 +9,8 @@
 static const double s_smallc     = 1.0e-8;
 static const double s_inv_smallc = 1. / s_smallc;
 
+namespace Thermo4PFM
+{
 //=======================================================================
 
 CALPHADConcentrationSolverBinary::CALPHADConcentrationSolverBinary(
@@ -127,4 +129,5 @@ int CALPHADConcentrationSolverBinary::ComputeConcentration(double* const conc,
         fB_[ii] = fB[ii];
 
     return NewtonSolver::ComputeSolution(conc, N_);
+}
 }

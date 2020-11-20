@@ -7,6 +7,9 @@ static const double inv_smallx        = 1. / smallx;
 static const double log_smallx        = log(smallx);
 static const double smallx_log_smallx = smallx * log_smallx;
 
+namespace Thermo4PFM
+{
+
 double xlogx(const double x)
 {
     if (x > smallx)
@@ -42,4 +45,5 @@ double xlogx_deriv2(const double x)
     {
         return inv_smallx;
     }
+}
 }

@@ -11,6 +11,9 @@
 
 namespace pt = boost::property_tree;
 
+namespace Thermo4PFM
+{
+
 void readLmixBinaryParameters(pt::ptree& Lmix_db, double Lmix[4][2])
 {
     {
@@ -1031,4 +1034,5 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
         os6 << conc[0] << "\t" << e << std::endl;
     }
     os6 << std::endl;
+}
 }

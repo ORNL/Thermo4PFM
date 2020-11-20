@@ -14,6 +14,9 @@
 #include <fstream>
 #include <iostream>
 
+namespace Thermo4PFM
+{
+
 class CALPHADFreeEnergyFunctionsTernary : public CALPHADFreeEnergyFunctions
 {
 public:
@@ -588,5 +591,5 @@ private:
     void computePhasesFreeEnergies(const double temperature, const double hphi,
         const double conc0, const double conc1, double& fl, double& fa);
 };
-
+}
 #endif

@@ -9,6 +9,9 @@
 
 namespace pt = boost::property_tree;
 
+namespace Thermo4PFM
+{
+
 KKSFreeEnergyFunctionDiluteBinary::KKSFreeEnergyFunctionDiluteBinary(
     pt::ptree& conc_db, const EnergyInterpolationType energy_interp_func_type,
     const ConcInterpolationType conc_interp_func_type)
@@ -432,4 +435,5 @@ void KKSFreeEnergyFunctionDiluteBinary::printEnergyVsComposition(
         double e = fchem(1., 0., &conc, temperature);
         os << conc << "\t" << e << std::endl;
     }
+}
 }

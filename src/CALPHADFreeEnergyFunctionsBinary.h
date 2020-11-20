@@ -20,6 +20,9 @@
 #define MAX_POL_T_INDEX 2
 #endif
 
+namespace Thermo4PFM
+{
+
 class CALPHADFreeEnergyFunctionsBinary : public CALPHADFreeEnergyFunctions
 {
 public:
@@ -209,5 +212,5 @@ private:
         const double heta, const double conc, double& fl, double& fa,
         double& fb);
 };
-
+}
 #endif

@@ -15,9 +15,10 @@ namespace pt = boost::property_tree;
 
 TEST_CASE("CALPHAD binary equilibrium", "[binary equilibrium]")
 {
-    EnergyInterpolationType energy_interp_func_type
-        = EnergyInterpolationType::PBG;
-    ConcInterpolationType conc_interp_func_type = ConcInterpolationType::PBG;
+    Thermo4PFM::EnergyInterpolationType energy_interp_func_type
+        = Thermo4PFM::EnergyInterpolationType::PBG;
+    Thermo4PFM::ConcInterpolationType conc_interp_func_type
+        = Thermo4PFM::ConcInterpolationType::PBG;
 
     double temperature = 1423.;
 
@@ -36,12 +37,12 @@ TEST_CASE("CALPHAD binary equilibrium", "[binary equilibrium]")
 
     bool with_third_phase = false;
 
-    CALPHADFreeEnergyFunctionsBinary cafe(calphad_db, newton_db,
+    Thermo4PFM::CALPHADFreeEnergyFunctionsBinary cafe(calphad_db, newton_db,
         energy_interp_func_type, conc_interp_func_type, with_third_phase);
 
     // choose pair of phases: phaseL, phaseA, phaseB
-    const PhaseIndex pi0 = PhaseIndex::phaseL;
-    const PhaseIndex pi1 = PhaseIndex::phaseA;
+    const Thermo4PFM::PhaseIndex pi0 = Thermo4PFM::PhaseIndex::phaseL;
+    const Thermo4PFM::PhaseIndex pi1 = Thermo4PFM::PhaseIndex::phaseA;
 
     // initial guesses
     double init_guess[2] = { 0.2, 0.1 };

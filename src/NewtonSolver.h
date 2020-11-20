@@ -1,6 +1,9 @@
 #ifndef included_NewtonSolver
 #define included_NewtonSolver
 
+namespace Thermo4PFM
+{
+
 class NewtonSolver
 {
 public:
@@ -44,5 +47,6 @@ private:
     double tolerance_;
     bool verbose_;
 };
+}
 
 #endif

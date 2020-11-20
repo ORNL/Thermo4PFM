@@ -12,9 +12,10 @@
 
 #include <iomanip>
 
-int NewtonSolver::s_N = 0;
+namespace Thermo4PFM
+{
 
-//=======================================================================
+int NewtonSolver::s_N = 0;
 
 NewtonSolver::NewtonSolver()
     : max_iters_(50), tolerance_(1.0e-8), verbose_(false){};
@@ -223,4 +224,5 @@ int NewtonSolver::ComputeSolution(double* const conc, const int N)
     }
 
     return iterations;
+}
 }

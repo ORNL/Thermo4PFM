@@ -1,7 +1,8 @@
 #include "math_utilities.h"
 #include <math.h>
 
-//-----------------------------------------------------------------------
+namespace Thermo4PFM
+{
 
 double Determinant3(double** const m)
 {
@@ -73,4 +74,5 @@ double DeterminantN(double** mat, const short n)
         }
         return d;
     }
+}
 }

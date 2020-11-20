@@ -1,6 +1,9 @@
 #ifndef InterpolationType_H
 #define InterpolationType_H
 
+namespace Thermo4PFM
+{
+
 enum class ConcInterpolationType
 {
     LINEAR,
@@ -19,5 +22,6 @@ enum class EnergyInterpolationType
 
 char energyInterpChar(EnergyInterpolationType interp_func_type);
 char concInterpChar(ConcInterpolationType interp_func_type);
+}
 
 #endif

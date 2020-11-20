@@ -5,7 +5,8 @@
 #include <cmath>
 #include <iostream>
 
-//=======================================================================
+namespace Thermo4PFM
+{
 
 CALPHADConcentrationSolverTernary::CALPHADConcentrationSolverTernary() {}
 
@@ -194,4 +195,5 @@ int CALPHADConcentrationSolverTernary::ComputeConcentration(double* const conc,
     int ret = NewtonSolver::ComputeSolution(conc, 4);
 
     return ret;
+}
 }

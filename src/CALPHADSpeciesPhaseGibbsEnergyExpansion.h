@@ -3,6 +3,9 @@
 
 #include <string>
 
+namespace Thermo4PFM
+{
+
 class CALPHADSpeciesPhaseGibbsEnergyExpansion
 {
 public:
@@ -26,5 +29,5 @@ private:
     const double dm1_;
     const double dm9_;
 };
-
+}
 #endif

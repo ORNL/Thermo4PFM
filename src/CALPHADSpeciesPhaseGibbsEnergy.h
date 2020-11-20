@@ -8,6 +8,9 @@
 #include <string>
 #include <vector>
 
+namespace Thermo4PFM
+{
+
 class CALPHADSpeciesPhaseGibbsEnergy
 {
 private:
@@ -27,5 +30,5 @@ public:
     void plotFofT(
         std::ostream& os, const double T0 = 300., const double T1 = 3000.);
 };
-
+}
 #endif

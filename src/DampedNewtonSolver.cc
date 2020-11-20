@@ -6,7 +6,8 @@
 
 #include <iomanip>
 
-//=======================================================================
+namespace Thermo4PFM
+{
 
 DampedNewtonSolver::DampedNewtonSolver() : NewtonSolver(), alpha_(1.){};
 
@@ -63,4 +64,5 @@ void DampedNewtonSolver::UpdateSolution(
     {
         c[ii] = c[ii] - alpha_ * del[ii];
     }
+}
 }

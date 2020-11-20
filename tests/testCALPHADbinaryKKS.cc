@@ -17,9 +17,10 @@ namespace pt = boost::property_tree;
 
 TEST_CASE("CALPHAD binary KKS", "[binary kks]")
 {
-    EnergyInterpolationType energy_interp_func_type
-        = EnergyInterpolationType::PBG;
-    ConcInterpolationType conc_interp_func_type = ConcInterpolationType::PBG;
+    Thermo4PFM::EnergyInterpolationType energy_interp_func_type
+        = Thermo4PFM::EnergyInterpolationType::PBG;
+    Thermo4PFM::ConcInterpolationType conc_interp_func_type
+        = Thermo4PFM::ConcInterpolationType::PBG;
 
     double temperature = 1450.;
 
@@ -36,7 +37,7 @@ TEST_CASE("CALPHAD binary KKS", "[binary kks]")
 
     boost::optional<pt::ptree&> newton_db;
 
-    CALPHADFreeEnergyFunctionsBinary cafe(calphad_db, newton_db,
+    Thermo4PFM::CALPHADFreeEnergyFunctionsBinary cafe(calphad_db, newton_db,
         energy_interp_func_type, conc_interp_func_type,
         false); // no 3rd phase
 
@@ -57,8 +58,8 @@ TEST_CASE("CALPHAD binary KKS", "[binary kks]")
     std::cout << "   cL = " << sol[0] << std::endl;
     std::cout << "   cS = " << sol[1] << std::endl;
 
-    const PhaseIndex pi0 = PhaseIndex::phaseL;
-    const PhaseIndex pi1 = PhaseIndex::phaseA;
+    const Thermo4PFM::PhaseIndex pi0 = Thermo4PFM::PhaseIndex::phaseL;
+    const Thermo4PFM::PhaseIndex pi1 = Thermo4PFM::PhaseIndex::phaseA;
 
     std::cout << "Verification:" << std::endl;
 

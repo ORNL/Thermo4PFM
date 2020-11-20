@@ -75,7 +75,7 @@ TEST_CASE("CALPHAD Gibbs energy", "[gibbs energy]")
     }
 
     // liquid
-    CALPHADSpeciesPhaseGibbsEnergy energyNiLiquid;
+    Thermo4PFM::CALPHADSpeciesPhaseGibbsEnergy energyNiLiquid;
     energyNiLiquid.initialize("NiL", liqB);
 
     double el = energyNiLiquid.fenergy(temperature);
@@ -83,7 +83,7 @@ TEST_CASE("CALPHAD Gibbs energy", "[gibbs energy]")
               << std::endl;
 
     // solid
-    CALPHADSpeciesPhaseGibbsEnergy energyNiSolid;
+    Thermo4PFM::CALPHADSpeciesPhaseGibbsEnergy energyNiSolid;
     energyNiSolid.initialize("NiS", solB);
 
     double es = energyNiSolid.fenergy(temperature);

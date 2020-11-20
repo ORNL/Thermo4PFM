@@ -3,6 +3,9 @@
 
 #include "DampedNewtonSolver.h"
 
+namespace Thermo4PFM
+{
+
 class KKSdiluteBinaryConcentrationSolver : public DampedNewtonSolver
 {
 public:
@@ -31,5 +34,6 @@ private:
     double hphi_;
     double heta_;
 };
+}
 
 #endif

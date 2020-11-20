@@ -15,9 +15,10 @@ namespace pt = boost::property_tree;
 
 TEST_CASE("KKS ternary", "[KKS ternary]")
 {
-    EnergyInterpolationType energy_interp_func_type
-        = EnergyInterpolationType::PBG;
-    ConcInterpolationType conc_interp_func_type = ConcInterpolationType::PBG;
+    Thermo4PFM::EnergyInterpolationType energy_interp_func_type
+        = Thermo4PFM::EnergyInterpolationType::PBG;
+    Thermo4PFM::ConcInterpolationType conc_interp_func_type
+        = Thermo4PFM::ConcInterpolationType::PBG;
 
     double temperature = 2923.;
 
@@ -33,7 +34,7 @@ TEST_CASE("KKS ternary", "[KKS ternary]")
 
     boost::optional<pt::ptree&> newton_db;
 
-    CALPHADFreeEnergyFunctionsTernary cafe(
+    Thermo4PFM::CALPHADFreeEnergyFunctionsTernary cafe(
         calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
 
     // Mo energy at melting point
@@ -41,11 +42,11 @@ TEST_CASE("KKS ternary", "[KKS ternary]")
         double temperature0 = 2896.;
         double conc[2]      = { 1., 0. };
 
-        double el
-            = cafe.computeFreeEnergy(temperature0, conc, PhaseIndex::phaseL);
+        double el = cafe.computeFreeEnergy(
+            temperature0, conc, Thermo4PFM::PhaseIndex::phaseL);
         std::cout << "Mo, Energy in liquid phase: " << el << std::endl;
-        double es
-            = cafe.computeFreeEnergy(temperature0, conc, PhaseIndex::phaseA);
+        double es = cafe.computeFreeEnergy(
+            temperature0, conc, Thermo4PFM::PhaseIndex::phaseA);
         std::cout << "Mo, Energy in solid phase: " << es << std::endl;
 
         REQUIRE(el == Approx(es).margin(1.e-1));
@@ -56,11 +57,11 @@ TEST_CASE("KKS ternary", "[KKS ternary]")
         double temperature0 = 3290.;
         double conc[2]      = { 0., 0. };
 
-        double el
-            = cafe.computeFreeEnergy(temperature0, conc, PhaseIndex::phaseL);
+        double el = cafe.computeFreeEnergy(
+            temperature0, conc, Thermo4PFM::PhaseIndex::phaseL);
         std::cout << "Ta, Energy in liquid phase: " << el << std::endl;
-        double es
-            = cafe.computeFreeEnergy(temperature0, conc, PhaseIndex::phaseA);
+        double es = cafe.computeFreeEnergy(
+            temperature0, conc, Thermo4PFM::PhaseIndex::phaseA);
         std::cout << "Ta, Energy in solid phase: " << es << std::endl;
 
         REQUIRE(el == Approx(es).margin(1.e-1));
@@ -81,8 +82,8 @@ TEST_CASE("KKS ternary", "[KKS ternary]")
     std::cout << "   cL = " << sol[0] << ", " << sol[1] << std::endl;
     std::cout << "   cS = " << sol[2] << ", " << sol[3] << std::endl;
 
-    const PhaseIndex pi0 = PhaseIndex::phaseL;
-    const PhaseIndex pi1 = PhaseIndex::phaseA;
+    const Thermo4PFM::PhaseIndex pi0 = Thermo4PFM::PhaseIndex::phaseL;
+    const Thermo4PFM::PhaseIndex pi1 = Thermo4PFM::PhaseIndex::phaseA;
 
     std::cout << "Verification:" << std::endl;
 

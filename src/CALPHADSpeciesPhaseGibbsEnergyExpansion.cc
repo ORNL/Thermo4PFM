@@ -3,6 +3,9 @@
 #include <iostream>
 #include <math.h>
 
+namespace Thermo4PFM
+{
+
 CALPHADSpeciesPhaseGibbsEnergyExpansion::
     CALPHADSpeciesPhaseGibbsEnergyExpansion(const double a, const double b,
         const double c, const double d2, const double d3, const double d4,
@@ -37,4 +40,5 @@ double CALPHADSpeciesPhaseGibbsEnergyExpansion::value(
            + d2_ * t2 + d3_ * t2 * temperature + d4_ * t4
            + d7_ * t4 * t2 * temperature + dm1_ / temperature
            + dm9_ / (t4 * t4 * temperature);
+}
 }

@@ -14,9 +14,10 @@ namespace pt = boost::property_tree;
 
 TEST_CASE("Dilute binary equilibrium", "[dilute binary equilibrium]")
 {
-    EnergyInterpolationType energy_interp_func_type
-        = EnergyInterpolationType::PBG;
-    ConcInterpolationType conc_interp_func_type = ConcInterpolationType::LINEAR;
+    Thermo4PFM::EnergyInterpolationType energy_interp_func_type
+        = Thermo4PFM::EnergyInterpolationType::PBG;
+    Thermo4PFM::ConcInterpolationType conc_interp_func_type
+        = Thermo4PFM::ConcInterpolationType::LINEAR;
 
     // read dilute alloy informaton
     pt::ptree conc_db;
@@ -32,13 +33,13 @@ TEST_CASE("Dilute binary equilibrium", "[dilute binary equilibrium]")
 
     double temperature = 1710.;
 
-    KKSFreeEnergyFunctionDiluteBinary cafe(
+    Thermo4PFM::KKSFreeEnergyFunctionDiluteBinary cafe(
         conc_db, energy_interp_func_type, conc_interp_func_type);
 
     const double tol = 1.e-5;
 
-    const PhaseIndex pi0 = PhaseIndex::phaseL;
-    const PhaseIndex pi1 = PhaseIndex::phaseA;
+    const Thermo4PFM::PhaseIndex pi0 = Thermo4PFM::PhaseIndex::phaseL;
+    const Thermo4PFM::PhaseIndex pi1 = Thermo4PFM::PhaseIndex::phaseA;
 
     std::cout << "-------------------------------" << std::endl;
     std::cout << "Temperature = " << temperature << std::endl;

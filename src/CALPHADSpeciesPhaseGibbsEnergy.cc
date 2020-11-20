@@ -19,6 +19,9 @@
 
 namespace pt = boost::property_tree;
 
+namespace Thermo4PFM
+{
+
 void read_optional(pt::ptree& db, const std::string key,
     std::vector<double>& coeffs, const int nintervals)
 {
@@ -153,4 +156,5 @@ void CALPHADSpeciesPhaseGibbsEnergy::plotFofT(
         os << fenergy(testT) << std::endl;
     }
     os << std::endl;
+}
 }

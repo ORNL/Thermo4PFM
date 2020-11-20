@@ -5,7 +5,8 @@
 #include <cmath>
 #include <iostream>
 
-//=======================================================================
+namespace Thermo4PFM
+{
 
 CALPHADEqPhaseConcentrationSolverTernary::
     CALPHADEqPhaseConcentrationSolverTernary(const double c0, const double c1)
@@ -290,4 +291,5 @@ int CALPHADEqPhaseConcentrationSolverTernary::ComputeConcentration(
     double* const x)
 {
     return DampedNewtonSolver::ComputeSolution(x, 5);
+}
 }

@@ -1,5 +1,8 @@
 #include "InterpolationType.h"
 
+namespace Thermo4PFM
+{
+
 char concInterpChar(ConcInterpolationType interp_func_type)
 {
     switch (interp_func_type)
@@ -28,4 +31,5 @@ char energyInterpChar(EnergyInterpolationType interp_func_type)
         default:
             return '0';
     }
+}
 }

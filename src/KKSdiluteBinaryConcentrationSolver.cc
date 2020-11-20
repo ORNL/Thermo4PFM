@@ -5,7 +5,8 @@
 #include <cmath>
 #include <iostream>
 
-//=======================================================================
+namespace Thermo4PFM
+{
 
 KKSdiluteBinaryConcentrationSolver::KKSdiluteBinaryConcentrationSolver()
 {
@@ -55,4 +56,5 @@ int KKSdiluteBinaryConcentrationSolver::ComputeConcentration(double* const conc,
 
     int ret = NewtonSolver::ComputeSolution(conc, N_);
     return ret;
+}
 }

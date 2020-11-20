@@ -10,6 +10,9 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
+namespace Thermo4PFM
+{
+
 class KKSFreeEnergyFunctionDiluteBinary : public FreeEnergyFunctions
 {
 public:
@@ -82,5 +85,5 @@ private:
     void computePhasesFreeEnergies(const double temperature, const double hphi,
         const double conc, double& fl, double& fa);
 };
-
+}
 #endif

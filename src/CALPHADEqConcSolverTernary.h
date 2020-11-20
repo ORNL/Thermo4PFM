@@ -3,6 +3,9 @@
 
 #include "DampedNewtonSolver.h"
 
+namespace Thermo4PFM
+{
+
 class CALPHADEqConcentrationSolverTernary : public DampedNewtonSolver
 {
 public:
@@ -45,5 +48,5 @@ protected:
 
     double L_ABC_S_[3];
 };
-
+}
 #endif

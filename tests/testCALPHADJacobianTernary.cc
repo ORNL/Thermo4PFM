@@ -47,7 +47,7 @@ TEST_CASE("CALPHAD Jacobian ternary", "[CALPHAD Jacobian ternary]")
     double x[5] = { 0.1, 0.2, 0.3, 0.4, 0.5 };
 
     {
-        CALPHADEqPhaseConcentrationSolverTernary solver(cA, cB);
+        Thermo4PFM::CALPHADEqPhaseConcentrationSolverTernary solver(cA, cB);
         solver.setup(RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S, L_BC_S,
             L_ABC_L, L_ABC_S, fA, fB, fC);
 
@@ -85,7 +85,7 @@ TEST_CASE("CALPHAD Jacobian ternary", "[CALPHAD Jacobian ternary]")
     std::cout << "Test CALPHADConcentrationSolverTernary..." << std::endl;
 
     {
-        CALPHADConcentrationSolverTernary solver;
+        Thermo4PFM::CALPHADConcentrationSolverTernary solver;
         solver.setup(cA, cB, 0.5, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S,
             L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
 

@@ -3,6 +3,9 @@
 
 #include "DampedNewtonSolver.h"
 
+namespace Thermo4PFM
+{
+
 class CALPHADConcentrationSolverBinary : public DampedNewtonSolver
 {
 public:
@@ -45,5 +48,5 @@ private:
     double heta_;
     bool with_third_phase_;
 };
-
+}
 #endif

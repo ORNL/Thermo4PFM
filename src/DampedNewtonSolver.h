@@ -3,6 +3,9 @@
 
 #include "NewtonSolver.h"
 
+namespace Thermo4PFM
+{
+
 class DampedNewtonSolver : public NewtonSolver
 {
 public:
@@ -19,5 +22,5 @@ private:
     // damping factor
     double alpha_;
 };
-
+}
 #endif

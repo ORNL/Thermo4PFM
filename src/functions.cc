@@ -1,6 +1,9 @@
 #include <algorithm>
 #include <iostream>
 
+namespace Thermo4PFM
+{
+
 double well_func(const double phi)
 {
     return 16. * phi * phi * (1. - phi) * (1. - phi);
@@ -37,4 +40,5 @@ double interp_func(const double phi, const char type)
             return 0.;
         }
     }
+}
 }

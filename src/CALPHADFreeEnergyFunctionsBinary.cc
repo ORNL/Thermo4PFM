@@ -11,6 +11,9 @@
 
 namespace pt = boost::property_tree;
 
+namespace Thermo4PFM
+{
+
 #ifdef HAVE_TLOT
 void readLcoefficients(pt::ptree& db, double (&LmixPhase)[4][3])
 {
@@ -783,4 +786,5 @@ void CALPHADFreeEnergyFunctionsBinary::printEnergyVsComposition(
             os << conc << "\t" << e << std::endl;
         }
     }
+}
 }

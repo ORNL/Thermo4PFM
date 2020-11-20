@@ -6,6 +6,9 @@
 
 #include <vector>
 
+namespace Thermo4PFM
+{
+
 class CALPHADFreeEnergyFunctions : public FreeEnergyFunctions
 {
 public:
@@ -22,5 +25,6 @@ public:
         std::vector<double>& d2fdc2)
         = 0;
 };
+}
 
 #endif

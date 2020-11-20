@@ -5,6 +5,9 @@
 #include <cmath>
 #include <stddef.h>
 
+namespace Thermo4PFM
+{
+
 double CALPHADcomputeFMixBinary(const double l0, const double l1,
     const double l2, const double l3, const double conc)
 {
@@ -479,4 +482,5 @@ void CALPHADcomputeFIdealMix_derivTernary(
     deriv[0] = rt * (xlogx_deriv(cA) - xlogx_deriv(1.0 - cA - cB));
 
     deriv[1] = rt * (xlogx_deriv(cB) - xlogx_deriv(1.0 - cA - cB));
+}
 }

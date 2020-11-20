@@ -14,9 +14,10 @@ namespace pt = boost::property_tree;
 
 TEST_CASE("Dilute binary KKS", "[dilute binary kks]")
 {
-    EnergyInterpolationType energy_interp_func_type
-        = EnergyInterpolationType::PBG;
-    ConcInterpolationType conc_interp_func_type = ConcInterpolationType::LINEAR;
+    Thermo4PFM::EnergyInterpolationType energy_interp_func_type
+        = Thermo4PFM::EnergyInterpolationType::PBG;
+    Thermo4PFM::ConcInterpolationType conc_interp_func_type
+        = Thermo4PFM::ConcInterpolationType::LINEAR;
 
     // read dilute alloy informaton
     pt::ptree conc_db;
@@ -30,11 +31,11 @@ TEST_CASE("Dilute binary KKS", "[dilute binary kks]")
     }
     pt::write_json(std::clog, conc_db);
 
-    KKSFreeEnergyFunctionDiluteBinary cafe(
+    Thermo4PFM::KKSFreeEnergyFunctionDiluteBinary cafe(
         conc_db, energy_interp_func_type, conc_interp_func_type);
 
-    const PhaseIndex pi0 = PhaseIndex::phaseL;
-    const PhaseIndex pi1 = PhaseIndex::phaseA;
+    const Thermo4PFM::PhaseIndex pi0 = Thermo4PFM::PhaseIndex::phaseL;
+    const Thermo4PFM::PhaseIndex pi1 = Thermo4PFM::PhaseIndex::phaseA;
 
     // initial guesses
     double c_init0 = 0.5;

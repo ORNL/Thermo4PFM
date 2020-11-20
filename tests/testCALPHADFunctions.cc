@@ -28,12 +28,14 @@ TEST_CASE("CALPHAD functions", "[calphad functions]")
         double l3 = -2.5;
         double c  = 0.33;
 
-        double f0 = CALPHADcomputeFMixBinary(l0, l1, l2, l3, c);
-        double f1 = CALPHADcomputeFMixBinary(l0, l1, l2, l3, c + epsilon);
+        double f0 = Thermo4PFM::CALPHADcomputeFMixBinary(l0, l1, l2, l3, c);
+        double f1
+            = Thermo4PFM::CALPHADcomputeFMixBinary(l0, l1, l2, l3, c + epsilon);
 
         double fd = (f1 - f0) / epsilon;
         std::cout << "Numerical derivative   = " << fd << std::endl;
-        double ad = CALPHADcomputeFMix_derivBinary(l0, l1, l2, l3, c);
+        double ad
+            = Thermo4PFM::CALPHADcomputeFMix_derivBinary(l0, l1, l2, l3, c);
         std::cout << "Analytical derivative = " << ad << std::endl;
 
         REQUIRE(fd == Approx(ad).epsilon(tol));
@@ -45,11 +47,13 @@ TEST_CASE("CALPHAD functions", "[calphad functions]")
         double rt = 10.;
         double cA = 0.33;
         double cB = 0.21;
-        double f0 = CALPHADcomputeFIdealMixTernary(rt, cA, cB);
-        double f1 = CALPHADcomputeFIdealMixTernary(rt, cA + epsilon, cB);
-        double f2 = CALPHADcomputeFIdealMixTernary(rt, cA, cB + epsilon);
+        double f0 = Thermo4PFM::CALPHADcomputeFIdealMixTernary(rt, cA, cB);
+        double f1
+            = Thermo4PFM::CALPHADcomputeFIdealMixTernary(rt, cA + epsilon, cB);
+        double f2
+            = Thermo4PFM::CALPHADcomputeFIdealMixTernary(rt, cA, cB + epsilon);
         double deriv[2];
-        CALPHADcomputeFIdealMix_derivTernary(rt, cA, cB, deriv);
+        Thermo4PFM::CALPHADcomputeFIdealMix_derivTernary(rt, cA, cB, deriv);
         std::cout << "Analytical derivative = " << deriv[0] << "," << deriv[1]
                   << std::endl;
 
@@ -73,14 +77,16 @@ TEST_CASE("CALPHAD functions", "[calphad functions]")
         double cA = 0.33;
         double cB = 0.21;
 
-        double f0 = CALPHADcomputeFMixTernary(lAB, lAC, lBC, lABC, cA, cB);
-        double f1
-            = CALPHADcomputeFMixTernary(lAB, lAC, lBC, lABC, cA + epsilon, cB);
-        double f2
-            = CALPHADcomputeFMixTernary(lAB, lAC, lBC, lABC, cA, cB + epsilon);
+        double f0 = Thermo4PFM::CALPHADcomputeFMixTernary(
+            lAB, lAC, lBC, lABC, cA, cB);
+        double f1 = Thermo4PFM::CALPHADcomputeFMixTernary(
+            lAB, lAC, lBC, lABC, cA + epsilon, cB);
+        double f2 = Thermo4PFM::CALPHADcomputeFMixTernary(
+            lAB, lAC, lBC, lABC, cA, cB + epsilon);
 
         double deriv[2];
-        CALPHADcomputeFMix_derivTernary(lAB, lAC, lBC, lABC, cA, cB, deriv);
+        Thermo4PFM::CALPHADcomputeFMix_derivTernary(
+            lAB, lAC, lBC, lABC, cA, cB, deriv);
         std::cout << "Analytical derivative = " << deriv[0] << "," << deriv[1]
                   << std::endl;
 
@@ -95,13 +101,14 @@ TEST_CASE("CALPHAD functions", "[calphad functions]")
         REQUIRE(fd2 == Approx(deriv[1]).epsilon(tol));
 
         double deriv2[4];
-        CALPHADcomputeFMix_deriv2Ternary(lAB, lAC, lBC, lABC, cA, cB, deriv2);
+        Thermo4PFM::CALPHADcomputeFMix_deriv2Ternary(
+            lAB, lAC, lBC, lABC, cA, cB, deriv2);
 
         double fderiv0[2];
-        CALPHADcomputeFMix_derivTernary(
+        Thermo4PFM::CALPHADcomputeFMix_derivTernary(
             lAB, lAC, lBC, lABC, cA + epsilon, cB, fderiv0);
         double fderiv1[2];
-        CALPHADcomputeFMix_derivTernary(
+        Thermo4PFM::CALPHADcomputeFMix_derivTernary(
             lAB, lAC, lBC, lABC, cA, cB + epsilon, fderiv1);
 
         double fd = (fderiv0[0] - deriv[0]) / epsilon;

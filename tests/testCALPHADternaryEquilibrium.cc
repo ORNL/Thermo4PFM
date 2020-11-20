@@ -16,9 +16,10 @@ namespace pt = boost::property_tree;
 
 TEST_CASE("CALPHADternaryEquilibrium", "[CALPHADternaryEquilibrium]")
 {
-    EnergyInterpolationType energy_interp_func_type
-        = EnergyInterpolationType::PBG;
-    ConcInterpolationType conc_interp_func_type = ConcInterpolationType::PBG;
+    Thermo4PFM::EnergyInterpolationType energy_interp_func_type
+        = Thermo4PFM::EnergyInterpolationType::PBG;
+    Thermo4PFM::ConcInterpolationType conc_interp_func_type
+        = Thermo4PFM::ConcInterpolationType::PBG;
 
     pt::ptree calphad_db;
     try
@@ -32,7 +33,7 @@ TEST_CASE("CALPHADternaryEquilibrium", "[CALPHADternaryEquilibrium]")
 
     boost::optional<pt::ptree&> newton_db;
 
-    CALPHADFreeEnergyFunctionsTernary cafe(
+    Thermo4PFM::CALPHADFreeEnergyFunctionsTernary cafe(
         calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
 
     double temperature[2] = { 2923., 3073. };
@@ -49,8 +50,8 @@ TEST_CASE("CALPHADternaryEquilibrium", "[CALPHADternaryEquilibrium]")
     double expected_fs[2] = { 0.959621, 0.157429 };
 
     // choose pair of phases: phaseL, phaseA
-    const PhaseIndex pi0 = PhaseIndex::phaseL;
-    const PhaseIndex pi1 = PhaseIndex::phaseA;
+    const Thermo4PFM::PhaseIndex pi0 = Thermo4PFM::PhaseIndex::phaseL;
+    const Thermo4PFM::PhaseIndex pi1 = Thermo4PFM::PhaseIndex::phaseA;
 
     int maxits = 20;
 

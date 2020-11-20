@@ -6,6 +6,9 @@
 #include <string>
 #include <vector>
 
+namespace Thermo4PFM
+{
+
 class FreeEnergyFunctions
 {
 public:
@@ -41,5 +44,6 @@ public:
         return false;
     };
 };
+}
 
 #endif

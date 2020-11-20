@@ -5,7 +5,8 @@
 #include <cmath>
 #include <iostream>
 
-//=======================================================================
+namespace Thermo4PFM
+{
 
 void CALPHADEqConcentrationSolverBinary::RHS(
     const double* const c, // composition of species A in various phases
@@ -90,4 +91,5 @@ int CALPHADEqConcentrationSolverBinary::ComputeConcentration(double* const conc,
     }
 
     return DampedNewtonSolver::ComputeSolution(conc, 2);
+}
 }
