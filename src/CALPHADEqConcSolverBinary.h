@@ -11,13 +11,13 @@ public:
     CALPHADEqConcentrationSolverBinary()
     {
         for (unsigned i = 0; i < 3; i++)
-            d_L0[i] = std::nan("");
+            L0_[i] = std::nan("");
         for (unsigned i = 0; i < 3; i++)
-            d_L1[i] = std::nan("");
+            L1_[i] = std::nan("");
         for (unsigned i = 0; i < 3; i++)
-            d_L2[i] = std::nan("");
+            L2_[i] = std::nan("");
         for (unsigned i = 0; i < 3; i++)
-            d_L3[i] = std::nan("");
+            L3_[i] = std::nan("");
     };
 
     virtual ~CALPHADEqConcentrationSolverBinary(){};
@@ -31,21 +31,21 @@ protected:
 
     virtual void Jacobian(const double* const x, double** const fjac);
 
-    double d_RTinv;
-    double d_RT;
-    double d_c0;
-    double d_hphi;
-    double d_heta;
+    double RTinv_;
+    double RT_;
+    double c0_;
+    double hphi_;
+    double heta_;
 
     // energies of 2 species, in three phase each
-    double d_fA[3];
-    double d_fB[3];
+    double fA_[3];
+    double fB_[3];
 
     // L coefficients for 3 possible phases (L, A and B)
-    double d_L0[3];
-    double d_L1[3];
-    double d_L2[3];
-    double d_L3[3];
+    double L0_[3];
+    double L1_[3];
+    double L2_[3];
+    double L3_[3];
 };
 
 #endif

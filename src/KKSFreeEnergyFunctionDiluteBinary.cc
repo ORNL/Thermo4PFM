@@ -12,17 +12,17 @@ namespace pt = boost::property_tree;
 KKSFreeEnergyFunctionDiluteBinary::KKSFreeEnergyFunctionDiluteBinary(
     pt::ptree& conc_db, const EnergyInterpolationType energy_interp_func_type,
     const ConcInterpolationType conc_interp_func_type)
-    : d_energy_interp_func_type(energy_interp_func_type),
-      d_conc_interp_func_type(conc_interp_func_type)
+    : energy_interp_func_type_(energy_interp_func_type),
+      conc_interp_func_type_(conc_interp_func_type)
 {
-    d_fenergy_diag_filename = "energy.vtk";
+    fenergy_diag_filename_ = "energy.vtk";
 
-    d_ceq_l = -1;
-    d_ceq_a = -1;
+    ceq_l_ = -1;
+    ceq_a_ = -1;
 
     readParameters(conc_db);
 
-    d_fA = log(1. / d_ke);
+    fA_ = log(1. / ke_);
 
     boost::optional<pt::ptree&> newton_db;
 
@@ -36,7 +36,7 @@ void KKSFreeEnergyFunctionDiluteBinary::setupSolver(
 {
     std::cout << "KKSFreeEnergyFunctionDiluteBinary::setupSolver()..."
               << std::endl;
-    d_solver = new KKSdiluteBinaryConcentrationSolver();
+    solver_ = new KKSdiluteBinaryConcentrationSolver();
 
     if (newton_db) readNewtonparameters(newton_db.get());
 }
@@ -51,23 +51,23 @@ void KKSFreeEnergyFunctionDiluteBinary::readNewtonparameters(
     int maxits         = newton_db.get<int>("max_its", 20);
     const bool verbose = newton_db.get<bool>("verbose", false);
 
-    d_solver->SetTolerance(tol);
-    d_solver->SetMaxIterations(maxits);
-    d_solver->SetDamping(alpha);
-    d_solver->SetVerbose(verbose);
+    solver_->SetTolerance(tol);
+    solver_->SetMaxIterations(maxits);
+    solver_->SetDamping(alpha);
+    solver_->SetVerbose(verbose);
 }
 
 //=======================================================================
 
 void KKSFreeEnergyFunctionDiluteBinary::readParameters(pt::ptree& conc_db)
 {
-    d_me = conc_db.get<double>("liquidus_slope");
-    d_Tm = conc_db.get<double>("meltingT");
-    d_ke = conc_db.get<double>("keq");
+    me_ = conc_db.get<double>("liquidus_slope");
+    Tm_ = conc_db.get<double>("meltingT");
+    ke_ = conc_db.get<double>("keq");
 
-    assert(d_me < 0.);
-    assert(d_Tm > 0.);
-    assert(d_ke <= 1.);
+    assert(me_ < 0.);
+    assert(Tm_ > 0.);
+    assert(ke_ <= 1.);
 }
 
 //-----------------------------------------------------------------------
@@ -84,7 +84,7 @@ double KKSFreeEnergyFunctionDiluteBinary::computeFreeEnergy(
         case PhaseIndex::phaseL:
             break;
         case PhaseIndex::phaseA:
-            fe += conc[0] * d_fA + (1. - conc[0]) * d_fB;
+            fe += conc[0] * fA_ + (1. - conc[0]) * fB_;
             break;
         default:
             std::cout << "KKSFreeEnergyFunctionDiluteBinary::"
@@ -121,7 +121,7 @@ void KKSFreeEnergyFunctionDiluteBinary::computeDerivFreeEnergy(
             break;
         case PhaseIndex::phaseA:
             setupFB(temperature);
-            mu += (d_fA - d_fB);
+            mu += (fA_ - fB_);
             break;
         default:
             std::cout << "KKSFreeEnergyFunctionDiluteBinary::"
@@ -152,17 +152,17 @@ void KKSFreeEnergyFunctionDiluteBinary::computeSecondDerivativeFreeEnergy(
 
 void KKSFreeEnergyFunctionDiluteBinary::setupFB(const double temperature)
 {
-    assert(d_ke > 0.);
-    assert(temperature < d_Tm);
-    assert(d_me < 0.);
+    assert(ke_ > 0.);
+    assert(temperature < Tm_);
+    assert(me_ < 0.);
 
-    const double cLe = (temperature - d_Tm) / d_me;
-    const double cSe = cLe * d_ke;
+    const double cLe = (temperature - Tm_) / me_;
+    const double cSe = cLe * ke_;
 
     assert(cLe < 1.);
     assert(cSe < 1.);
 
-    d_fB = std::log(1. - cLe) - std::log(1. - cSe);
+    fB_ = std::log(1. - cLe) - std::log(1. - cSe);
 }
 
 //=======================================================================
@@ -177,11 +177,11 @@ bool KKSFreeEnergyFunctionDiluteBinary::computeCeqT(const double temperature,
                   << std::endl;
     assert(temperature > 0.);
 
-    d_ceq_l = (temperature - d_Tm) / d_me;
-    d_ceq_a = d_ceq_l * d_ke;
+    ceq_l_ = (temperature - Tm_) / me_;
+    ceq_a_ = ceq_l_ * ke_;
 
-    ceq[0] = d_ceq_l;
-    ceq[1] = d_ceq_a;
+    ceq[0] = ceq_l_;
+    ceq[1] = ceq_a_;
 
     return true;
 }
@@ -195,13 +195,13 @@ void KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies(
     // std::cout<<"KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies()"<<endl;
 
     double c[2] = { conc, conc };
-    if (d_ceq_l >= 0.) c[0] = d_ceq_l;
-    if (d_ceq_a >= 0.) c[1] = d_ceq_a;
+    if (ceq_l_ >= 0.) c[0] = ceq_l_;
+    if (ceq_a_ >= 0.) c[1] = ceq_a_;
 
     setupFB(temperature);
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
-    int ret = d_solver->ComputeConcentration(c, conc, hphi, RTinv, d_fA, d_fB);
+    int ret = solver_->ComputeConcentration(c, conc, hphi, RTinv, fA_, fB_);
 
     if (ret < 0)
     {
@@ -234,7 +234,7 @@ int KKSFreeEnergyFunctionDiluteBinary::computePhaseConcentrations(
 
     const double conc0 = conc[0];
 
-    const char interp_func_type = concInterpChar(d_conc_interp_func_type);
+    const char interp_func_type = concInterpChar(conc_interp_func_type_);
     const double hphi           = interp_func(phi, interp_func_type);
 
     setupFB(temperature);
@@ -242,9 +242,9 @@ int KKSFreeEnergyFunctionDiluteBinary::computePhaseConcentrations(
     // conc could be outside of [0.,1.] in a trial step
     double c0 = conc[0] >= 0. ? conc[0] : 0.;
     c0        = c0 <= 1. ? c0 : 1.;
-    int ret   = d_solver->ComputeConcentration(x, c0, hphi,
+    int ret   = solver_->ComputeConcentration(x, c0, hphi,
         -1., // unused parameter
-        d_fA, d_fB);
+        fA_, fB_);
     if (ret == -1)
     {
         std::cerr << "ERROR, "
@@ -294,7 +294,7 @@ void KKSFreeEnergyFunctionDiluteBinary::energyVsPhiAndC(
         cmax          = std::max(cmax, cmin + dc);
         double deltac = (cmax - cmin) / (npts_c - 1);
 
-        std::ofstream tfile(d_fenergy_diag_filename.data(), std::ios::out);
+        std::ofstream tfile(fenergy_diag_filename_.data(), std::ios::out);
 
         printEnergyVsPhiHeader(
             temperature, npts_phi, npts_c, cmin, cmax, slopec, tfile);
@@ -376,7 +376,7 @@ double KKSFreeEnergyFunctionDiluteBinary::fchem(const double phi,
 {
     (void)eta;
 
-    const char interp_func_type = concInterpChar(d_conc_interp_func_type);
+    const char interp_func_type = concInterpChar(conc_interp_func_type_);
     const double hcphi          = interp_func(phi, interp_func_type);
 
     const double tol = 1.e-8;
@@ -398,7 +398,7 @@ double KKSFreeEnergyFunctionDiluteBinary::fchem(const double phi,
         }
     }
 
-    const char interpf = energyInterpChar(d_energy_interp_func_type);
+    const char interpf = energyInterpChar(energy_interp_func_type_);
     const double hfphi = interp_func(phi, interpf);
     double e           = (1.0 - hfphi) * fl + hfphi * fa;
 

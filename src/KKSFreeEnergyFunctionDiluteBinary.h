@@ -17,7 +17,7 @@ public:
         const EnergyInterpolationType energy_interp_func_type,
         const ConcInterpolationType conc_interp_func_type);
 
-    ~KKSFreeEnergyFunctionDiluteBinary() { delete d_solver; };
+    ~KKSFreeEnergyFunctionDiluteBinary() { delete solver_; };
 
     virtual double computeFreeEnergy(const double temperature,
         const double* const conc, const PhaseIndex pi, const bool gp = false);
@@ -54,26 +54,26 @@ public:
         std::ostream& os);
 
 private:
-    KKSdiluteBinaryConcentrationSolver* d_solver;
+    KKSdiluteBinaryConcentrationSolver* solver_;
 
-    double d_ceq_l;
-    double d_ceq_a;
+    double ceq_l_;
+    double ceq_a_;
 
-    EnergyInterpolationType d_energy_interp_func_type;
-    ConcInterpolationType d_conc_interp_func_type;
+    EnergyInterpolationType energy_interp_func_type_;
+    ConcInterpolationType conc_interp_func_type_;
 
     void readNewtonparameters(boost::property_tree::ptree& newton_db);
 
     void setupFB(const double temperature);
 
-    std::string d_fenergy_diag_filename;
+    std::string fenergy_diag_filename_;
 
-    double d_fA;
-    double d_fB;
+    double fA_;
+    double fB_;
 
-    double d_Tm;
-    double d_me;
-    double d_ke;
+    double Tm_;
+    double me_;
+    double ke_;
 
     void readParameters(boost::property_tree::ptree& conc_db);
 

@@ -32,26 +32,26 @@ public:
 
 private:
     // energies of 3 species, in two phase each
-    double d_fA[2];
-    double d_fB[2];
-    double d_fC[2];
+    double fA_[2];
+    double fB_[2];
+    double fC_[2];
 
     // L coefficients for phase L
-    double d_L_AB_L[4];
-    double d_L_AC_L[4];
-    double d_L_BC_L[4];
-    double d_L_ABC_L[3];
+    double L_AB_L_[4];
+    double L_AC_L_[4];
+    double L_BC_L_[4];
+    double L_ABC_L_[3];
 
     // L coefficients for phase S
-    double d_L_AB_S[4];
-    double d_L_AC_S[4];
-    double d_L_BC_S[4];
-    double d_L_ABC_S[3];
+    double L_AB_S_[4];
+    double L_AC_S_[4];
+    double L_BC_S_[4];
+    double L_ABC_S_[3];
 
-    double d_c0[2];
-    double d_hphi;
+    double c0_[2];
+    double hphi_;
 
-    double d_RT;
+    double RT_;
 };
 
 #endif

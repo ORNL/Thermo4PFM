@@ -31,13 +31,13 @@ public:
 
     ~CALPHADFreeEnergyFunctionsBinary()
     {
-        delete[] d_fA;
-        delete[] d_fB;
-        delete[] d_L0;
-        delete[] d_L1;
-        delete[] d_L2;
-        delete[] d_L3;
-        delete d_solver;
+        delete[] fA_;
+        delete[] fB_;
+        delete[] L0_;
+        delete[] L1_;
+        delete[] L2_;
+        delete[] L3_;
+        delete solver_;
     };
 
     virtual double computeFreeEnergy(const double temperature,
@@ -56,19 +56,19 @@ public:
     {
         std::ofstream os1("FlC0vsT.dat", std::ios::out);
         os1 << "#Species 0, Phase L" << std::endl;
-        d_g_species_phaseL[0].plotFofT(os1, T0, T1);
+        g_species_phaseL_[0].plotFofT(os1, T0, T1);
 
         std::ofstream os2("FlC1vsT.dat", std::ios::out);
         os2 << "#Species 1, Phase L" << std::endl;
-        d_g_species_phaseL[1].plotFofT(os2, T0, T1);
+        g_species_phaseL_[1].plotFofT(os2, T0, T1);
 
         std::ofstream os3("FsC0vsT.dat", std::ios::out);
         os3 << "#Species 0, Phase A" << std::endl;
-        d_g_species_phaseA[0].plotFofT(os3, T0, T1);
+        g_species_phaseA_[0].plotFofT(os3, T0, T1);
 
         std::ofstream os4("FsC1vsT.dat", std::ios::out);
         os4 << "#Species 1, Phase A" << std::endl;
-        d_g_species_phaseA[1].plotFofT(os4, T0, T1);
+        g_species_phaseA_[1].plotFofT(os4, T0, T1);
     }
 
     int computePhaseConcentrations(const double temperature, const double* conc,
@@ -106,16 +106,16 @@ public:
     };
 
 protected:
-    CALPHADConcentrationSolverBinary* d_solver;
+    CALPHADConcentrationSolverBinary* solver_;
 
-    double d_ceq_l;
-    double d_ceq_a;
-    double d_ceq_b;
+    double ceq_l_;
+    double ceq_a_;
+    double ceq_b_;
 
-    EnergyInterpolationType d_energy_interp_func_type;
-    ConcInterpolationType d_conc_interp_func_type;
+    EnergyInterpolationType energy_interp_func_type_;
+    ConcInterpolationType conc_interp_func_type_;
 
-    bool d_with_third_phase;
+    bool with_third_phase_;
 
     void readNewtonparameters(boost::property_tree::ptree& newton_db);
 
@@ -126,29 +126,29 @@ protected:
     void setup(const double temperature);
 
 private:
-    std::string d_fenergy_diag_filename;
+    std::string fenergy_diag_filename_;
 
     // size 2 for species 0 and 1
-    CALPHADSpeciesPhaseGibbsEnergy d_g_species_phaseL[2];
-    CALPHADSpeciesPhaseGibbsEnergy d_g_species_phaseA[2];
-    CALPHADSpeciesPhaseGibbsEnergy d_g_species_phaseB[2];
+    CALPHADSpeciesPhaseGibbsEnergy g_species_phaseL_[2];
+    CALPHADSpeciesPhaseGibbsEnergy g_species_phaseA_[2];
+    CALPHADSpeciesPhaseGibbsEnergy g_species_phaseB_[2];
 
     // size 4 for L0, L1, L2, L3,
     // can contain up to 3 coefficients a,b,c for a+b*T,
     // possibly +c*T*ln(T) if compiled with -DHAVE_TLOGT
-    double d_LmixPhaseL[4][MAX_POL_T_INDEX];
-    double d_LmixPhaseA[4][MAX_POL_T_INDEX];
-    double d_LmixPhaseB[4][MAX_POL_T_INDEX];
+    double LmixPhaseL_[4][MAX_POL_T_INDEX];
+    double LmixPhaseA_[4][MAX_POL_T_INDEX];
+    double LmixPhaseB_[4][MAX_POL_T_INDEX];
 
-    double* d_fA;
-    double* d_fB;
+    double* fA_;
+    double* fB_;
     /*
      * L values evaluated at temperature T (index corresponding to phase)
      */
-    double* d_L0;
-    double* d_L1;
-    double* d_L2;
-    double* d_L3;
+    double* L0_;
+    double* L1_;
+    double* L2_;
+    double* L3_;
 
     void readParameters(boost::property_tree::ptree& calphad_db);
 
@@ -157,15 +157,15 @@ private:
     // energy of species "is" in phase L,A,B
     double getFenergyPhaseL(const short is, const double temperature)
     {
-        return d_g_species_phaseL[is].fenergy(temperature);
+        return g_species_phaseL_[is].fenergy(temperature);
     }
     double getFenergyPhaseA(const short is, const double temperature)
     {
-        return d_g_species_phaseA[is].fenergy(temperature);
+        return g_species_phaseA_[is].fenergy(temperature);
     }
     double getFenergyPhaseB(const short is, const double temperature)
     {
-        return d_g_species_phaseB[is].fenergy(temperature);
+        return g_species_phaseB_[is].fenergy(temperature);
     }
 
     double lmixPhase(
@@ -176,24 +176,24 @@ private:
         switch (pi)
         {
             case PhaseIndex::phaseL:
-                return d_LmixPhaseL[index][0]
-                       + d_LmixPhaseL[index][1] * temperature
+                return LmixPhaseL_[index][0]
+                       + LmixPhaseL_[index][1] * temperature
 #ifdef HAVE_TLOGT
-                       + d_LmixPhaseL[index][2] * temperature * log(temperature)
+                       + LmixPhaseL_[index][2] * temperature * log(temperature)
 #endif
                     ;
             case PhaseIndex::phaseA:
-                return d_LmixPhaseA[index][0]
-                       + d_LmixPhaseA[index][1] * temperature
+                return LmixPhaseA_[index][0]
+                       + LmixPhaseA_[index][1] * temperature
 #ifdef HAVE_TLOGT
-                       + d_LmixPhaseA[index][2] * temperature * log(temperature)
+                       + LmixPhaseA_[index][2] * temperature * log(temperature)
 #endif
                     ;
             case PhaseIndex::phaseB:
-                return d_LmixPhaseB[index][0]
-                       + d_LmixPhaseB[index][1] * temperature
+                return LmixPhaseB_[index][0]
+                       + LmixPhaseB_[index][1] * temperature
 #ifdef HAVE_TLOGT
-                       + d_LmixPhaseB[index][2] * temperature * log(temperature)
+                       + LmixPhaseB_[index][2] * temperature * log(temperature)
 #endif
                     ;
             default:

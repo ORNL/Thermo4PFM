@@ -9,63 +9,63 @@
 
 CALPHADEqConcentrationSolverTernary::CALPHADEqConcentrationSolverTernary()
 {
-    d_fA[0] = std::nan("");
-    d_fA[1] = std::nan("");
-    d_fB[0] = std::nan("");
-    d_fB[1] = std::nan("");
-    d_fC[0] = std::nan("");
-    d_fC[1] = std::nan("");
+    fA_[0] = std::nan("");
+    fA_[1] = std::nan("");
+    fB_[0] = std::nan("");
+    fB_[1] = std::nan("");
+    fC_[0] = std::nan("");
+    fC_[1] = std::nan("");
 }
 
 void CALPHADEqConcentrationSolverTernary::RHS(
     const double* const c, double* const fvec)
 {
-    assert(d_fA[0] == d_fA[0]);
-    assert(d_fC[1] == d_fC[1]);
+    assert(fA_[0] == fA_[0]);
+    assert(fC_[1] == fC_[1]);
 
     const double* const cL = &c[0]; // composition of Species A and B in phase L
     const double* const cS = &c[2]; // composition of Species A and B in phase S
     // tbox::pout<<"Compute RHS for CALPHAD..."<<endl;
 
     double derivIdealMixL[2];
-    CALPHADcomputeFIdealMix_derivTernary(d_RT, cL[0], cL[1], derivIdealMixL);
+    CALPHADcomputeFIdealMix_derivTernary(RT_, cL[0], cL[1], derivIdealMixL);
 
     double derivFMixL[2];
     CALPHADcomputeFMix_derivTernary(
-        d_L_AB_L, d_L_AC_L, d_L_BC_L, d_L_ABC_L, cL[0], cL[1], derivFMixL);
+        L_AB_L_, L_AC_L_, L_BC_L_, L_ABC_L_, cL[0], cL[1], derivFMixL);
 
     double dfLdciL[2];
     // 1st species
-    dfLdciL[0] = d_fA[0] - d_fC[0] + derivFMixL[0] + derivIdealMixL[0];
+    dfLdciL[0] = fA_[0] - fC_[0] + derivFMixL[0] + derivIdealMixL[0];
 
     // 2nd species
-    dfLdciL[1] = d_fB[0] - d_fC[0] + derivFMixL[1] + derivIdealMixL[1];
+    dfLdciL[1] = fB_[0] - fC_[0] + derivFMixL[1] + derivIdealMixL[1];
 
     double derivIdealMixS[2];
-    CALPHADcomputeFIdealMix_derivTernary(d_RT, cS[0], cS[1], derivIdealMixS);
+    CALPHADcomputeFIdealMix_derivTernary(RT_, cS[0], cS[1], derivIdealMixS);
 
     double derivFMixS[2];
     CALPHADcomputeFMix_derivTernary(
-        d_L_AB_S, d_L_AC_S, d_L_BC_S, d_L_ABC_S, cS[0], cS[1], derivFMixS);
+        L_AB_S_, L_AC_S_, L_BC_S_, L_ABC_S_, cS[0], cS[1], derivFMixS);
 
     double dfSdciS[2];
     // 1st species
-    dfSdciS[0] = d_fA[1] - d_fC[1] + derivFMixS[0] + derivIdealMixS[0];
+    dfSdciS[0] = fA_[1] - fC_[1] + derivFMixS[0] + derivIdealMixS[0];
 
     // 2nd species
-    dfSdciS[1] = d_fB[1] - d_fC[1] + derivFMixS[1] + derivIdealMixS[1];
+    dfSdciS[1] = fB_[1] - fC_[1] + derivFMixS[1] + derivIdealMixS[1];
 
     // equation fL-fS-(cL-cS)*dfL/dcL=0
-    const double fL = cL[0] * d_fA[0] + cL[1] * d_fB[0]
-                      + (1.0 - cL[0] - cL[1]) * d_fC[0]
-                      + CALPHADcomputeFIdealMixTernary(d_RT, cL[0], cL[1])
-                      + CALPHADcomputeFMixTernary(d_L_AB_L, d_L_AC_L, d_L_BC_L,
-                            d_L_ABC_L, cL[0], cL[1]);
-    const double fS = cS[0] * d_fA[1] + cS[1] * d_fB[1]
-                      + (1.0 - cS[0] - cS[1]) * d_fC[1]
-                      + CALPHADcomputeFIdealMixTernary(d_RT, cS[0], cS[1])
-                      + CALPHADcomputeFMixTernary(d_L_AB_S, d_L_AC_S, d_L_BC_S,
-                            d_L_ABC_S, cS[0], cS[1]);
+    const double fL = cL[0] * fA_[0] + cL[1] * fB_[0]
+                      + (1.0 - cL[0] - cL[1]) * fC_[0]
+                      + CALPHADcomputeFIdealMixTernary(RT_, cL[0], cL[1])
+                      + CALPHADcomputeFMixTernary(
+                            L_AB_L_, L_AC_L_, L_BC_L_, L_ABC_L_, cL[0], cL[1]);
+    const double fS = cS[0] * fA_[1] + cS[1] * fB_[1]
+                      + (1.0 - cS[0] - cS[1]) * fC_[1]
+                      + CALPHADcomputeFIdealMixTernary(RT_, cS[0], cS[1])
+                      + CALPHADcomputeFMixTernary(
+                            L_AB_S_, L_AC_S_, L_BC_S_, L_ABC_S_, cS[0], cS[1]);
     // std::cout<<"fL="<<fL<<", fS="<<fS<<endl;
     fvec[0]
         = fL - fS - (cL[0] - cS[0]) * dfLdciL[0] - (cL[1] - cS[1]) * dfLdciL[1];
@@ -91,25 +91,25 @@ void CALPHADEqConcentrationSolverTernary::Jacobian(
     // tbox::pout<<"Compute RHS for CALPHAD..."<<endl;
 
     double derivIdealMixL[2];
-    CALPHADcomputeFIdealMix_derivTernary(d_RT, cL[0], cL[1], derivIdealMixL);
+    CALPHADcomputeFIdealMix_derivTernary(RT_, cL[0], cL[1], derivIdealMixL);
 
     double derivFMixL[2];
     CALPHADcomputeFMix_derivTernary(
-        d_L_AB_L, d_L_AC_L, d_L_BC_L, d_L_ABC_L, cL[0], cL[1], derivFMixL);
+        L_AB_L_, L_AC_L_, L_BC_L_, L_ABC_L_, cL[0], cL[1], derivFMixL);
 
     double deriv2IdealMixL[4];
-    CALPHADcomputeFIdealMix_deriv2Ternary(d_RT, cL[0], cL[1], deriv2IdealMixL);
+    CALPHADcomputeFIdealMix_deriv2Ternary(RT_, cL[0], cL[1], deriv2IdealMixL);
 
     double deriv2FMixL[4];
     CALPHADcomputeFMix_deriv2Ternary(
-        d_L_AB_L, d_L_AC_L, d_L_BC_L, d_L_ABC_L, cL[0], cL[1], deriv2FMixL);
+        L_AB_L_, L_AC_L_, L_BC_L_, L_ABC_L_, cL[0], cL[1], deriv2FMixL);
 
     double dfLdciL[2];
     // 1st species
-    dfLdciL[0] = d_fA[0] - d_fC[0] + derivFMixL[0] + derivIdealMixL[0];
+    dfLdciL[0] = fA_[0] - fC_[0] + derivFMixL[0] + derivIdealMixL[0];
 
     // 2nd species
-    dfLdciL[1] = d_fB[0] - d_fC[0] + derivFMixL[1] + derivIdealMixL[1];
+    dfLdciL[1] = fB_[0] - fC_[0] + derivFMixL[1] + derivIdealMixL[1];
 
     double d2fLdciL2[3]; // include only one cross term (other one equal by
                          // symmetry)
@@ -118,18 +118,18 @@ void CALPHADEqConcentrationSolverTernary::Jacobian(
     d2fLdciL2[2] = deriv2FMixL[3] + deriv2IdealMixL[3];
 
     double derivIdealMixS[2];
-    CALPHADcomputeFIdealMix_derivTernary(d_RT, cS[0], cS[1], derivIdealMixS);
+    CALPHADcomputeFIdealMix_derivTernary(RT_, cS[0], cS[1], derivIdealMixS);
 
     double derivFMixS[2];
     CALPHADcomputeFMix_derivTernary(
-        d_L_AB_S, d_L_AC_S, d_L_BC_S, d_L_ABC_S, cS[0], cS[1], derivFMixS);
+        L_AB_S_, L_AC_S_, L_BC_S_, L_ABC_S_, cS[0], cS[1], derivFMixS);
 
     double deriv2IdealMixS[4];
-    CALPHADcomputeFIdealMix_deriv2Ternary(d_RT, cS[0], cS[1], deriv2IdealMixS);
+    CALPHADcomputeFIdealMix_deriv2Ternary(RT_, cS[0], cS[1], deriv2IdealMixS);
 
     double deriv2FMixS[4];
     CALPHADcomputeFMix_deriv2Ternary(
-        d_L_AB_S, d_L_AC_S, d_L_BC_S, d_L_ABC_S, cS[0], cS[1], deriv2FMixS);
+        L_AB_S_, L_AC_S_, L_BC_S_, L_ABC_S_, cS[0], cS[1], deriv2FMixS);
 
     double d2fSdciS2[3];
     d2fSdciS2[0] = deriv2FMixS[0] + deriv2IdealMixS[0];
@@ -137,19 +137,19 @@ void CALPHADEqConcentrationSolverTernary::Jacobian(
     d2fSdciS2[2] = deriv2FMixS[3] + deriv2IdealMixS[3];
 
     // f[i][j]=df[i]/dc[j]
-    fjac[0][0] = d_fA[0] - d_fC[0] + derivIdealMixL[0] + derivFMixL[0]
+    fjac[0][0] = fA_[0] - fC_[0] + derivIdealMixL[0] + derivFMixL[0]
                  - dfLdciL[0] - (cL[0] - cS[0]) * d2fLdciL2[0]
                  - (cL[1] - cS[1]) * d2fLdciL2[1];
 
-    fjac[0][1] = d_fB[0] - d_fC[0] + derivIdealMixL[1] + derivFMixL[1]
+    fjac[0][1] = fB_[0] - fC_[0] + derivIdealMixL[1] + derivFMixL[1]
                  - dfLdciL[1] - (cL[0] - cS[0]) * d2fLdciL2[1]
                  - (cL[1] - cS[1]) * d2fLdciL2[2];
 
     fjac[0][2]
-        = -d_fA[1] + d_fC[1] - derivIdealMixS[0] - derivFMixS[0] + dfLdciL[0];
+        = -fA_[1] + fC_[1] - derivIdealMixS[0] - derivFMixS[0] + dfLdciL[0];
 
     fjac[0][3]
-        = -d_fB[1] + d_fC[1] - derivIdealMixS[1] - derivFMixS[1] + dfLdciL[1];
+        = -fB_[1] + fC_[1] - derivIdealMixS[1] - derivFMixS[1] + dfLdciL[1];
 
     fjac[1][0]
         = d2fLdciL2[0] * (cL[1] - cS[1]) - dfLdciL[1] + d2fLdciL2[1] * cS[0];
@@ -187,33 +187,33 @@ int CALPHADEqConcentrationSolverTernary::ComputeConcentration(
     const double* const L_ABC_S, const double* const fA, const double* const fB,
     const double* const fC)
 {
-    d_RTinv = RTinv;
-    d_RT    = 1. / RTinv;
+    RTinv_ = RTinv;
+    RT_    = 1. / RTinv;
 
     for (int ii = 0; ii < 4; ii++)
     {
-        d_L_AB_L[ii] = L_AB_L[ii];
-        d_L_AC_L[ii] = L_AC_L[ii];
-        d_L_BC_L[ii] = L_BC_L[ii];
+        L_AB_L_[ii] = L_AB_L[ii];
+        L_AC_L_[ii] = L_AC_L[ii];
+        L_BC_L_[ii] = L_BC_L[ii];
     }
     for (int ii = 0; ii < 4; ii++)
     {
-        d_L_AB_S[ii] = L_AB_S[ii];
-        d_L_AC_S[ii] = L_AC_S[ii];
-        d_L_BC_S[ii] = L_BC_S[ii];
+        L_AB_S_[ii] = L_AB_S[ii];
+        L_AC_S_[ii] = L_AC_S[ii];
+        L_BC_S_[ii] = L_BC_S[ii];
     }
     for (int ii = 0; ii < 3; ii++)
     {
-        d_L_ABC_L[ii] = L_ABC_L[ii];
-        d_L_ABC_S[ii] = L_ABC_S[ii];
+        L_ABC_L_[ii] = L_ABC_L[ii];
+        L_ABC_S_[ii] = L_ABC_S[ii];
     }
 
     // loop over phases (L and S)
     for (int ii = 0; ii < 2; ii++)
     {
-        d_fA[ii] = fA[ii];
-        d_fB[ii] = fB[ii];
-        d_fC[ii] = fC[ii];
+        fA_[ii] = fA[ii];
+        fB_[ii] = fB[ii];
+        fC_[ii] = fC[ii];
     }
 
     return DampedNewtonSolver::ComputeSolution(conc, 4);
