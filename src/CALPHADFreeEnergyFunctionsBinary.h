@@ -200,7 +200,7 @@ private:
 #endif
                     ;
             default:
-                std::cout << "CALPHADFreeEnergyStrategy::lmix0Phase(), "
+                std::cout << "CALPHADFreeEnergyStrategy::lmixPhase(), "
                              "undefined phase"
                           << "!!!" << std::endl;
                 abort();

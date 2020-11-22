@@ -14,13 +14,8 @@ namespace pt = boost::property_tree;
 namespace Thermo4PFM
 {
 
-#ifdef HAVE_TLOT
-void readLcoefficients(pt::ptree& db, double (&LmixPhase)[4][3])
+void readLcoefficients(pt::ptree& db, double (&LmixPhase)[4][MAX_POL_T_INDEX])
 {
-#else
-void readLcoefficients(pt::ptree& db, double (&LmixPhase)[4][2])
-{
-#endif
     {
         int i = 0;
         for (pt::ptree::value_type& v : db.get_child("L0"))
@@ -28,9 +23,7 @@ void readLcoefficients(pt::ptree& db, double (&LmixPhase)[4][2])
             LmixPhase[0][i] = v.second.get_value<double>();
             i++;
         }
-#ifdef HAVE_TLOGT
-        if (i < 3) LmixPhase[0][2] = 0.;
-#endif
+        if (i < MAX_POL_T_INDEX) LmixPhase[0][i] = 0.;
     }
 
     {
@@ -40,9 +33,7 @@ void readLcoefficients(pt::ptree& db, double (&LmixPhase)[4][2])
             LmixPhase[1][i] = v.second.get_value<double>();
             i++;
         }
-#ifdef HAVE_TLOGT
-        if (i < 3) LmixPhase[1][2] = 0.;
-#endif
+        if (i < MAX_POL_T_INDEX) LmixPhase[1][i] = 0.;
     }
 
     // L2
@@ -56,17 +47,12 @@ void readLcoefficients(pt::ptree& db, double (&LmixPhase)[4][2])
                 LmixPhase[2][i] = v.second.get_value<double>();
                 i++;
             }
-#ifdef HAVE_TLOGT
-            if (i < 3) LmixPhase[2][2] = 0.;
-#endif
+            if (i < MAX_POL_T_INDEX) LmixPhase[2][i] = 0.;
         }
         else
         {
-            LmixPhase[2][0] = 0.0;
-            LmixPhase[2][1] = 0.0;
-#ifdef HAVE_TLOGT
-            LmixPhase[2][2] = 0.0;
-#endif
+            for (int i = 0; i < MAX_POL_T_INDEX; i++)
+                LmixPhase[2][i] = 0.0;
         }
     }
 
@@ -81,17 +67,12 @@ void readLcoefficients(pt::ptree& db, double (&LmixPhase)[4][2])
                 LmixPhase[3][i] = v.second.get_value<double>();
                 i++;
             }
-#ifdef HAVE_TLOGT
-            if (i < 3) LmixPhase[3][2] = 0.;
-#endif
+            if (i < MAX_POL_T_INDEX) LmixPhase[3][i] = 0.;
         }
         else
         {
-            LmixPhase[3][0] = 0.0;
-            LmixPhase[3][1] = 0.0;
-#ifdef HAVE_TLOGT
-            LmixPhase[3][2] = 0.0;
-#endif
+            for (int i = 0; i < MAX_POL_T_INDEX; i++)
+                LmixPhase[3][i] = 0.0;
         }
     }
 }
