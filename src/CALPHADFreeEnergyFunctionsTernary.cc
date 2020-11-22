@@ -14,62 +14,6 @@ namespace pt = boost::property_tree;
 namespace Thermo4PFM
 {
 
-void readLmixBinaryParameters(pt::ptree& Lmix_db, double Lmix[4][2])
-{
-    {
-        int i = 0;
-        for (pt::ptree::value_type& v : Lmix_db.get_child("L0"))
-        {
-            Lmix[0][i] = v.second.get_value<double>();
-            std::cout << Lmix[0][i] << std::endl;
-            i++;
-        }
-    }
-    {
-        int i = 0;
-        for (pt::ptree::value_type& v : Lmix_db.get_child("L1"))
-        {
-            Lmix[1][i] = v.second.get_value<double>();
-            std::cout << Lmix[1][i] << std::endl;
-            i++;
-        }
-    }
-    {
-        auto child = Lmix_db.get_child_optional("L2");
-        if (child)
-        {
-            int i = 0;
-            for (pt::ptree::value_type& v : Lmix_db.get_child("L2"))
-            {
-                Lmix[2][i] = v.second.get_value<double>();
-                i++;
-            }
-        }
-        else
-        {
-            Lmix[2][0] = 0.0;
-            Lmix[2][1] = 0.0;
-        }
-    }
-    {
-        auto child = Lmix_db.get_child_optional("L3");
-        if (child)
-        {
-            int i = 0;
-            for (pt::ptree::value_type& v : Lmix_db.get_child("L3"))
-            {
-                Lmix[3][i] = v.second.get_value<double>();
-                i++;
-            }
-        }
-        else
-        {
-            Lmix[3][0] = 0.0;
-            Lmix[3][1] = 0.0;
-        }
-    }
-}
-
 void readLmixTernaryParameters(pt::ptree& Lmix_db, double LmixABC[3][2])
 {
     // L0
@@ -209,28 +153,28 @@ void CALPHADFreeEnergyFunctionsTernary::readParameters(pt::ptree& calphad_db)
     // AB
     {
         pt::ptree& Lmix0_db = calphad_db.get_child("LmixABPhaseL");
-        readLmixBinaryParameters(Lmix0_db, LmixABPhaseL_);
+        readLmixBinary(Lmix0_db, LmixABPhaseL_);
 
         pt::ptree& Lmix1_db = calphad_db.get_child("LmixABPhaseA");
-        readLmixBinaryParameters(Lmix1_db, LmixABPhaseA_);
+        readLmixBinary(Lmix1_db, LmixABPhaseA_);
     }
 
     // AC
     {
         pt::ptree& Lmix0_db = calphad_db.get_child("LmixACPhaseL");
-        readLmixBinaryParameters(Lmix0_db, LmixACPhaseL_);
+        readLmixBinary(Lmix0_db, LmixACPhaseL_);
 
         pt::ptree& Lmix1_db = calphad_db.get_child("LmixACPhaseA");
-        readLmixBinaryParameters(Lmix1_db, LmixACPhaseA_);
+        readLmixBinary(Lmix1_db, LmixACPhaseA_);
     }
 
     // BC
     {
         pt::ptree& Lmix0_db = calphad_db.get_child("LmixBCPhaseL");
-        readLmixBinaryParameters(Lmix0_db, LmixBCPhaseL_);
+        readLmixBinary(Lmix0_db, LmixBCPhaseL_);
 
         pt::ptree& Lmix1_db = calphad_db.get_child("LmixBCPhaseA");
-        readLmixBinaryParameters(Lmix1_db, LmixBCPhaseA_);
+        readLmixBinary(Lmix1_db, LmixBCPhaseA_);
     }
 
     // ABC

@@ -14,69 +14,6 @@ namespace pt = boost::property_tree;
 namespace Thermo4PFM
 {
 
-void readLcoefficients(pt::ptree& db, double (&LmixPhase)[4][MAX_POL_T_INDEX])
-{
-    {
-        int i = 0;
-        for (pt::ptree::value_type& v : db.get_child("L0"))
-        {
-            LmixPhase[0][i] = v.second.get_value<double>();
-            i++;
-        }
-        if (i < MAX_POL_T_INDEX) LmixPhase[0][i] = 0.;
-    }
-
-    {
-        int i = 0;
-        for (pt::ptree::value_type& v : db.get_child("L1"))
-        {
-            LmixPhase[1][i] = v.second.get_value<double>();
-            i++;
-        }
-        if (i < MAX_POL_T_INDEX) LmixPhase[1][i] = 0.;
-    }
-
-    // L2
-    {
-        auto child = db.get_child_optional("L2");
-        if (child)
-        {
-            int i = 0;
-            for (pt::ptree::value_type& v : db.get_child("L2"))
-            {
-                LmixPhase[2][i] = v.second.get_value<double>();
-                i++;
-            }
-            if (i < MAX_POL_T_INDEX) LmixPhase[2][i] = 0.;
-        }
-        else
-        {
-            for (int i = 0; i < MAX_POL_T_INDEX; i++)
-                LmixPhase[2][i] = 0.0;
-        }
-    }
-
-    // L3
-    {
-        auto child = db.get_child_optional("L3");
-        if (child)
-        {
-            int i = 0;
-            for (pt::ptree::value_type& v : db.get_child("L3"))
-            {
-                LmixPhase[3][i] = v.second.get_value<double>();
-                i++;
-            }
-            if (i < MAX_POL_T_INDEX) LmixPhase[3][i] = 0.;
-        }
-        else
-        {
-            for (int i = 0; i < MAX_POL_T_INDEX; i++)
-                LmixPhase[3][i] = 0.0;
-        }
-    }
-}
-
 CALPHADFreeEnergyFunctionsBinary::CALPHADFreeEnergyFunctionsBinary(
     pt::ptree& calphad_db, boost::optional<pt::ptree&> newton_db,
     const EnergyInterpolationType energy_interp_func_type,
@@ -166,15 +103,15 @@ void CALPHADFreeEnergyFunctionsBinary::readParameters(pt::ptree& calphad_db)
     std::string dbnamemixA("LmixPhaseA");
     std::string dbnamemixB("LmixPhaseB");
     pt::ptree Lmix0_db = calphad_db.get_child(dbnamemixL);
-    readLcoefficients(Lmix0_db, LmixPhaseL_);
+    readLmixBinary(Lmix0_db, LmixPhaseL_);
 
     pt::ptree Lmix1_db = calphad_db.get_child(dbnamemixA);
-    readLcoefficients(Lmix1_db, LmixPhaseA_);
+    readLmixBinary(Lmix1_db, LmixPhaseA_);
 
     if (with_third_phase_)
     {
         pt::ptree Lmix2_db = calphad_db.get_child(dbnamemixB);
-        readLcoefficients(Lmix2_db, LmixPhaseB_);
+        readLmixBinary(Lmix2_db, LmixPhaseB_);
     }
 
     // print database just read

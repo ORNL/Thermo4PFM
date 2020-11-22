@@ -14,12 +14,6 @@
 #include <fstream>
 #include <iostream>
 
-#ifdef HAVE_TLOGT
-#define MAX_POL_T_INDEX 3
-#else
-#define MAX_POL_T_INDEX 2
-#endif
-
 namespace Thermo4PFM
 {
 
@@ -138,7 +132,7 @@ private:
 
     // size 4 for L0, L1, L2, L3,
     // can contain up to 3 coefficients a,b,c for a+b*T,
-    // possibly +c*T*ln(T) if compiled with -DHAVE_TLOGT
+    // possibly +c*T*ln(T) if compiled with -DLMIX_WTLOGT
     double LmixPhaseL_[4][MAX_POL_T_INDEX];
     double LmixPhaseA_[4][MAX_POL_T_INDEX];
     double LmixPhaseB_[4][MAX_POL_T_INDEX];
@@ -181,21 +175,21 @@ private:
             case PhaseIndex::phaseL:
                 return LmixPhaseL_[index][0]
                        + LmixPhaseL_[index][1] * temperature
-#ifdef HAVE_TLOGT
+#ifdef LMIX_WTLOGT
                        + LmixPhaseL_[index][2] * temperature * log(temperature)
 #endif
                     ;
             case PhaseIndex::phaseA:
                 return LmixPhaseA_[index][0]
                        + LmixPhaseA_[index][1] * temperature
-#ifdef HAVE_TLOGT
+#ifdef LMIX_WTLOGT
                        + LmixPhaseA_[index][2] * temperature * log(temperature)
 #endif
                     ;
             case PhaseIndex::phaseB:
                 return LmixPhaseB_[index][0]
                        + LmixPhaseB_[index][1] * temperature
-#ifdef HAVE_TLOGT
+#ifdef LMIX_WTLOGT
                        + LmixPhaseB_[index][2] * temperature * log(temperature)
 #endif
                     ;

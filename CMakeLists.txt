@@ -25,6 +25,14 @@ if(${WITH_CLANG_FORMAT})
   endif(${CLANG_FORMAT_FOUND})
 endif()
 
+set(WITH_TLOGT4L FALSE CACHE BOOL "Include T*log(T) in L coeffs")
+if(${WITH_TLOGT4L})
+  add_definitions(-DMAX_POL_T_INDEX=3)
+  add_definitions(-DLMIX_WTLOGT)
+else()
+  add_definitions(-DMAX_POL_T_INDEX=2)
+endif(${WITH_TLOGT4L})
+
 enable_testing()
 
 add_subdirectory(src)
