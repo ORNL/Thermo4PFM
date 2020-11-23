@@ -26,16 +26,7 @@ public:
         const ConcInterpolationType conc_interp_func_type,
         const bool with_third_phase);
 
-    ~CALPHADFreeEnergyFunctionsBinary()
-    {
-        delete[] fA_;
-        delete[] fB_;
-        delete[] L0_;
-        delete[] L1_;
-        delete[] L2_;
-        delete[] L3_;
-        delete solver_;
-    };
+    ~CALPHADFreeEnergyFunctionsBinary() { delete solver_; };
 
     virtual double computeFreeEnergy(const double temperature,
         const double* const conc, const PhaseIndex pi, const bool gp = false);
@@ -116,8 +107,8 @@ protected:
 
     void readNewtonparameters(boost::property_tree::ptree& newton_db);
 
-    void setupValuesForTwoPhasesSolver(const double temperature, double* L0,
-        double* L1, double* L2, double* L3, double* fA, double* fB,
+    void setupValuesForTwoPhasesSolver(const double temperature, double* Lmix_L,
+        double* Lmix_A, double* Lmix_B, double* fA, double* fB,
         const PhaseIndex pi0, const PhaseIndex pi1);
 
     void setup(const double temperature);
@@ -137,15 +128,14 @@ private:
     double LmixPhaseA_[4][MAX_POL_T_INDEX];
     double LmixPhaseB_[4][MAX_POL_T_INDEX];
 
-    double* fA_;
-    double* fB_;
+    double fA_[3];
+    double fB_[3];
     /*
-     * L values evaluated at temperature T (index corresponding to phase)
+     * L values evaluated at temperature T
      */
-    double* L0_;
-    double* L1_;
-    double* L2_;
-    double* L3_;
+    double Lmix_L_[4];
+    double Lmix_A_[4];
+    double Lmix_B_[4];
 
     void readParameters(boost::property_tree::ptree& calphad_db);
 

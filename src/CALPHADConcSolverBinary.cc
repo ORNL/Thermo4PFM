@@ -27,16 +27,34 @@ void CALPHADConcentrationSolverBinary::computeXi(
 {
     // std::cout<<"CALPHADConcentrationSolverBinary::computeXi()"<<endl;
     // loop over phases
-    for (int ii = 0; ii < N_; ii++)
     {
-
         double omega = CALPHADcomputeFMix_derivBinary(
-            L0_[ii], L1_[ii], L2_[ii], L3_[ii], c[ii]);
+            Lmix_L_[0], Lmix_L_[1], Lmix_L_[2], Lmix_L_[3], c[0]);
 
-        double eps = fA_[ii] - fB_[ii];
+        double eps = fA_[0] - fB_[0];
 
-        xi[ii] = RTinv_ * (eps + omega);
+        xi[0] = RTinv_ * (eps + omega);
+        // std::cout << "L2_["<<ii<<"] = " << L2_[ii] << std::endl;
+    }
 
+    {
+        double omega = CALPHADcomputeFMix_derivBinary(
+            Lmix_A_[0], Lmix_A_[1], Lmix_A_[2], Lmix_A_[3], c[1]);
+
+        double eps = fA_[1] - fB_[1];
+
+        xi[1] = RTinv_ * (eps + omega);
+        // std::cout << "L2_["<<ii<<"] = " << L2_[ii] << std::endl;
+    }
+
+    if (with_third_phase_)
+    {
+        double omega = CALPHADcomputeFMix_derivBinary(
+            Lmix_B_[0], Lmix_B_[1], Lmix_B_[2], Lmix_B_[3], c[2]);
+
+        double eps = fA_[2] - fB_[2];
+
+        xi[2] = RTinv_ * (eps + omega);
         // std::cout << "L2_["<<ii<<"] = " << L2_[ii] << std::endl;
     }
 }
@@ -54,7 +72,7 @@ void CALPHADConcentrationSolverBinary::RHS(
     fvec[1] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[1])
               + xlogx_deriv(1. - c[1]) + (xi[0] - xi[1]);
 
-    if (N_ > 2)
+    if (with_third_phase_)
     {
         fvec[2] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[2])
                   + xlogx_deriv(1. - c[2]) + (xi[0] - xi[2]);
@@ -68,11 +86,19 @@ void CALPHADConcentrationSolverBinary::computeDxiDc(
 {
     // std::cout<<"CALPHADConcentrationSolverBinary::computeDxiDc()"<<endl;
     // loop over phases
-    for (int ii = 0; ii < N_; ii++)
+    dxidc[0] = RTinv_
+               * CALPHADcomputeFMix_deriv2Binary(
+                     Lmix_L_[0], Lmix_L_[1], Lmix_L_[2], Lmix_L_[3], c[0]);
+
+    dxidc[1] = RTinv_
+               * CALPHADcomputeFMix_deriv2Binary(
+                     Lmix_A_[0], Lmix_A_[1], Lmix_A_[2], Lmix_A_[3], c[1]);
+
+    if (with_third_phase_)
     {
-        dxidc[ii] = RTinv_
-                    * CALPHADcomputeFMix_deriv2Binary(
-                          L0_[ii], L1_[ii], L2_[ii], L3_[ii], c[ii]);
+        dxidc[2] = RTinv_
+                   * CALPHADcomputeFMix_deriv2Binary(
+                         Lmix_B_[0], Lmix_B_[1], Lmix_B_[2], Lmix_B_[3], c[2]);
     }
 }
 
@@ -106,8 +132,8 @@ void CALPHADConcentrationSolverBinary::Jacobian(
  */
 int CALPHADConcentrationSolverBinary::ComputeConcentration(double* const conc,
     const double c0, const double hphi, const double heta, const double RTinv,
-    const double* const L0, const double* const L1, const double* const L2,
-    const double* const L3, const double* const fA, const double* const fB)
+    const double* const Lmix_L, const double* const Lmix_A,
+    const double* const Lmix_B, const double* const fA, const double* const fB)
 {
     // std::cout<<"CALPHADConcentrationSolverBinary::ComputeConcentration()"<<endl;
     c0_    = c0;
@@ -115,14 +141,12 @@ int CALPHADConcentrationSolverBinary::ComputeConcentration(double* const conc,
     heta_  = heta;
     RTinv_ = RTinv;
 
-    for (int ii = 0; ii < N_; ii++)
-        L0_[ii] = L0[ii];
-    for (int ii = 0; ii < N_; ii++)
-        L1_[ii] = L1[ii];
-    for (int ii = 0; ii < N_; ii++)
-        L2_[ii] = L2[ii];
-    for (int ii = 0; ii < N_; ii++)
-        L3_[ii] = L3[ii];
+    for (int ii = 0; ii < 4; ii++)
+        Lmix_L_[ii] = Lmix_L[ii];
+    for (int ii = 0; ii < 4; ii++)
+        Lmix_A_[ii] = Lmix_A[ii];
+    for (int ii = 0; ii < 4; ii++)
+        Lmix_B_[ii] = Lmix_B[ii];
     for (int ii = 0; ii < N_; ii++)
         fA_[ii] = fA[ii];
     for (int ii = 0; ii < N_; ii++)
