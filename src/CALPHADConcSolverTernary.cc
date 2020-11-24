@@ -8,7 +8,10 @@
 namespace Thermo4PFM
 {
 
-CALPHADConcentrationSolverTernary::CALPHADConcentrationSolverTernary() {}
+CALPHADConcentrationSolverTernary::CALPHADConcentrationSolverTernary()
+    : DampedNewtonSolver(4)
+{
+}
 
 //=======================================================================
 
@@ -192,7 +195,7 @@ int CALPHADConcentrationSolverTernary::ComputeConcentration(double* const conc,
     setup(c0, c1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S, L_BC_S,
         L_ABC_L, L_ABC_S, fA, fB, fC);
 
-    int ret = NewtonSolver::ComputeSolution(conc, 4);
+    int ret = NewtonSolver::ComputeSolution(conc);
 
     return ret;
 }

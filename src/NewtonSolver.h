@@ -7,13 +7,13 @@ namespace Thermo4PFM
 class NewtonSolver
 {
 public:
-    NewtonSolver();
+    NewtonSolver(const int ndim);
 
     virtual ~NewtonSolver(){};
 
     virtual void initialize(){};
 
-    virtual int ComputeSolution(double* const conc, const int N);
+    virtual int ComputeSolution(double* const conc);
 
     void SetTolerance(const double t) { tolerance_ = t; }
 
@@ -25,7 +25,7 @@ public:
 
     void CopyMatrix(double** const dst, double** const src);
 
-    int size() const { return s_N; };
+    int size() const { return ndim_; };
 
     virtual void UpdateSolution(
         double* const x, const double* const fvec, double** const fjac);
@@ -41,7 +41,7 @@ private:
     /*
      * Number of equations in system
      */
-    static int s_N;
+    int ndim_;
 
     int max_iters_;
     double tolerance_;

@@ -12,7 +12,8 @@ namespace Thermo4PFM
 
 CALPHADConcentrationSolverBinary::CALPHADConcentrationSolverBinary(
     const bool with_third_phase)
-    : with_third_phase_(with_third_phase)
+    : DampedNewtonSolver(with_third_phase ? 3 : 2),
+      with_third_phase_(with_third_phase)
 {
 }
 
@@ -150,6 +151,6 @@ int CALPHADConcentrationSolverBinary::ComputeConcentration(double* const conc,
     for (int ii = 0; ii < N; ii++)
         fB_[ii] = fB[ii];
 
-    return NewtonSolver::ComputeSolution(conc, N);
+    return NewtonSolver::ComputeSolution(conc);
 }
 }

@@ -85,7 +85,6 @@ int CALPHADEqConcentrationSolverBinary::ComputeConcentration(double* const conc,
     {
         Lmix_L_[ii] = Lmix_L[ii];
         Lmix_A_[ii] = Lmix_A[ii];
-        Lmix_B_[ii] = Lmix_B[ii];
     }
     for (int ii = 0; ii < 3; ii++)
     {
@@ -93,6 +92,6 @@ int CALPHADEqConcentrationSolverBinary::ComputeConcentration(double* const conc,
         fB_[ii] = fB[ii];
     }
 
-    return DampedNewtonSolver::ComputeSolution(conc, 2);
+    return DampedNewtonSolver::ComputeSolution(conc);
 }
 }

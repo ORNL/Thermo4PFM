@@ -9,6 +9,7 @@ namespace Thermo4PFM
 {
 
 CALPHADEqConcentrationSolverTernary::CALPHADEqConcentrationSolverTernary()
+    : DampedNewtonSolver(4)
 {
     fA_[0] = std::nan("");
     fA_[1] = std::nan("");
@@ -217,6 +218,6 @@ int CALPHADEqConcentrationSolverTernary::ComputeConcentration(
         fC_[ii] = fC[ii];
     }
 
-    return DampedNewtonSolver::ComputeSolution(conc, 4);
+    return DampedNewtonSolver::ComputeSolution(conc);
 }
 }

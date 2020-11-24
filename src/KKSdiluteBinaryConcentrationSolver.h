@@ -18,11 +18,6 @@ public:
         const double fB);
 
 private:
-    /*
-     * number of coexisting phases
-     */
-    int N_;
-
     double fA_;
     double fB_;
 

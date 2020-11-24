@@ -15,16 +15,14 @@
 namespace Thermo4PFM
 {
 
-int NewtonSolver::s_N = 0;
-
-NewtonSolver::NewtonSolver()
-    : max_iters_(50), tolerance_(1.0e-8), verbose_(false){};
+NewtonSolver::NewtonSolver(const int ndim)
+    : ndim_(ndim), max_iters_(50), tolerance_(1.0e-8), verbose_(false){};
 
 //=======================================================================
 
 bool NewtonSolver::CheckTolerance(const double* const fvec)
 {
-    for (int ii = 0; ii < s_N; ii++)
+    for (int ii = 0; ii < ndim_; ii++)
     {
         if (std::abs(fvec[ii]) >= tolerance_) return false;
     }
@@ -46,9 +44,9 @@ void NewtonSolver::CopyMatrix(double** const dst, double** const src)
     assert(src != nullptr);
     assert(dst != nullptr);
 
-    for (int jj = 0; jj < s_N; jj++)
+    for (int jj = 0; jj < ndim_; jj++)
     {
-        for (int ii = 0; ii < s_N; ii++)
+        for (int ii = 0; ii < ndim_; ii++)
         {
             dst[jj][ii] = src[jj][ii];
         }
@@ -59,21 +57,21 @@ void NewtonSolver::CopyMatrix(double** const dst, double** const src)
 
 double NewtonSolver::Determinant(double** const m)
 {
-    assert(s_N == 2 || s_N == 3 || s_N == 4 || s_N == 5);
+    assert(ndim_ == 2 || ndim_ == 3 || ndim_ == 4 || ndim_ == 5);
 
-    if (s_N == 5)
+    if (ndim_ == 5)
     {
         return DeterminantN(m, 5);
     }
-    else if (s_N == 4)
+    else if (ndim_ == 4)
     {
         return Determinant4(m);
     }
-    else if (s_N == 3)
+    else if (ndim_ == 3)
     {
         return Determinant3(m);
     }
-    else if (s_N == 2)
+    else if (ndim_ == 2)
     {
         return m[0][0] * m[1][1] - m[1][0] * m[0][1];
     }
@@ -86,11 +84,11 @@ double NewtonSolver::Determinant(double** const m)
 void NewtonSolver::UpdateSolution(
     double* const c, const double* const fvec, double** const fjac)
 {
-    static double* mwork[3];
-    static double mtmp[9];
-    for (int ii = 0; ii < s_N; ii++)
+    double* mwork[3];
+    double mtmp[9];
+    for (int ii = 0; ii < ndim_; ii++)
     {
-        mwork[ii] = &mtmp[ii * s_N];
+        mwork[ii] = &mtmp[ii * ndim_];
     }
 
     const double D     = Determinant(fjac);
@@ -98,13 +96,13 @@ void NewtonSolver::UpdateSolution(
 
     // std::cout << "D = " << D << std::endl;
 
-    static double del_c[4];
+    double del_c[4];
 
     // use Cramer's rule to solve linear system
-    for (int jj = 0; jj < s_N; jj++)
+    for (int jj = 0; jj < ndim_; jj++)
     {
         CopyMatrix(mwork, fjac);
-        for (int ii = 0; ii < s_N; ii++)
+        for (int ii = 0; ii < ndim_; ii++)
         {
             mwork[ii][jj] = fvec[ii];
         }
@@ -115,7 +113,7 @@ void NewtonSolver::UpdateSolution(
     }
 
     double w = 1.0;
-    for (int ii = 0; ii < s_N; ii++)
+    for (int ii = 0; ii < ndim_; ii++)
     {
         c[ii] = c[ii] - w * del_c[ii];
     }
@@ -123,10 +121,11 @@ void NewtonSolver::UpdateSolution(
 
 //=======================================================================
 // conc: initial guess and output solution
-int NewtonSolver::ComputeSolution(double* const conc, const int N)
+int NewtonSolver::ComputeSolution(double* const conc)
 {
     assert(max_iters_ > 1);
-    for (int ii = 0; ii < N; ii++)
+
+    for (int ii = 0; ii < ndim_; ii++)
         assert(conc[ii] == conc[ii]);
 
 #ifdef DEBUG_CONVERGENCE
@@ -137,23 +136,12 @@ int NewtonSolver::ComputeSolution(double* const conc, const int N)
     // std::cout<<endl;
 #endif
 
-    static double* fvec = nullptr;
-    static double** fjac;
-    static double* ftmp = nullptr;
-    if (ftmp == nullptr || s_N != N)
+    double* fvec  = new double[ndim_];
+    double** fjac = new double*[ndim_];
+    double* ftmp  = new double[ndim_ * ndim_];
+    for (int ii = 0; ii < ndim_; ii++)
     {
-        if (fvec != nullptr) delete[] fvec;
-        if (fjac != nullptr) delete[] fjac;
-        if (ftmp != nullptr) delete[] ftmp;
-
-        s_N  = N;
-        fvec = new double[N];
-        fjac = new double*[N];
-        ftmp = new double[N * N];
-        for (int ii = 0; ii < N; ii++)
-        {
-            fjac[ii] = &ftmp[ii * N];
-        }
+        fjac[ii] = &ftmp[ii * ndim_];
     }
 
     int iterations = 0;
@@ -165,17 +153,17 @@ int NewtonSolver::ComputeSolution(double* const conc, const int N)
     {
 
 #ifdef DEBUG_CONVERGENCE
-        // for ( int ii = 0; ii < N ; ii++ )cout<<conc[ii]<<endl;
+        // for ( int ii = 0; ii < ndim_ ; ii++ )cout<<conc[ii]<<endl;
         // std::cout<<endl;
 
-        for (int ii = 0; ii < N; ii++)
+        for (int ii = 0; ii < ndim_; ii++)
             assert(conc[ii] == conc[ii]);
-        for (int ii = 0; ii < N; ii++)
+        for (int ii = 0; ii < ndim_; ii++)
             ctmp.push_back(conc[ii]);
 #endif
         RHS(conc, fvec);
 #ifdef DEBUG_CONVERGENCE
-        for (int ii = 0; ii < N; ii++)
+        for (int ii = 0; ii < ndim_; ii++)
             assert(fvec[ii] == fvec[ii]);
 #endif
 
@@ -199,20 +187,20 @@ int NewtonSolver::ComputeSolution(double* const conc, const int N)
 #ifdef DEBUG_CONVERGENCE
         std::cout << std::setprecision(12);
         std::cout << "Concentration history..." << std::endl;
-        for (unsigned j = 0; j < ctmp.size(); j = j + s_N)
+        for (unsigned j = 0; j < ctmp.size(); j = j + ndim_)
         {
             std::cout << "  conc= ";
-            for (int ii = 0; ii < N; ii++)
+            for (int ii = 0; ii < ndim_; ii++)
             {
                 std::cout << ctmp[j + ii] << "   ";
             }
             std::cout << std::endl;
         }
-        for (int ii = 0; ii < N; ii++)
+        for (int ii = 0; ii < ndim_; ii++)
         {
             std::cout << "  conc[" << ii << "] = " << conc[ii] << std::endl;
         }
-        for (int ii = 0; ii < N; ii++)
+        for (int ii = 0; ii < ndim_; ii++)
         {
             std::cout << "  rhs[" << ii << "] = " << fvec[ii] << std::endl;
         }
@@ -221,6 +209,10 @@ int NewtonSolver::ComputeSolution(double* const conc, const int N)
         std::cerr << "Error: too many iterations in NewtonSolver" << std::endl;
         return -1;
     }
+
+    delete[] fvec;
+    delete[] fjac;
+    delete[] ftmp;
 
     return iterations;
 }

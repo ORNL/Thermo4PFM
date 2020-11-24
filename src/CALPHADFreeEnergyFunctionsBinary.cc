@@ -100,8 +100,8 @@ void CALPHADFreeEnergyFunctionsBinary::readParameters(pt::ptree& calphad_db)
     }
 
     // print database just read
-    std::clog << "CALPHAD database..." << std::endl;
-    pt::write_json(std::clog, calphad_db);
+    // std::clog << "CALPHAD database..." << std::endl;
+    // pt::write_json(std::clog, calphad_db);
 }
 
 //-----------------------------------------------------------------------

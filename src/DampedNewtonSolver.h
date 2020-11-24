@@ -9,7 +9,7 @@ namespace Thermo4PFM
 class DampedNewtonSolver : public NewtonSolver
 {
 public:
-    DampedNewtonSolver();
+    DampedNewtonSolver(const int ndim);
 
     virtual ~DampedNewtonSolver(){};
 

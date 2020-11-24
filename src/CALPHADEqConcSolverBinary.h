@@ -11,14 +11,12 @@ namespace Thermo4PFM
 class CALPHADEqConcentrationSolverBinary : public DampedNewtonSolver
 {
 public:
-    CALPHADEqConcentrationSolverBinary()
+    CALPHADEqConcentrationSolverBinary() : DampedNewtonSolver(2)
     {
         for (unsigned i = 0; i < 4; i++)
             Lmix_L_[i] = std::nan("");
         for (unsigned i = 0; i < 4; i++)
             Lmix_A_[i] = std::nan("");
-        for (unsigned i = 0; i < 4; i++)
-            Lmix_B_[i] = std::nan("");
     };
 
     virtual ~CALPHADEqConcentrationSolverBinary(){};
@@ -37,7 +35,6 @@ protected:
     double RT_;
     double c0_;
     double hphi_;
-    double heta_;
 
     // energies of 2 species, in three phase each
     double fA_[3];
@@ -46,7 +43,6 @@ protected:
     // 4 L coefficients for 3 possible phases (L, A and B)
     double Lmix_L_[4];
     double Lmix_A_[4];
-    double Lmix_B_[4];
 };
 }
 #endif

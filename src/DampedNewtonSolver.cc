@@ -9,7 +9,8 @@
 namespace Thermo4PFM
 {
 
-DampedNewtonSolver::DampedNewtonSolver() : NewtonSolver(), alpha_(1.){};
+DampedNewtonSolver::DampedNewtonSolver(const int ndim)
+    : NewtonSolver(ndim), alpha_(1.){};
 
 //=======================================================================
 // note: sizes to accomodate up to ternary alloys
@@ -20,8 +21,8 @@ void DampedNewtonSolver::UpdateSolution(
 {
     int nn = size();
 
-    static double* mwork[5];
-    static double mtmp[25];
+    double* mwork[5];
+    double mtmp[25];
     for (int ii = 0; ii < nn; ii++)
     {
         mwork[ii] = &mtmp[ii * nn];
@@ -36,7 +37,7 @@ void DampedNewtonSolver::UpdateSolution(
     // std::cout << "DampedNewtonSolver::UpdateSolution(), N = "<<nn<<", D = "
     // << D << std::endl;
 
-    static double del[5];
+    double del[5];
 
     // use Cramer's rule to solve linear system
     for (int jj = 0; jj < nn; jj++)
