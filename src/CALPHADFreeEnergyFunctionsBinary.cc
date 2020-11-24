@@ -19,22 +19,14 @@ CALPHADFreeEnergyFunctionsBinary::CALPHADFreeEnergyFunctionsBinary(
     const EnergyInterpolationType energy_interp_func_type,
     const ConcInterpolationType conc_interp_func_type,
     const bool with_third_phase)
-    : energy_interp_func_type_(energy_interp_func_type),
+    : ceq_l_(-1.),
+      ceq_a_(-1.),
+      ceq_b_(-1.),
+      energy_interp_func_type_(energy_interp_func_type),
       conc_interp_func_type_(conc_interp_func_type),
-      with_third_phase_(with_third_phase)
+      with_third_phase_(with_third_phase),
+      fenergy_diag_filename_("energy.vtk")
 {
-    fenergy_diag_filename_ = "energy.vtk";
-
-    int N = 2;
-    if (with_third_phase_)
-    {
-        N = 3;
-    }
-
-    ceq_l_ = -1;
-    ceq_a_ = -1;
-    ceq_b_ = -1;
-
     readParameters(calphad_db);
 
     setupSolver(newton_db);
@@ -93,16 +85,16 @@ void CALPHADFreeEnergyFunctionsBinary::readParameters(pt::ptree& calphad_db)
 
     // read Lmix coefficients
     std::string dbnamemixL("LmixPhaseL");
-    std::string dbnamemixA("LmixPhaseA");
-    std::string dbnamemixB("LmixPhaseB");
     pt::ptree Lmix0_db = calphad_db.get_child(dbnamemixL);
     readLmixBinary(Lmix0_db, LmixPhaseL_);
 
+    std::string dbnamemixA("LmixPhaseA");
     pt::ptree Lmix1_db = calphad_db.get_child(dbnamemixA);
     readLmixBinary(Lmix1_db, LmixPhaseA_);
 
     if (with_third_phase_)
     {
+        std::string dbnamemixB("LmixPhaseB");
         pt::ptree Lmix2_db = calphad_db.get_child(dbnamemixB);
         readLmixBinary(Lmix2_db, LmixPhaseB_);
     }

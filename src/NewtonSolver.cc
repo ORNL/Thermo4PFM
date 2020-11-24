@@ -103,7 +103,6 @@ void NewtonSolver::UpdateSolution(
     // use Cramer's rule to solve linear system
     for (int jj = 0; jj < s_N; jj++)
     {
-
         CopyMatrix(mwork, fjac);
         for (int ii = 0; ii < s_N; ii++)
         {
@@ -151,9 +150,9 @@ int NewtonSolver::ComputeSolution(double* const conc, const int N)
         fvec = new double[N];
         fjac = new double*[N];
         ftmp = new double[N * N];
-        for (int ii = 0; ii < s_N; ii++)
+        for (int ii = 0; ii < N; ii++)
         {
-            fjac[ii] = &ftmp[ii * s_N];
+            fjac[ii] = &ftmp[ii * N];
         }
     }
 
@@ -203,17 +202,17 @@ int NewtonSolver::ComputeSolution(double* const conc, const int N)
         for (unsigned j = 0; j < ctmp.size(); j = j + s_N)
         {
             std::cout << "  conc= ";
-            for (int ii = 0; ii < s_N; ii++)
+            for (int ii = 0; ii < N; ii++)
             {
                 std::cout << ctmp[j + ii] << "   ";
             }
             std::cout << std::endl;
         }
-        for (int ii = 0; ii < s_N; ii++)
+        for (int ii = 0; ii < N; ii++)
         {
             std::cout << "  conc[" << ii << "] = " << conc[ii] << std::endl;
         }
-        for (int ii = 0; ii < s_N; ii++)
+        for (int ii = 0; ii < N; ii++)
         {
             std::cout << "  rhs[" << ii << "] = " << fvec[ii] << std::endl;
         }

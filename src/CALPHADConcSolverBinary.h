@@ -20,11 +20,6 @@ public:
         const double* const fB);
 
 protected:
-    /*
-     * number of coexisting phases
-     */
-    int N_;
-
     double fA_[3];
     double fB_[3];
 
@@ -34,11 +29,12 @@ protected:
     double Lmix_B_[4];
     double RTinv_;
 
-    virtual void computeXi(const double* const c, double xi[3]) const;
-
-    virtual void computeDxiDc(const double* const c, double dxidc[3]) const;
-
 private:
+    void computeXi(const double* const c, double xi[3]) const;
+
+    void computeDxiDc(const double* const c, double dxidc[3]) const;
+
+    // virtual functions inherited from DampedNewtonSolver
     void RHS(const double* const x, double* const fvec);
 
     void Jacobian(const double* const x, double** const fjac);

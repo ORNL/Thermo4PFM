@@ -6,18 +6,14 @@
 #include <cmath>
 #include <iostream>
 
-static const double s_smallc     = 1.0e-8;
-static const double s_inv_smallc = 1. / s_smallc;
-
 namespace Thermo4PFM
 {
 //=======================================================================
 
 CALPHADConcentrationSolverBinary::CALPHADConcentrationSolverBinary(
     const bool with_third_phase)
+    : with_third_phase_(with_third_phase)
 {
-    with_third_phase_ = with_third_phase;
-    N_                = with_third_phase_ ? 3 : 2;
 }
 
 //=======================================================================
@@ -113,7 +109,7 @@ void CALPHADConcentrationSolverBinary::Jacobian(
 
     fjac[0][0] = (1.0 - hphi_);
     fjac[0][1] = hphi_;
-    if (N_ > 2)
+    if (with_third_phase_)
     {
         fjac[0][1] -= hphi_ * heta_;
         fjac[0][2] = hphi_ * heta_;
@@ -141,17 +137,19 @@ int CALPHADConcentrationSolverBinary::ComputeConcentration(double* const conc,
     heta_  = heta;
     RTinv_ = RTinv;
 
+    int N = with_third_phase_ ? 3 : 2;
+
     for (int ii = 0; ii < 4; ii++)
         Lmix_L_[ii] = Lmix_L[ii];
     for (int ii = 0; ii < 4; ii++)
         Lmix_A_[ii] = Lmix_A[ii];
     for (int ii = 0; ii < 4; ii++)
         Lmix_B_[ii] = Lmix_B[ii];
-    for (int ii = 0; ii < N_; ii++)
+    for (int ii = 0; ii < N; ii++)
         fA_[ii] = fA[ii];
-    for (int ii = 0; ii < N_; ii++)
+    for (int ii = 0; ii < N; ii++)
         fB_[ii] = fB[ii];
 
-    return NewtonSolver::ComputeSolution(conc, N_);
+    return NewtonSolver::ComputeSolution(conc, N);
 }
 }

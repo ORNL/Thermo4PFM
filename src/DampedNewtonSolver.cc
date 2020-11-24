@@ -41,7 +41,6 @@ void DampedNewtonSolver::UpdateSolution(
     // use Cramer's rule to solve linear system
     for (int jj = 0; jj < nn; jj++)
     {
-
         CopyMatrix(mwork, fjac);
 
         // replace jth column with rhs
