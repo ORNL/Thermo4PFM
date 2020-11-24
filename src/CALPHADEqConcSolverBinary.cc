@@ -8,7 +8,7 @@
 namespace Thermo4PFM
 {
 
-void CALPHADEqConcentrationSolverBinary::RHS(
+void CALPHADEqConcSolverBinary::RHS(
     const double* const c, // composition of species A in various phases
     double* const fvec)
 {
@@ -40,7 +40,7 @@ void CALPHADEqConcentrationSolverBinary::RHS(
 
 //=======================================================================
 
-void CALPHADEqConcentrationSolverBinary::Jacobian(
+void CALPHADEqConcSolverBinary::Jacobian(
     const double* const c, double** const fjac)
 {
     // tbox::pout<<"Compute Jacobian for CALPHAD..."<<endl;
@@ -74,7 +74,7 @@ void CALPHADEqConcentrationSolverBinary::Jacobian(
 
 //=======================================================================
 
-int CALPHADEqConcentrationSolverBinary::ComputeConcentration(double* const conc,
+int CALPHADEqConcSolverBinary::ComputeConcentration(double* const conc,
     const double RTinv, const double* const Lmix_L, const double* const Lmix_A,
     const double* const Lmix_B, const double* const fA, const double* const fB)
 {

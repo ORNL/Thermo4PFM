@@ -8,10 +8,10 @@
 namespace Thermo4PFM
 {
 
-class CALPHADEqConcentrationSolverBinary : public DampedNewtonSolver
+class CALPHADEqConcSolverBinary : public DampedNewtonSolver
 {
 public:
-    CALPHADEqConcentrationSolverBinary() : DampedNewtonSolver(2)
+    CALPHADEqConcSolverBinary() : DampedNewtonSolver(2)
     {
         for (unsigned i = 0; i < 4; i++)
             Lmix_L_[i] = std::nan("");
@@ -19,7 +19,7 @@ public:
             Lmix_A_[i] = std::nan("");
     };
 
-    virtual ~CALPHADEqConcentrationSolverBinary(){};
+    virtual ~CALPHADEqConcSolverBinary(){};
 
     int ComputeConcentration(double* const conc, const double RTinv,
         const double* const Lmix_L, const double* const Lmix_A,

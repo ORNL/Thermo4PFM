@@ -308,7 +308,7 @@ bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(const double temperature,
     setupValuesForTwoPhasesSolver(
         temperature, Lmix_L_, Lmix_A_, Lmix_B_, fA_, fB_, pi0, pi1);
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
-    CALPHADEqConcentrationSolverBinary eq_solver;
+    CALPHADEqConcSolverBinary eq_solver;
     eq_solver.SetMaxIterations(maxits);
 
     int ret = eq_solver.ComputeConcentration(
