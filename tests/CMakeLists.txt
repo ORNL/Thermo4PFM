@@ -103,6 +103,24 @@ add_executable(testCALPHADternaryEquilibrium
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+add_executable(testLoopCALPHADbinaryEquilibrium
+               ${TEST_DIR}/testLoopCALPHADbinaryEquilibrium.cc
+               ${CMAKE_SOURCE_DIR}/src/functions.cc
+               ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverBinary.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergy.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergyExpansion.cc
+               ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
+               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
+               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
+               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
+               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+
+if (${OPENMP_CXX_FOUND})
+  target_link_libraries(testLoopCALPHADbinaryEquilibrium OpenMP::OpenMP_CXX)
+endif()
 
 add_test(NAME testPropertyTree
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testPropertyTree
@@ -133,4 +151,7 @@ add_test(NAME testCALPHADternaryKKS
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testCALPHADternaryEquilibrium
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADternaryEquilibrium
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testLoopCALPHADbinaryEquilibrium
+         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testLoopCALPHADbinaryEquilibrium
          WORKING_DIRECTORY ${TEST_DIR})

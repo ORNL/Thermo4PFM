@@ -12,6 +12,8 @@ if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
+find_package(OpenMP)
+
 # clang-format (optional)
 set(WITH_CLANG_FORMAT FALSE CACHE BOOL "Indent code with clang-format")
 if(${WITH_CLANG_FORMAT})
