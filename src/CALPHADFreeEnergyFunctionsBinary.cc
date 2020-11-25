@@ -215,14 +215,12 @@ void CALPHADFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
 
 //=======================================================================
 
-void CALPHADFreeEnergyFunctionsBinary::setupValuesForTwoPhasesSolver(
+void CALPHADFreeEnergyFunctionsBinary::computeParametersForSolvers(
     const double temperature, double* Lmix_L, double* Lmix_A, double* Lmix_B,
-    double* fA, double* fB, const PhaseIndex pi0, const PhaseIndex pi1)
+    double* fA, double* fB, const PhaseIndex* pis, const int nphases)
 {
-    PhaseIndex pis[2] = { pi0, pi1 };
-
-    // loop over two phases
-    for (short i = 0; i < 2; i++)
+    // loop over phases
+    for (short i = 0; i < nphases; i++)
     {
         switch (pis[i])
         {
@@ -255,41 +253,9 @@ void CALPHADFreeEnergyFunctionsBinary::setupValuesForTwoPhasesSolver(
 
             default:
                 std::cerr << "CALPHADFreeEnergyFunctionsBinary::"
-                             "setupValuesForTwoPhasesSolver: Undefined phase"
+                             "computeParametersForSolvers: Undefined phase"
                           << std::endl;
         }
-    }
-}
-
-//=======================================================================
-
-void CALPHADFreeEnergyFunctionsBinary::setup(const double temperature)
-{
-    fA_[0] = g_species_phaseL_[0].fenergy(temperature);
-    fA_[1] = g_species_phaseA_[0].fenergy(temperature);
-
-    fB_[0] = g_species_phaseL_[1].fenergy(temperature);
-    fB_[1] = g_species_phaseA_[1].fenergy(temperature);
-
-    Lmix_L_[0] = lmixPhase(0, PhaseIndex::phaseL, temperature);
-    Lmix_L_[0] = lmixPhase(1, PhaseIndex::phaseL, temperature);
-    Lmix_L_[0] = lmixPhase(2, PhaseIndex::phaseL, temperature);
-    Lmix_L_[0] = lmixPhase(3, PhaseIndex::phaseL, temperature);
-
-    Lmix_A_[1] = lmixPhase(0, PhaseIndex::phaseA, temperature);
-    Lmix_A_[1] = lmixPhase(1, PhaseIndex::phaseA, temperature);
-    Lmix_A_[1] = lmixPhase(2, PhaseIndex::phaseA, temperature);
-    Lmix_A_[1] = lmixPhase(3, PhaseIndex::phaseA, temperature);
-
-    if (with_third_phase_)
-    {
-        fA_[2] = g_species_phaseB_[0].fenergy(temperature);
-        fB_[2] = g_species_phaseB_[1].fenergy(temperature);
-
-        Lmix_B_[2] = lmixPhase(0, PhaseIndex::phaseB, temperature);
-        Lmix_B_[2] = lmixPhase(1, PhaseIndex::phaseB, temperature);
-        Lmix_B_[2] = lmixPhase(2, PhaseIndex::phaseB, temperature);
-        Lmix_B_[2] = lmixPhase(3, PhaseIndex::phaseB, temperature);
     }
 }
 
@@ -305,14 +271,25 @@ bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(const double temperature,
                   << std::endl;
     assert(temperature > 0.);
 
-    setupValuesForTwoPhasesSolver(
-        temperature, Lmix_L_, Lmix_A_, Lmix_B_, fA_, fB_, pi0, pi1);
+    // evaluate temperature dependent parameters
+    double fA[3];
+    double fB[3];
+
+    double Lmix_L[4];
+    double Lmix_A[4];
+    double Lmix_B[4];
+
+    PhaseIndex pis[2] = { pi0, pi1 };
+    computeParametersForSolvers(
+        temperature, Lmix_L, Lmix_A, Lmix_B, fA, fB, pis, 2);
+
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
+
     CALPHADEqConcSolverBinary eq_solver;
     eq_solver.SetMaxIterations(maxits);
 
     int ret = eq_solver.ComputeConcentration(
-        ceq, RTinv, Lmix_L_, Lmix_A_, Lmix_B_, fA_, fB_);
+        ceq, RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB);
 
     if (ret >= 0)
     {
@@ -365,11 +342,21 @@ void CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
     if (ceq_a_ >= 0.) c[1] = ceq_a_;
     if (ceq_b_ >= 0.) c[2] = ceq_b_;
 
-    setup(temperature);
+    // evaluate temperature dependent parameters
+    double fA[3];
+    double fB[3];
+
+    double Lmix_L[4];
+    double Lmix_A[4];
+    double Lmix_B[4];
+    const PhaseIndex pis[3]
+        = { PhaseIndex::phaseL, PhaseIndex::phaseA, PhaseIndex::phaseB };
+    computeParametersForSolvers(
+        temperature, Lmix_L, Lmix_A, Lmix_B, fA, fB, pis, 3);
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
     int ret      = solver_->ComputeConcentration(
-        c, conc, hphi, heta, RTinv, Lmix_L_, Lmix_A_, Lmix_B_, fA_, fB_);
+        c, conc, hphi, heta, RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB);
 
     if (ret < 0)
     {
@@ -427,21 +414,19 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
 
     const double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
 
-    fA_[0] = getFenergyPhaseL(0, temperature);
-    fA_[1] = getFenergyPhaseA(0, temperature);
+    double fA[3];
+    double fB[3];
+    double Lmix_L[4];
+    double Lmix_A[4];
+    double Lmix_B[4];
 
-    fB_[0] = getFenergyPhaseL(1, temperature);
-    fB_[1] = getFenergyPhaseA(1, temperature);
-
-    Lmix_L_[0] = lmixPhase(0, PhaseIndex::phaseL, temperature);
-    Lmix_L_[1] = lmixPhase(1, PhaseIndex::phaseL, temperature);
-    Lmix_L_[2] = lmixPhase(2, PhaseIndex::phaseL, temperature);
-    Lmix_L_[3] = lmixPhase(3, PhaseIndex::phaseL, temperature);
-
-    Lmix_A_[0] = lmixPhase(0, PhaseIndex::phaseA, temperature);
-    Lmix_A_[1] = lmixPhase(1, PhaseIndex::phaseA, temperature);
-    Lmix_A_[2] = lmixPhase(2, PhaseIndex::phaseA, temperature);
-    Lmix_A_[3] = lmixPhase(3, PhaseIndex::phaseA, temperature);
+    const int nphases = with_third_phase_ ? 3 : 2;
+    PhaseIndex* pis   = new PhaseIndex[nphases];
+    pis[0]            = PhaseIndex::phaseL;
+    pis[1]            = PhaseIndex::phaseA;
+    if (with_third_phase_) pis[2] = PhaseIndex::phaseB;
+    computeParametersForSolvers(
+        temperature, Lmix_L, Lmix_A, Lmix_B, fA, fB, pis, nphases);
 
     const char interp_func_type = concInterpChar(conc_interp_func_type_);
     const double hphi           = interp_func(phi, interp_func_type);
@@ -457,14 +442,6 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
         assert(x[2] <= 1.);
         // x[2] = ( ceq_b_>=0. ) ? ceq_b_ : 0.5;
 
-        fA_[2] = getFenergyPhaseB(0, temperature);
-        fB_[2] = getFenergyPhaseB(1, temperature);
-
-        Lmix_B_[0] = lmixPhase(0, PhaseIndex::phaseB, temperature);
-        Lmix_B_[1] = lmixPhase(1, PhaseIndex::phaseB, temperature);
-        Lmix_B_[2] = lmixPhase(2, PhaseIndex::phaseB, temperature);
-        Lmix_B_[3] = lmixPhase(3, PhaseIndex::phaseB, temperature);
-
         heta = interp_func(eta, interp_func_type);
     }
 
@@ -472,7 +449,7 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
     double c0 = conc[0] >= 0. ? conc[0] : 0.;
     c0        = c0 <= 1. ? c0 : 1.;
     int ret   = solver_->ComputeConcentration(
-        x, c0, hphi, heta, RTinv, Lmix_L_, Lmix_A_, Lmix_B_, fA_, fB_);
+        x, c0, hphi, heta, RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB);
     if (ret == -1)
     {
         std::cerr << "ERROR, "
