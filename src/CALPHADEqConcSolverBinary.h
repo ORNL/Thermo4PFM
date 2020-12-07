@@ -3,7 +3,7 @@
 
 #include "DampedNewtonSolver.h"
 
-#include <math.h>
+#include <cmath>
 
 namespace Thermo4PFM
 {
