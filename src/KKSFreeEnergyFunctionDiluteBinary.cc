@@ -1,6 +1,7 @@
 #include "KKSFreeEnergyFunctionDiluteBinary.h"
 #include "PhysicalConstants.h"
 #include "functions.h"
+#include "well_functions.h"
 #include "xlogx.h"
 
 #include <cmath>

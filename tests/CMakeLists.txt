@@ -19,6 +19,7 @@ add_executable(testCALPHADGibbsEnergy
 add_executable(testCALPHADbinaryKKS
                ${TEST_DIR}/testCALPHADbinaryKKS.cc
                ${CMAKE_SOURCE_DIR}/src/functions.cc
+               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
                ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
@@ -33,6 +34,7 @@ add_executable(testCALPHADbinaryKKS
 add_executable(testCALPHADbinaryEquilibrium
                ${TEST_DIR}/testCALPHADbinaryEquilibrium.cc
                ${CMAKE_SOURCE_DIR}/src/functions.cc
+               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
                ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary.cc
@@ -47,6 +49,7 @@ add_executable(testCALPHADbinaryEquilibrium
 add_executable(testKKSdiluteBinaryKKS
                ${TEST_DIR}/testKKSdiluteBinaryKKS.cc
                ${CMAKE_SOURCE_DIR}/src/functions.cc
+               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
                ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
                ${CMAKE_SOURCE_DIR}/src/KKSFreeEnergyFunctionDiluteBinary.cc
                ${CMAKE_SOURCE_DIR}/src/KKSdiluteBinaryConcentrationSolver.cc
@@ -57,6 +60,7 @@ add_executable(testKKSdiluteBinaryKKS
 add_executable(testKKSdiluteBinaryEquilibrium
                ${TEST_DIR}/testKKSdiluteBinaryEquilibrium.cc
                ${CMAKE_SOURCE_DIR}/src/functions.cc
+               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
                ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
                ${CMAKE_SOURCE_DIR}/src/KKSFreeEnergyFunctionDiluteBinary.cc
                ${CMAKE_SOURCE_DIR}/src/KKSdiluteBinaryConcentrationSolver.cc
@@ -76,6 +80,7 @@ add_executable(testCALPHADJacobianTernary
 add_executable(testCALPHADternaryKKS
                ${TEST_DIR}/testCALPHADternaryKKS.cc
                ${CMAKE_SOURCE_DIR}/src/functions.cc
+               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
                ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsTernary.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergy.cc
@@ -91,6 +96,7 @@ add_executable(testCALPHADternaryKKS
 add_executable(testCALPHADternaryEquilibrium
                ${TEST_DIR}/testCALPHADternaryEquilibrium.cc
                ${CMAKE_SOURCE_DIR}/src/functions.cc
+               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
                ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsTernary.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverTernary.cc
@@ -106,6 +112,7 @@ add_executable(testCALPHADternaryEquilibrium
 add_executable(testLoopCALPHADbinaryEquilibrium
                ${TEST_DIR}/testLoopCALPHADbinaryEquilibrium.cc
                ${CMAKE_SOURCE_DIR}/src/functions.cc
+               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
                ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary.cc
@@ -120,6 +127,7 @@ add_executable(testLoopCALPHADbinaryEquilibrium
 add_executable(testLoopCALPHADbinaryKKS
                ${TEST_DIR}/testLoopCALPHADbinaryKKS.cc
                ${CMAKE_SOURCE_DIR}/src/functions.cc
+               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
                ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary.cc

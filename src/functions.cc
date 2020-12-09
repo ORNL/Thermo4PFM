@@ -4,11 +4,6 @@
 namespace Thermo4PFM
 {
 
-double well_func(const double phi)
-{
-    return 16. * phi * phi * (1. - phi) * (1. - phi);
-}
-
 double interp_func(const double phi, const char type)
 {
     switch (type)
@@ -32,6 +27,41 @@ double interp_func(const double phi, const char type)
         {
             double phit = std::max(0., std::min(1., phi));
             return phit;
+        }
+        default:
+        {
+            std::cerr << "Unknown interpolation type" << std::endl;
+            abort();
+            return 0.;
+        }
+    }
+}
+
+double deriv_interp_func(const double phi, const char type)
+{
+    switch (type)
+    {
+        case 'q':
+        {
+            double phit = std::max(0., phi);
+            return 2. * phit;
+        }
+        case 'p':
+        {
+            double phit = std::max(0., std::min(1., phi));
+            return 30. * phit * phit * (1. - phit) * (1. - phit);
+        }
+        case 'h':
+        {
+            double phit = std::max(0., std::min(1., phi));
+            return 6. * phit * (1. - phit);
+        }
+        case 'l':
+        {
+            if (phi > 0. || phi < 1.)
+                return 1.;
+            else
+                return 0.;
         }
         default:
         {

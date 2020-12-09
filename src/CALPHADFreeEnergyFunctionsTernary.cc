@@ -2,6 +2,7 @@
 #include "CALPHADFunctions.h"
 #include "PhysicalConstants.h"
 #include "functions.h"
+#include "well_functions.h"
 
 #include <boost/property_tree/json_parser.hpp>
 
