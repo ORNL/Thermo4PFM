@@ -71,4 +71,35 @@ double deriv_interp_func(const double phi, const char type)
         }
     }
 }
+
+double second_deriv_interp_func(const double phi, const char type)
+{
+    switch (type)
+    {
+        case 'q':
+        {
+            return 2.;
+        }
+        case 'p':
+        {
+            double phit = std::max(0., std::min(1., phi));
+            return 60. * phit * (1. - 3. * phit + 2. * phit * phit);
+        }
+        case 'h':
+        {
+            double phit = std::max(0., std::min(1., phi));
+            return 6. * (1. - 2. * phit);
+        }
+        case 'l':
+        {
+            return 0.;
+        }
+        default:
+        {
+            std::cerr << "Unknown interpolation type" << std::endl;
+            abort();
+            return 0.;
+        }
+    }
+}
 }
