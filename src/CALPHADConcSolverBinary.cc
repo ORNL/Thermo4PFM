@@ -86,18 +86,12 @@ void CALPHADConcSolverBinary::Jacobian(
     fjac[1][1] = -dxidc[1] - xlogx_deriv2(c[1]) - xlogx_deriv2(1. - c[1]);
 }
 
-/*
- ********************************************************************
- * conc: initial guess and final solution (concentration in each phase)
- * c0: local composition
- ********************************************************************
- */
-int CALPHADConcSolverBinary::ComputeConcentration(double* const conc,
-    const double c0, const double hphi, const double RTinv,
-    const double* const Lmix_L, const double* const Lmix_A,
+// set values of internal variables used to evaluate
+// terms in Newton iterations
+void CALPHADConcSolverBinary::setup(const double c0, const double hphi,
+    const double RTinv, const double* const Lmix_L, const double* const Lmix_A,
     const double* const fA, const double* const fB)
 {
-    // std::cout<<"CALPHADConcSolverBinary::ComputeConcentration()"<<endl;
     c0_    = c0;
     hphi_  = hphi;
     RTinv_ = RTinv;
@@ -110,6 +104,16 @@ int CALPHADConcSolverBinary::ComputeConcentration(double* const conc,
         fA_[ii] = fA[ii];
     for (int ii = 0; ii < 2; ii++)
         fB_[ii] = fB[ii];
+}
+
+/*
+ ********************************************************************
+ * conc: initial guess and final solution (concentration in each phase)
+ ********************************************************************
+ */
+int CALPHADConcSolverBinary::ComputeConcentration(double* const conc)
+{
+    // std::cout<<"CALPHADConcSolverBinary::ComputeConcentration()"<<endl;
 
     return NewtonSolver::ComputeSolution(conc);
 }

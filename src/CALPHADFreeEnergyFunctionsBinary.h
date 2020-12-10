@@ -85,7 +85,7 @@ private:
 
     void readNewtonparameters(boost::property_tree::ptree& newton_db);
 
-    void computeParametersForSolvers(const double temperature, double* Lmix_L,
+    void computeTdependentParameters(const double temperature, double* Lmix_L,
         double* Lmix_A, double* fA, double* fB);
 
     std::string fenergy_diag_filename_;
