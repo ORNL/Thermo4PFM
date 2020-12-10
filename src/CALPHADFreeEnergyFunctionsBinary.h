@@ -23,8 +23,7 @@ public:
     CALPHADFreeEnergyFunctionsBinary(boost::property_tree::ptree& input_db,
         boost::optional<boost::property_tree::ptree&> newton_db,
         const EnergyInterpolationType energy_interp_func_type,
-        const ConcInterpolationType conc_interp_func_type,
-        const bool with_third_phase = false);
+        const ConcInterpolationType conc_interp_func_type);
 
     ~CALPHADFreeEnergyFunctionsBinary() { delete solver_; };
 
@@ -60,23 +59,20 @@ public:
     }
 
     int computePhaseConcentrations(const double temperature, const double* conc,
-        const double phi, const double eta, double* x);
+        const double phi, double* x);
     void energyVsPhiAndC(const double temperature, const double* const ceq,
         const bool found_ceq, const double phi_well_scale,
         const int npts_phi = 51,
         const int npts_c   = 50); // # of compositions to use (>1)
     void printEnergyVsComposition(
         const double temperature, const int npts = 100);
-    double fchem(const double phi, const double eta, const double* const conc,
-        const double temperature);
+    double fchem(
+        const double phi, const double* const conc, const double temperature);
     void printEnergyVsPhiHeader(const double temperature, const int nphi,
         const int nc, const double cmin, const double cmax, const double slopec,
         std::ostream& os) const;
     void printEnergyVsPhi(const double* const conc, const double temperature,
         const double phi_well_scale, const int npts, const double slopec,
-        std::ostream& os);
-    void printEnergyVsEta(const double* const conc, const double temperature,
-        const double eta_well_scale, const int npts, const double slopec,
         std::ostream& os);
 
 private:
@@ -84,32 +80,27 @@ private:
 
     double ceq_l_;
     double ceq_a_;
-    double ceq_b_;
 
     EnergyInterpolationType energy_interp_func_type_;
     ConcInterpolationType conc_interp_func_type_;
 
-    bool with_third_phase_;
-
     void readNewtonparameters(boost::property_tree::ptree& newton_db);
 
     void computeParametersForSolvers(const double temperature, double* Lmix_L,
-        double* Lmix_A, double* Lmix_B, double* fA, double* fB,
-        const PhaseIndex* pis, const int nphases);
+        double* Lmix_A, double* fA, double* fB, const PhaseIndex* pis,
+        const int nphases);
 
     std::string fenergy_diag_filename_;
 
     // size 2 for species 0 and 1
     CALPHADSpeciesPhaseGibbsEnergy g_species_phaseL_[2];
     CALPHADSpeciesPhaseGibbsEnergy g_species_phaseA_[2];
-    CALPHADSpeciesPhaseGibbsEnergy g_species_phaseB_[2];
 
     // size 4 for L0, L1, L2, L3,
     // can contain up to 3 coefficients a,b,c for a+b*T,
     // possibly +c*T*ln(T) if compiled with -DLMIX_WTLOGT
     double LmixPhaseL_[4][MAX_POL_T_INDEX];
     double LmixPhaseA_[4][MAX_POL_T_INDEX];
-    double LmixPhaseB_[4][MAX_POL_T_INDEX];
 
     void readParameters(boost::property_tree::ptree& calphad_db);
 
@@ -121,10 +112,6 @@ private:
     double getFenergyPhaseA(const short is, const double temperature)
     {
         return g_species_phaseA_[is].fenergy(temperature);
-    }
-    double getFenergyPhaseB(const short is, const double temperature)
-    {
-        return g_species_phaseB_[is].fenergy(temperature);
     }
 
     double lmixPhase(
@@ -148,13 +135,6 @@ private:
                        + LmixPhaseA_[index][2] * temperature * log(temperature)
 #endif
                     ;
-            case PhaseIndex::phaseB:
-                return LmixPhaseB_[index][0]
-                       + LmixPhaseB_[index][1] * temperature
-#ifdef LMIX_WTLOGT
-                       + LmixPhaseB_[index][2] * temperature * log(temperature)
-#endif
-                    ;
             default:
                 std::cout << "CALPHADFreeEnergyStrategy::lmixPhase(), "
                              "undefined phase"
@@ -165,8 +145,7 @@ private:
     }
 
     void computePhasesFreeEnergies(const double temperature, const double hphi,
-        const double heta, const double conc, double& fl, double& fa,
-        double& fb);
+        const double conc, double& fl, double& fa);
 };
 }
 #endif

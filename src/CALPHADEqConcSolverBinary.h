@@ -23,8 +23,7 @@ public:
 
     int ComputeConcentration(double* const conc, const double RTinv,
         const double* const Lmix_L, const double* const Lmix_A,
-        const double* const Lmix_B, const double* const fA,
-        const double* const fB);
+        const double* const fA, const double* const fB);
 
 protected:
     virtual void RHS(const double* const x, double* const fvec);
@@ -36,11 +35,11 @@ protected:
     double c0_;
     double hphi_;
 
-    // energies of 2 species, in three phase each
-    double fA_[3];
-    double fB_[3];
+    // energies of 2 species (A and B), in two phase each
+    double fA_[2];
+    double fB_[2];
 
-    // 4 L coefficients for 3 possible phases (L, A and B)
+    // 4 L coefficients for 2 possible phases (L, A)
     double Lmix_L_[4];
     double Lmix_A_[4];
 };

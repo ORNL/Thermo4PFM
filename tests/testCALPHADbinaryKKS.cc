@@ -49,7 +49,7 @@ TEST_CASE("CALPHAD binary KKS", "[binary kks]")
     // compute concentrations satisfying KKS equations
     double conc = 0.3;
     double phi  = 0.5;
-    cafe.computePhaseConcentrations(temperature, &conc, phi, 0., &sol[0]);
+    cafe.computePhaseConcentrations(temperature, &conc, phi, &sol[0]);
 
     std::cout << "-------------------------------" << std::endl;
     std::cout << "Temperature = " << temperature << std::endl;

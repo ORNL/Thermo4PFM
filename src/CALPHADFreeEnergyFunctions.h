@@ -17,7 +17,7 @@ public:
     virtual ~CALPHADFreeEnergyFunctions(){};
 
     virtual int computePhaseConcentrations(const double temperature,
-        const double* conc, const double phi, const double eta, double* x)
+        const double* conc, const double phi, double* x)
         = 0;
 
     virtual void computeSecondDerivativeFreeEnergy(const double temp,

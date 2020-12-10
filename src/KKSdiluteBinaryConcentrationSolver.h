@@ -27,7 +27,6 @@ private:
 
     double c0_;
     double hphi_;
-    double heta_;
 };
 }
 

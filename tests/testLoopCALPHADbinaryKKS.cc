@@ -62,8 +62,7 @@ TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
             double conc[2];
 
             // compute concentrations in each phase
-            cafe.computePhaseConcentrations(
-                temperature, init_guess, phi, 0., conc);
+            cafe.computePhaseConcentrations(temperature, init_guess, phi, conc);
 
             std::cout << "Temperature = " << temperature << std::endl;
             std::cout << "Concentrations: cl = " << conc[0]
@@ -84,7 +83,7 @@ TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
         double conc[2];
 
         // compute concentrations in each phase
-        cafe.computePhaseConcentrations(temperature, init_guess, phi, 0., conc);
+        cafe.computePhaseConcentrations(temperature, init_guess, phi, conc);
 
         REQUIRE(conc[0] == Approx(cl[i]).margin(1.e-1));
         REQUIRE(conc[1] == Approx(cs[i]).margin(1.e-1));

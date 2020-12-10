@@ -37,15 +37,15 @@ public:
     void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.) {}
 
     int computePhaseConcentrations(const double temperature, const double* conc,
-        const double phi, const double eta, double* x);
+        const double phi, double* x);
     void energyVsPhiAndC(const double temperature, const double* const ceq,
         const bool found_ceq, const double phi_well_scale,
         const int npts_phi = 51,
         const int npts_c   = 50); // # of compositions to use (>1)
     void printEnergyVsComposition(
         const double temperature, const int npts = 100);
-    double fchem(const double phi, const double eta, const double* const conc,
-        const double temperature);
+    double fchem(
+        const double phi, const double* const conc, const double temperature);
     void printEnergyVsPhiHeader(const double temperature, const int nphi,
         const int nc, const double cmin, const double cmax, const double slopec,
         std::ostream& os) const;
@@ -53,8 +53,7 @@ public:
         const double phi_well_scale, const int npts, const double slopec,
         std::ostream& os);
     void printEnergyVsEta(const double* const conc, const double temperature,
-        const double eta_well_scale, const int npts, const double slopec,
-        std::ostream& os);
+        const int npts, const double slopec, std::ostream& os);
 
 private:
     KKSdiluteBinaryConcentrationSolver* solver_;
