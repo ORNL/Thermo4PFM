@@ -48,7 +48,7 @@ TEST_CASE("CALPHAD binary equilibrium", "[binary equilibrium]")
     double lceq[2] = { init_guess[0], init_guess[1] };
 
     // compute equilibrium concentrations in each phase
-    bool found_ceq = cafe.computeCeqT(temperature, pi0, pi1, &lceq[0]);
+    bool found_ceq = cafe.computeCeqT(temperature, &lceq[0]);
     if (lceq[0] > 1.) found_ceq = false;
     if (lceq[0] < 0.) found_ceq = false;
     if (lceq[1] > 1.) found_ceq = false;

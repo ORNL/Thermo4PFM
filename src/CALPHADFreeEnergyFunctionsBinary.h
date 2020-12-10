@@ -35,9 +35,8 @@ public:
         const double* const conc, const PhaseIndex pi,
         std::vector<double>& d2fdc2);
 
-    virtual bool computeCeqT(const double temperature, const PhaseIndex pi0,
-        const PhaseIndex pi1, double* ceq, const int maxits = 20,
-        const bool verbose = false);
+    virtual bool computeCeqT(const double temperature, double* ceq,
+        const int maxits = 20, const bool verbose = false);
 
     void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.)
     {
@@ -87,8 +86,7 @@ private:
     void readNewtonparameters(boost::property_tree::ptree& newton_db);
 
     void computeParametersForSolvers(const double temperature, double* Lmix_L,
-        double* Lmix_A, double* fA, double* fB, const PhaseIndex* pis,
-        const int nphases);
+        double* Lmix_A, double* fA, double* fB);
 
     std::string fenergy_diag_filename_;
 
