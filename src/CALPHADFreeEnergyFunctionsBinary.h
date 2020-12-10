@@ -24,7 +24,7 @@ public:
         boost::optional<boost::property_tree::ptree&> newton_db,
         const EnergyInterpolationType energy_interp_func_type,
         const ConcInterpolationType conc_interp_func_type,
-        const bool with_third_phase);
+        const bool with_third_phase = false);
 
     ~CALPHADFreeEnergyFunctionsBinary() { delete solver_; };
 

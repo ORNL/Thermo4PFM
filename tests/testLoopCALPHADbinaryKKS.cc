@@ -43,16 +43,14 @@ TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
 
     boost::optional<pt::ptree&> newton_db;
 
-    bool with_third_phase = false;
-
     // initial guesses
     const double init_guess[2] = { 0.2, 0.1 };
 
     std::vector<double> cl(nTintervals + 1);
     std::vector<double> cs(nTintervals + 1);
 
-    Thermo4PFM::CALPHADFreeEnergyFunctionsBinary cafe(calphad_db, newton_db,
-        energy_interp_func_type, conc_interp_func_type, with_third_phase);
+    Thermo4PFM::CALPHADFreeEnergyFunctionsBinary cafe(
+        calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
 
     {
         // serial loop

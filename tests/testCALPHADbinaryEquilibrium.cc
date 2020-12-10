@@ -35,10 +35,8 @@ TEST_CASE("CALPHAD binary equilibrium", "[binary equilibrium]")
 
     boost::optional<pt::ptree&> newton_db;
 
-    bool with_third_phase = false;
-
-    Thermo4PFM::CALPHADFreeEnergyFunctionsBinary cafe(calphad_db, newton_db,
-        energy_interp_func_type, conc_interp_func_type, with_third_phase);
+    Thermo4PFM::CALPHADFreeEnergyFunctionsBinary cafe(
+        calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
 
     // choose pair of phases: phaseL, phaseA, phaseB
     const Thermo4PFM::PhaseIndex pi0 = Thermo4PFM::PhaseIndex::phaseL;

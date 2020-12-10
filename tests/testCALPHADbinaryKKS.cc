@@ -37,9 +37,8 @@ TEST_CASE("CALPHAD binary KKS", "[binary kks]")
 
     boost::optional<pt::ptree&> newton_db;
 
-    Thermo4PFM::CALPHADFreeEnergyFunctionsBinary cafe(calphad_db, newton_db,
-        energy_interp_func_type, conc_interp_func_type,
-        false); // no 3rd phase
+    Thermo4PFM::CALPHADFreeEnergyFunctionsBinary cafe(
+        calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
 
     // initial guesses
     double c_init0 = 0.5;
