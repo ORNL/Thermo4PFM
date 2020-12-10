@@ -27,16 +27,6 @@ double CALPHADcomputeFMix_mixDeriv2(const double l0, const double l1,
     const double l2, const double l3, const std::vector<double>& concf,
     const int ic0, const int ic1);
 
-double CALPHADcomputePenalty(const double alpha1, const double p12,
-    const double p13, const double alpha2, const double p22, const double p23,
-    const double conc);
-double CALPHADcomputeDerivPenalty(const double alpha1, const double p12,
-    const double p13, const double alpha2, const double p22, const double p23,
-    const double conc);
-double CALPHADcompute2ndDerivPenalty(const double alpha1, const double p12,
-    const double p13, const double alpha2, const double p22, const double p23,
-    const double conc);
-
 double CALPHADcomputeFMixTernary(const double* lAB, const double* lAC,
     const double* lBC, const double* lABC, const double cA, const double cB);
 double CALPHADcomputeFIdealMixTernary(

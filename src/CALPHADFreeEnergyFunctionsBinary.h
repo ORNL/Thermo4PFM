@@ -79,20 +79,6 @@ public:
         const double eta_well_scale, const int npts, const double slopec,
         std::ostream& os);
 
-    // empty default implementation to avoid downcasting
-    virtual double computePenalty(const PhaseIndex, const double)
-    {
-        return 0.;
-    };
-    virtual double computeDerivPenalty(const PhaseIndex, const double)
-    {
-        return 0.;
-    };
-    virtual double compute2ndDerivPenalty(const PhaseIndex, const double)
-    {
-        return 0.;
-    };
-
 protected:
     CALPHADConcentrationSolverBinary* solver_;
 

@@ -87,28 +87,6 @@ public:
     void printEnergyVsPhi(const double* const conc, const double temperature,
         const double phi_well_scale, const int npts, std::ostream& os);
 
-    // empty default implementation to avoid downcasting
-    virtual double computePenalty(const PhaseIndex index, const double conc)
-    {
-        (void)index;
-        (void)conc;
-        return 0.;
-    };
-    virtual double computeDerivPenalty(
-        const PhaseIndex index, const double conc)
-    {
-        (void)index;
-        (void)conc;
-        return 0.;
-    };
-    virtual double compute2ndDerivPenalty(
-        const PhaseIndex index, const double conc)
-    {
-        (void)index;
-        (void)conc;
-        return 0.;
-    };
-
 protected:
     CALPHADConcentrationSolverTernary* solver_;
 
