@@ -30,7 +30,7 @@ CALPHADFreeEnergyFunctionsBinary::CALPHADFreeEnergyFunctionsBinary(
 {
     readParameters(calphad_db);
 
-    solver_ = new CALPHADConcentrationSolverBinary(with_third_phase_);
+    solver_ = new CALPHADConcSolverBinary(with_third_phase_);
 
     if (newton_db) readNewtonparameters(newton_db.get());
 }

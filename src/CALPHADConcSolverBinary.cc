@@ -10,8 +10,7 @@ namespace Thermo4PFM
 {
 //=======================================================================
 
-CALPHADConcentrationSolverBinary::CALPHADConcentrationSolverBinary(
-    const bool with_third_phase)
+CALPHADConcSolverBinary::CALPHADConcSolverBinary(const bool with_third_phase)
     : DampedNewtonSolver(with_third_phase ? 3 : 2),
       with_third_phase_(with_third_phase)
 {
@@ -19,10 +18,10 @@ CALPHADConcentrationSolverBinary::CALPHADConcentrationSolverBinary(
 
 //=======================================================================
 
-void CALPHADConcentrationSolverBinary::computeXi(
+void CALPHADConcSolverBinary::computeXi(
     const double* const c, double xi[3]) const
 {
-    // std::cout<<"CALPHADConcentrationSolverBinary::computeXi()"<<endl;
+    // std::cout<<"CALPHADConcSolverBinary::computeXi()"<<endl;
     // loop over phases
     {
         double omega = CALPHADcomputeFMix_derivBinary(
@@ -58,8 +57,7 @@ void CALPHADConcentrationSolverBinary::computeXi(
 //=======================================================================
 
 // solve for c=(c_L, c_A, c_B)
-void CALPHADConcentrationSolverBinary::RHS(
-    const double* const c, double* const fvec)
+void CALPHADConcSolverBinary::RHS(const double* const c, double* const fvec)
 {
     double xi[3] = { 0., 0., 0. };
 
@@ -78,10 +76,10 @@ void CALPHADConcentrationSolverBinary::RHS(
 
 //=======================================================================
 
-void CALPHADConcentrationSolverBinary::computeDxiDc(
+void CALPHADConcSolverBinary::computeDxiDc(
     const double* const c, double dxidc[3]) const
 {
-    // std::cout<<"CALPHADConcentrationSolverBinary::computeDxiDc()"<<endl;
+    // std::cout<<"CALPHADConcSolverBinary::computeDxiDc()"<<endl;
     // loop over phases
     dxidc[0] = RTinv_
                * CALPHADcomputeFMix_deriv2Binary(
@@ -101,7 +99,7 @@ void CALPHADConcentrationSolverBinary::computeDxiDc(
 
 //=======================================================================
 
-void CALPHADConcentrationSolverBinary::Jacobian(
+void CALPHADConcSolverBinary::Jacobian(
     const double* const c, double** const fjac)
 {
     // compute dxidc for up to 3 phases
@@ -127,12 +125,12 @@ void CALPHADConcentrationSolverBinary::Jacobian(
  * c0: local composition
  ********************************************************************
  */
-int CALPHADConcentrationSolverBinary::ComputeConcentration(double* const conc,
+int CALPHADConcSolverBinary::ComputeConcentration(double* const conc,
     const double c0, const double hphi, const double heta, const double RTinv,
     const double* const Lmix_L, const double* const Lmix_A,
     const double* const Lmix_B, const double* const fA, const double* const fB)
 {
-    // std::cout<<"CALPHADConcentrationSolverBinary::ComputeConcentration()"<<endl;
+    // std::cout<<"CALPHADConcSolverBinary::ComputeConcentration()"<<endl;
     c0_    = c0;
     hphi_  = hphi;
     heta_  = heta;

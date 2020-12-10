@@ -6,12 +6,12 @@
 namespace Thermo4PFM
 {
 
-class CALPHADConcentrationSolverBinary : public DampedNewtonSolver
+class CALPHADConcSolverBinary : public DampedNewtonSolver
 {
 public:
-    CALPHADConcentrationSolverBinary(const bool with_third_phase = false);
+    CALPHADConcSolverBinary(const bool with_third_phase = false);
 
-    virtual ~CALPHADConcentrationSolverBinary(){};
+    virtual ~CALPHADConcSolverBinary(){};
 
     int ComputeConcentration(double* const conc, const double c0,
         const double hphi, const double heta, const double RTinv,

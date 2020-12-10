@@ -80,7 +80,7 @@ public:
         std::ostream& os);
 
 private:
-    CALPHADConcentrationSolverBinary* solver_;
+    CALPHADConcSolverBinary* solver_;
 
     double ceq_l_;
     double ceq_a_;
