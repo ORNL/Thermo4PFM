@@ -30,16 +30,6 @@ CALPHADFreeEnergyFunctionsBinary::CALPHADFreeEnergyFunctionsBinary(
 {
     readParameters(calphad_db);
 
-    setupSolver(newton_db);
-}
-
-//=======================================================================
-
-void CALPHADFreeEnergyFunctionsBinary::setupSolver(
-    boost::optional<pt::ptree&> newton_db)
-{
-    std::cout << "CALPHADFreeEnergyFunctionsBinary::setupSolver()..."
-              << std::endl;
     solver_ = new CALPHADConcentrationSolverBinary(with_third_phase_);
 
     if (newton_db) readNewtonparameters(newton_db.get());

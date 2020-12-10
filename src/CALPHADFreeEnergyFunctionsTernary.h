@@ -87,7 +87,7 @@ public:
     void printEnergyVsPhi(const double* const conc, const double temperature,
         const double phi_well_scale, const int npts, std::ostream& os);
 
-protected:
+private:
     CALPHADConcentrationSolverTernary* solver_;
 
     double ceq_l_[2];
@@ -103,7 +103,6 @@ protected:
 
     void setup(const double temperature);
 
-private:
     std::string fenergy_diag_filename_;
 
     // size 3 for species A, B, C
@@ -111,6 +110,7 @@ private:
     CALPHADSpeciesPhaseGibbsEnergy g_species_phaseA_[3];
 
     // size 4 for L0, L1, L2, L3, with 2 coefficient for linear expansion in T
+    // a+b*T
     double LmixABPhaseL_[4][2];
     double LmixABPhaseA_[4][2];
 
@@ -140,8 +140,6 @@ private:
     double fC_[2];
 
     void readParameters(boost::property_tree::ptree& calphad_db);
-
-    void setupSolver(boost::optional<boost::property_tree::ptree&> newton_db);
 
     void setupValuesL(const double temperature);
     void setupValuesS(const double temperature);

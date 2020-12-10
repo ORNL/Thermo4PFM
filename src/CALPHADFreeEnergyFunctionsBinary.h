@@ -79,7 +79,7 @@ public:
         const double eta_well_scale, const int npts, const double slopec,
         std::ostream& os);
 
-protected:
+private:
     CALPHADConcentrationSolverBinary* solver_;
 
     double ceq_l_;
@@ -97,7 +97,6 @@ protected:
         double* Lmix_A, double* Lmix_B, double* fA, double* fB,
         const PhaseIndex* pis, const int nphases);
 
-private:
     std::string fenergy_diag_filename_;
 
     // size 2 for species 0 and 1
@@ -113,8 +112,6 @@ private:
     double LmixPhaseB_[4][MAX_POL_T_INDEX];
 
     void readParameters(boost::property_tree::ptree& calphad_db);
-
-    void setupSolver(boost::optional<boost::property_tree::ptree&> newton_db);
 
     // energy of species "is" in phase L,A,B
     double getFenergyPhaseL(const short is, const double temperature)

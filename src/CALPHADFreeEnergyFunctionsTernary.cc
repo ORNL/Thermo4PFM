@@ -97,16 +97,6 @@ CALPHADFreeEnergyFunctionsTernary::CALPHADFreeEnergyFunctionsTernary(
 
     readParameters(calphad_db);
 
-    setupSolver(newton_db);
-}
-
-//=======================================================================
-
-void CALPHADFreeEnergyFunctionsTernary::setupSolver(
-    boost::optional<pt::ptree&> newton_db)
-{
-    std::clog << "CALPHADFreeEnergyFunctionsTernary::setupSolver()..."
-              << std::endl;
     solver_ = new CALPHADConcentrationSolverTernary();
 
     if (newton_db) readNewtonparameters(newton_db.get());
