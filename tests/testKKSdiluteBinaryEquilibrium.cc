@@ -69,10 +69,12 @@ TEST_CASE("Dilute binary equilibrium", "[dilute binary equilibrium]")
 
     // compute second derivatives for info only
     std::vector<double> d2fdc2(1);
-    cafe.computeSecondDerivativeFreeEnergy(temperature, &ceq[0], pi0, d2fdc2);
+    cafe.computeSecondDerivativeFreeEnergy(
+        temperature, &ceq[0], pi0, d2fdc2.data());
     std::cout << "-------------------------------" << std::endl;
     std::cout << "Second derivatives" << std::endl;
     std::cout << "At ceL: " << d2fdc2[0] << std::endl;
-    cafe.computeSecondDerivativeFreeEnergy(temperature, &ceq[1], pi1, d2fdc2);
+    cafe.computeSecondDerivativeFreeEnergy(
+        temperature, &ceq[1], pi1, d2fdc2.data());
     std::cout << "At ceS: " << d2fdc2[0] << std::endl;
 }

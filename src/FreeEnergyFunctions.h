@@ -4,7 +4,6 @@
 #include "Phases.h"
 
 #include <string>
-#include <vector>
 
 namespace Thermo4PFM
 {
@@ -26,8 +25,7 @@ public:
         = 0;
 
     virtual void computeSecondDerivativeFreeEnergy(const double temp,
-        const double* const conc, const PhaseIndex pi,
-        std::vector<double>& d2fdc2)
+        const double* const conc, const PhaseIndex pi, double* d2fdc2)
         = 0;
 
     virtual bool computeCeqT(const double temperature, const PhaseIndex pi0,

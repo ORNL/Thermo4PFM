@@ -72,7 +72,7 @@ void CALPHADEqConcentrationSolverTernary::RHS(
     fvec[0]
         = fL - fS - (cL[0] - cS[0]) * dfLdciL[0] - (cL[1] - cS[1]) * dfLdciL[1];
 
-    // equation: slope 0 in tangent plane for std::vector orthogonal to cL-CS
+    // equation: slope 0 in tangent plane for vector orthogonal to cL-CS
     fvec[1] = dfLdciL[0] * cL[1] - dfLdciL[0] * cS[1] - dfLdciL[1] * cL[0]
               + dfLdciL[1] * cS[0];
 

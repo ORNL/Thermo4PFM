@@ -164,7 +164,7 @@ void CALPHADFreeEnergyFunctionsBinary::computeDerivFreeEnergy(
 
 void CALPHADFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
     const double temp, const double* const conc, const PhaseIndex pi,
-    std::vector<double>& d2fdc2)
+    double* d2fdc2)
 {
     assert(conc[0] >= 0.);
     assert(conc[0] <= 1.);
