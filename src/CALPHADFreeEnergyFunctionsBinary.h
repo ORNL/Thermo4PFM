@@ -1,8 +1,6 @@
 #ifndef included_CALPHADFreeEnergyFunctionsBinary
 #define included_CALPHADFreeEnergyFunctionsBinary
 
-#include "CALPHADConcSolverBinary.h"
-#include "CALPHADEqConcSolverBinary.h"
 #include "CALPHADFreeEnergyFunctions.h"
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 #include "InterpolationType.h"
@@ -25,7 +23,7 @@ public:
         const EnergyInterpolationType energy_interp_func_type,
         const ConcInterpolationType conc_interp_func_type);
 
-    ~CALPHADFreeEnergyFunctionsBinary() { delete solver_; };
+    ~CALPHADFreeEnergyFunctionsBinary(){};
 
     virtual double computeFreeEnergy(const double temperature,
         const double* const conc, const PhaseIndex pi, const bool gp = false);
@@ -74,8 +72,6 @@ public:
         std::ostream& os);
 
 private:
-    CALPHADConcSolverBinary* solver_;
-
     double ceq_l_;
     double ceq_a_;
 
@@ -88,6 +84,11 @@ private:
         double* Lmix_A, double* fA, double* fB);
 
     std::string fenergy_diag_filename_;
+
+    double newton_tol_;
+    double newton_alpha_;
+    int newton_maxits_;
+    bool newton_verbose_;
 
     // size 2 for species 0 and 1
     CALPHADSpeciesPhaseGibbsEnergy g_species_phaseL_[2];

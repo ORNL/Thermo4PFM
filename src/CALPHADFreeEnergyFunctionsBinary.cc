@@ -1,4 +1,5 @@
 #include "CALPHADFreeEnergyFunctionsBinary.h"
+#include "CALPHADConcSolverBinary.h"
 #include "CALPHADEqConcSolverBinary.h"
 #include "CALPHADFunctions.h"
 #include "PhysicalConstants.h"
@@ -23,11 +24,13 @@ CALPHADFreeEnergyFunctionsBinary::CALPHADFreeEnergyFunctionsBinary(
       ceq_a_(-1.),
       energy_interp_func_type_(energy_interp_func_type),
       conc_interp_func_type_(conc_interp_func_type),
-      fenergy_diag_filename_("energy.vtk")
+      fenergy_diag_filename_("energy.vtk"),
+      newton_tol_(1.e-8),
+      newton_alpha_(1.),
+      newton_maxits_(20),
+      newton_verbose_(false)
 {
     readParameters(calphad_db);
-
-    solver_ = new CALPHADConcSolverBinary();
 
     if (newton_db) readNewtonparameters(newton_db.get());
 }
@@ -37,15 +40,10 @@ CALPHADFreeEnergyFunctionsBinary::CALPHADFreeEnergyFunctionsBinary(
 void CALPHADFreeEnergyFunctionsBinary::readNewtonparameters(
     pt::ptree& newton_db)
 {
-    double tol         = newton_db.get<double>("tol", 1.e-8);
-    double alpha       = newton_db.get<double>("alpha", 1.);
-    int maxits         = newton_db.get<int>("max_its", 20);
-    const bool verbose = newton_db.get<bool>("verbose", false);
-
-    solver_->SetTolerance(tol);
-    solver_->SetMaxIterations(maxits);
-    solver_->SetDamping(alpha);
-    solver_->SetVerbose(verbose);
+    newton_tol_     = newton_db.get<double>("tol", newton_tol_);
+    newton_alpha_   = newton_db.get<double>("alpha", newton_alpha_);
+    newton_maxits_  = newton_db.get<int>("max_its", newton_maxits_);
+    newton_verbose_ = newton_db.get<bool>("verbose", newton_verbose_);
 }
 
 //=======================================================================
@@ -272,8 +270,16 @@ void CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
     computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
-    solver_->setup(conc, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
-    int ret = solver_->ComputeConcentration(c);
+
+    CALPHADConcSolverBinary solver;
+
+    solver.SetTolerance(newton_tol_);
+    solver.SetMaxIterations(newton_maxits_);
+    solver.SetDamping(newton_alpha_);
+    solver.SetVerbose(newton_verbose_);
+
+    solver.setup(conc, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
+    int ret = solver.ComputeConcentration(c);
     if (ret < 0)
     {
         std::cerr << "ERROR in "
@@ -325,8 +331,15 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
     c0        = c0 <= 1. ? c0 : 1.;
     // solve system of equations to find (cl,cs) given c0 and hphi
     // x: initial guess and solution
-    solver_->setup(c0, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
-    int ret = solver_->ComputeConcentration(x);
+    CALPHADConcSolverBinary solver; //=new CALPHADConcSolverBinary();
+
+    solver.SetTolerance(newton_tol_);
+    solver.SetMaxIterations(newton_maxits_);
+    solver.SetDamping(newton_alpha_);
+    solver.SetVerbose(newton_verbose_);
+
+    solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
+    int ret = solver.ComputeConcentration(x);
     if (ret == -1)
     {
         std::cerr << "ERROR, "
