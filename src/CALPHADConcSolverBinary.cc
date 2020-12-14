@@ -10,10 +10,6 @@ namespace Thermo4PFM
 {
 //=======================================================================
 
-CALPHADConcSolverBinary::CALPHADConcSolverBinary() : DampedNewtonSolver(2) {}
-
-//=======================================================================
-
 void CALPHADConcSolverBinary::computeXi(
     const double* const c, double xi[2]) const
 {
@@ -115,6 +111,6 @@ int CALPHADConcSolverBinary::ComputeConcentration(double* const conc)
 {
     // std::cout<<"CALPHADConcSolverBinary::ComputeConcentration()"<<endl;
 
-    return NewtonSolver::ComputeSolution(conc);
+    return DampedNewtonSolver::ComputeSolution(conc);
 }
 }

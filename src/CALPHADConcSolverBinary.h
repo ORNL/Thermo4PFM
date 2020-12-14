@@ -9,7 +9,7 @@ namespace Thermo4PFM
 class CALPHADConcSolverBinary : public DampedNewtonSolver
 {
 public:
-    CALPHADConcSolverBinary();
+    CALPHADConcSolverBinary() : DampedNewtonSolver(2){};
 
     virtual ~CALPHADConcSolverBinary(){};
 
