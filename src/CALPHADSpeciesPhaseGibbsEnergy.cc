@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 #ifndef CALPHAD4PFM_ERROR
 
@@ -43,14 +44,23 @@ void read_optional(pt::ptree& db, const std::string key,
 void CALPHADSpeciesPhaseGibbsEnergy::initialize(
     const std::string& name, pt::ptree& db)
 {
+    assert(tc_ == nullptr);
+    assert(expansion_ == nullptr);
+
     name_ = name;
+    std::vector<double> tmp;
     for (pt::ptree::value_type& tc : db.get_child("Tc"))
     {
-        tc_.push_back(tc.second.get_value<double>());
+        tmp.push_back(tc.second.get_value<double>());
     }
 
-    size_t ntc = tc_.size();
+    size_t ntc = tmp.size();
     assert(ntc > 1);
+
+    tc_ = new double[ntc];
+    for (int i = 0; i < ntc; i++)
+        tc_[i] = tmp[i];
+    nintervals_ = ntc - 1;
 
     std::vector<double> a;
     for (pt::ptree::value_type& v : db.get_child("a"))
@@ -112,11 +122,14 @@ void CALPHADSpeciesPhaseGibbsEnergy::initialize(
             "CALPHADSpeciesPhaseGibbsEnergy: T**-2 not implemented!!!");
     }
 
+    // expansion_.resize(nintervals);
+    expansion_ = new CALPHADSpeciesPhaseGibbsEnergyExpansion[nintervals];
     for (unsigned i = 0; i < nintervals; i++)
     {
-        CALPHADSpeciesPhaseGibbsEnergyExpansion expan(
+        CALPHADSpeciesPhaseGibbsEnergyExpansion expan;
+        expan.init(
             a[i], b[i], c[i], d2[i], d3[i], d4[i], d7[i], dm1[i], dm9[i]);
-        expansion_.push_back(expan);
+        expansion_[i] = expan;
     }
 }
 
@@ -127,17 +140,16 @@ void CALPHADSpeciesPhaseGibbsEnergy::initialize(
 double CALPHADSpeciesPhaseGibbsEnergy::fenergy(
     const double T) // expect T in Kelvin
 {
-    const int n = (int)tc_.size();
-    assert(n > 1);
+    assert(nintervals_ > 0);
 
-    for (int i = 0; i < n - 1; i++)
+    for (int i = 0; i < nintervals_; i++)
         if (T >= tc_[i] && T < tc_[i + 1])
         {
             return expansion_[i].value(T);
         }
 
-    std::cerr << "T=" << T << ", Tmin=" << tc_[0] << ", Tmax=" << tc_[n - 1]
-              << std::endl;
+    std::cerr << "T=" << T << ", Tmin=" << tc_[0]
+              << ", Tmax=" << tc_[nintervals_] << std::endl;
     CALPHAD4PFM_ERROR("T out of range for fenergy");
 
     return 0.;

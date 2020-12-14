@@ -6,20 +6,19 @@
 namespace Thermo4PFM
 {
 
-CALPHADSpeciesPhaseGibbsEnergyExpansion::
-    CALPHADSpeciesPhaseGibbsEnergyExpansion(const double a, const double b,
-        const double c, const double d2, const double d3, const double d4,
-        const double d7, const double dm1, const double dm9)
-    : a_(a),
-      b_(b),
-      c_(c),
-      d2_(d2),
-      d3_(d3),
-      d4_(d4),
-      d7_(d7),
-      dm1_(dm1),
-      dm9_(dm9)
+void CALPHADSpeciesPhaseGibbsEnergyExpansion::init(const double a,
+    const double b, const double c, const double d2, const double d3,
+    const double d4, const double d7, const double dm1, const double dm9)
 {
+    a_   = a;
+    b_   = b;
+    c_   = c;
+    d2_  = d2;
+    d3_  = d3;
+    d4_  = d4;
+    d7_  = d7;
+    dm1_ = dm1;
+    dm9_ = dm9;
 }
 
 double CALPHADSpeciesPhaseGibbsEnergyExpansion::value(

@@ -5,8 +5,8 @@
 
 #include <boost/property_tree/ptree.hpp>
 
+#include <cassert>
 #include <string>
-#include <vector>
 
 namespace Thermo4PFM
 {
@@ -15,12 +15,24 @@ class CALPHADSpeciesPhaseGibbsEnergy
 {
 private:
     std::string name_;
-    std::vector<double> tc_;
-
-    std::vector<CALPHADSpeciesPhaseGibbsEnergyExpansion> expansion_;
+    int nintervals_;
+    double* tc_;
+    CALPHADSpeciesPhaseGibbsEnergyExpansion* expansion_;
 
 public:
-    CALPHADSpeciesPhaseGibbsEnergy(){};
+    CALPHADSpeciesPhaseGibbsEnergy()
+    {
+        tc_        = nullptr;
+        expansion_ = nullptr;
+    }
+
+    ~CALPHADSpeciesPhaseGibbsEnergy()
+    {
+        assert(expansion_ != nullptr);
+        assert(tc_ != nullptr);
+        delete[] expansion_;
+        delete[] tc_;
+    }
 
     std::string name() const { return name_; }
 
