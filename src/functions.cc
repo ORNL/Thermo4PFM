@@ -8,11 +8,6 @@ double interp_func(const double phi, const char type)
 {
     switch (type)
     {
-        case 'q':
-        {
-            double phit = fmax(0., phi);
-            return phit * phit;
-        }
         case 'p':
         {
             double phit = fmax(0., fmin(1., phi));
@@ -41,11 +36,6 @@ double deriv_interp_func(const double phi, const char type)
 {
     switch (type)
     {
-        case 'q':
-        {
-            double phit = fmax(0., phi);
-            return 2. * phit;
-        }
         case 'p':
         {
             double phit = fmax(0., fmin(1., phi));
@@ -76,10 +66,6 @@ double second_deriv_interp_func(const double phi, const char type)
 {
     switch (type)
     {
-        case 'q':
-        {
-            return 2.;
-        }
         case 'p':
         {
             double phit = fmax(0., fmin(1., phi));
