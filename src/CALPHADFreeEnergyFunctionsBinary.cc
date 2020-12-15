@@ -20,9 +20,7 @@ CALPHADFreeEnergyFunctionsBinary::CALPHADFreeEnergyFunctionsBinary(
     pt::ptree& calphad_db, boost::optional<pt::ptree&> newton_db,
     const EnergyInterpolationType energy_interp_func_type,
     const ConcInterpolationType conc_interp_func_type)
-    : ceq_l_(-1.),
-      ceq_a_(-1.),
-      energy_interp_func_type_(energy_interp_func_type),
+    : energy_interp_func_type_(energy_interp_func_type),
       conc_interp_func_type_(conc_interp_func_type),
       fenergy_diag_filename_("energy.vtk"),
       newton_tol_(1.e-8),
@@ -233,9 +231,6 @@ bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(
             std::cout << "CALPHAD, c_eq phase0=" << ceq[0] << std::endl;
             std::cout << "CALPHAD, c_eq phase1=" << ceq[1] << std::endl;
         }
-
-        ceq_l_ = ceq[0];
-        ceq_a_ = ceq[1];
     }
     else
     {
@@ -256,10 +251,6 @@ void CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
     // std::cout<<"CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies()"<<endl;
 
     double c[2] = { conc, conc };
-    // std::cout<<"ceq_l_="<<ceq_l_<<endl;
-    // std::cout<<"ceq_a_="<<ceq_a_<<endl;
-    if (ceq_l_ >= 0.) c[0] = ceq_l_;
-    if (ceq_a_ >= 0.) c[1] = ceq_a_;
 
     // evaluate temperature dependent parameters
     double fA[2];
@@ -322,16 +313,12 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
     const char interp_func_type = concInterpChar(conc_interp_func_type_);
     const double hphi           = interp_func(phi, interp_func_type);
 
-    // std::cout<<"ceq_a_="<<ceq_a_<<endl;
-    // x[0] = ( ceq_l_>=0. ) ? ceq_l_ : 0.5;
-    // x[1] = ( ceq_a_>=0. ) ? ceq_a_ : 0.5;
-
     // conc could be outside of [0.,1.] in a trial step
     double c0 = conc[0] >= 0. ? conc[0] : 0.;
     c0        = c0 <= 1. ? c0 : 1.;
     // solve system of equations to find (cl,cs) given c0 and hphi
     // x: initial guess and solution
-    CALPHADConcSolverBinary solver; //=new CALPHADConcSolverBinary();
+    CALPHADConcSolverBinary solver;
 
     solver.SetTolerance(newton_tol_);
     solver.SetMaxIterations(newton_maxits_);

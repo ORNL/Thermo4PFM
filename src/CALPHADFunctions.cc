@@ -2,8 +2,6 @@
 #include "xlogx.h"
 
 #include <cassert>
-#include <cmath>
-#include <stddef.h>
 
 namespace pt = boost::property_tree;
 

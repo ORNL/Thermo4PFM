@@ -72,9 +72,6 @@ public:
         std::ostream& os);
 
 private:
-    double ceq_l_;
-    double ceq_a_;
-
     EnergyInterpolationType energy_interp_func_type_;
     ConcInterpolationType conc_interp_func_type_;
 
@@ -102,7 +99,7 @@ private:
 
     void readParameters(boost::property_tree::ptree& calphad_db);
 
-    // energy of species "is" in phase L,A,B
+    // energy of species "is" in phase L,A
     double getFenergyPhaseL(const short is, const double temperature)
     {
         return g_species_phaseL_[is].fenergy(temperature);

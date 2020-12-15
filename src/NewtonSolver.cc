@@ -3,14 +3,13 @@
 
 #include <cassert>
 #include <cmath>
-#include <iostream>
 
 #define DEBUG_CONVERGENCE
 #ifdef DEBUG_CONVERGENCE
+#include <iomanip>
+#include <iostream>
 #include <vector>
 #endif
-
-#include <iomanip>
 
 namespace Thermo4PFM
 {
@@ -24,7 +23,7 @@ bool NewtonSolver::CheckTolerance(const double* const fvec)
 {
     for (int ii = 0; ii < ndim_; ii++)
     {
-        if (std::abs(fvec[ii]) >= tolerance_) return false;
+        if (fabs(fvec[ii]) >= tolerance_) return false;
     }
     return true;
 }
@@ -33,7 +32,7 @@ bool NewtonSolver::CheckTolerance(const double* const fvec)
 
 bool NewtonSolver::CheckToleranceFirstEq(const double* const fvec)
 {
-    if (std::abs(fvec[0]) >= tolerance_) return false;
+    if (fabs(fvec[0]) >= tolerance_) return false;
     return true;
 }
 
@@ -121,6 +120,8 @@ void NewtonSolver::UpdateSolution(
 
 //=======================================================================
 // conc: initial guess and output solution
+//
+// Returns number of iterations used, or -1 if not converged
 int NewtonSolver::ComputeSolution(double* const conc)
 {
     assert(max_iters_ > 1);
@@ -182,9 +183,9 @@ int NewtonSolver::ComputeSolution(double* const conc)
         iterations++;
     }
 
+#ifdef DEBUG_CONVERGENCE
     if (!converged)
     {
-#ifdef DEBUG_CONVERGENCE
         std::cout << std::setprecision(12);
         std::cout << "Concentration history..." << std::endl;
         for (unsigned j = 0; j < ctmp.size(); j = j + ndim_)
@@ -204,15 +205,16 @@ int NewtonSolver::ComputeSolution(double* const conc)
         {
             std::cout << "  rhs[" << ii << "] = " << fvec[ii] << std::endl;
         }
-#endif
         std::cerr << iterations << " iterations..." << std::endl;
         std::cerr << "Error: too many iterations in NewtonSolver" << std::endl;
-        return -1;
     }
+#endif
 
     delete[] fvec;
     delete[] fjac;
     delete[] ftmp;
+
+    if (!converged) return -1;
 
     return iterations;
 }
