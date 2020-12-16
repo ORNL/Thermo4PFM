@@ -7,6 +7,9 @@ set( TEST_DIR ${CMAKE_SOURCE_DIR}/tests )
 add_executable(testPropertyTree
       ${TEST_DIR}/property_tree/testPropertyTree.cc)
 
+add_executable(testInterpolationFunctions
+               ${TEST_DIR}/testInterpolationFunctions.cc
+               ${CMAKE_SOURCE_DIR}/src/functions.cc )
 add_executable(testCALPHADFunctions
                ${TEST_DIR}/testCALPHADFunctions.cc
                ${CMAKE_SOURCE_DIR}/src/xlogx.cc
@@ -149,6 +152,8 @@ add_test(NAME testPropertyTree
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testPropertyTree
          WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/tests/property_tree)
 
+add_test(NAME testInterpolationFunctions
+         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testInterpolationFunctions)
 add_test(NAME testCALPHADFunctions
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADFunctions)
 add_test(NAME testCALPHADGibbsEnergy
