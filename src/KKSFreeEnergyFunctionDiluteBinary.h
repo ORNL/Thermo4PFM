@@ -78,7 +78,7 @@ private:
     double ke_;
 
     double (*fun_ptr_arr_[3])(
-        double){ pbg_interp_func, harmonic_interp_func, linear_interp_func };
+        double){ linear_interp_func, pbg_interp_func, harmonic_interp_func };
 
     void readParameters(boost::property_tree::ptree& conc_db);
 
