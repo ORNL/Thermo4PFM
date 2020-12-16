@@ -8,6 +8,7 @@
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 #include "InterpolationType.h"
 #include "Phases.h"
+#include "functions.h"
 
 #include <boost/property_tree/ptree.hpp>
 
@@ -136,6 +137,9 @@ private:
     double fA_[2];
     double fB_[2];
     double fC_[2];
+
+    double (*fun_ptr_arr_[3])(const double){ pbg_interp_func,
+        harmonic_interp_func, linear_interp_func };
 
     void readParameters(boost::property_tree::ptree& calphad_db);
 

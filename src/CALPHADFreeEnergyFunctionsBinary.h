@@ -5,6 +5,7 @@
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 #include "InterpolationType.h"
 #include "Phases.h"
+#include "functions.h"
 
 #include <boost/property_tree/ptree.hpp>
 
@@ -96,6 +97,9 @@ private:
     // possibly +c*T*ln(T) if compiled with -DLMIX_WTLOGT
     double LmixPhaseL_[4][MAX_POL_T_INDEX];
     double LmixPhaseA_[4][MAX_POL_T_INDEX];
+
+    double (*fun_ptr_arr_[3])(const double){ pbg_interp_func,
+        harmonic_interp_func, linear_interp_func };
 
     void readParameters(boost::property_tree::ptree& calphad_db);
 
