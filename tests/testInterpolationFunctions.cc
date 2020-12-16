@@ -19,17 +19,14 @@ TEST_CASE("Interpolation functions", "[interpolation]")
 
     const double phi = 0.25;
 
-    double hphi = fun_ptr_arr_[static_cast<int>(
-        Thermo4PFM::EnergyInterpolationType::LINEAR)](phi);
+    double hphi = interp_func(Thermo4PFM::EnergyInterpolationType::LINEAR, phi);
     CHECK(hphi == Approx(phi).margin(1.e-8));
 
-    hphi = fun_ptr_arr_[static_cast<int>(
-        Thermo4PFM::EnergyInterpolationType::PBG)](phi);
+    hphi = interp_func(Thermo4PFM::EnergyInterpolationType::PBG, phi);
     CHECK(hphi
           == Approx(phi * phi * phi * (10. - 15. * phi + 6. * phi * phi))
                  .margin(1.e-8));
 
-    hphi = fun_ptr_arr_[static_cast<int>(
-        Thermo4PFM::EnergyInterpolationType::HARMONIC)](phi);
+    hphi = interp_func(Thermo4PFM::EnergyInterpolationType::HARMONIC, phi);
     CHECK(hphi == Approx(phi * phi * (3. - 2. * phi)).margin(1.e-8));
 }

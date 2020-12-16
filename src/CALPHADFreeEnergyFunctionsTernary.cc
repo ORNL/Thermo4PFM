@@ -664,8 +664,7 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
     L_ABC_S_[1] = lmix1ABCPhaseA(temperature);
     L_ABC_S_[2] = lmix2ABCPhaseA(temperature);
 
-    const double hphi
-        = fun_ptr_arr_[static_cast<int>(conc_interp_func_type_)](phi);
+    const double hphi = interp_func(conc_interp_func_type_, phi);
 
     // std::cout<<"d_ceq_a="<<d_ceq_a<<endl;
     // x[0] = ( ceq_l_>=0. ) ? ceq_l_ : 0.5;
@@ -823,8 +822,7 @@ double CALPHADFreeEnergyFunctionsTernary::fchem(
     const double conc0 = conc[0];
     const double conc1 = conc[1];
 
-    const double hcphi
-        = fun_ptr_arr_[static_cast<int>(conc_interp_func_type_)](phi);
+    const double hcphi = interp_func(conc_interp_func_type_, phi);
 
     const double tol = 1.e-8;
     double fl        = 0.;
@@ -848,8 +846,7 @@ double CALPHADFreeEnergyFunctionsTernary::fchem(
         }
     }
 
-    const double hfphi
-        = fun_ptr_arr_[static_cast<int>(energy_interp_func_type_)](phi);
+    const double hfphi = interp_func(energy_interp_func_type_, phi);
 
     return (1.0 - hfphi) * fl + hfphi * fa;
 }

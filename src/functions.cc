@@ -1,8 +1,22 @@
-#include <iostream>
+#include "functions.h"
+
 #include <math.h>
 
 namespace Thermo4PFM
 {
+
+static double (*fun_ptr_arr[3])(
+    const double){ linear_interp_func, pbg_interp_func, harmonic_interp_func };
+
+double interp_func(EnergyInterpolationType type, const double phi)
+{
+    return fun_ptr_arr[static_cast<int>(type)](phi);
+}
+
+double interp_func(ConcInterpolationType type, const double phi)
+{
+    return fun_ptr_arr[static_cast<int>(type)](phi);
+}
 
 double pbg_interp_func(const double phi)
 {

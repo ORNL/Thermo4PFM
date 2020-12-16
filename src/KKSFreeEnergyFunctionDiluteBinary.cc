@@ -238,8 +238,7 @@ int KKSFreeEnergyFunctionDiluteBinary::computePhaseConcentrations(
 
     const double conc0 = conc[0];
 
-    const double hphi
-        = fun_ptr_arr_[static_cast<int>(conc_interp_func_type_)](phi);
+    const double hphi = interp_func(conc_interp_func_type_, phi);
 
     setupFB(temperature);
 
@@ -375,8 +374,7 @@ void KKSFreeEnergyFunctionDiluteBinary::printEnergyVsEta(
 double KKSFreeEnergyFunctionDiluteBinary::fchem(
     const double phi, const double* const conc, const double temperature)
 {
-    const double hcphi
-        = fun_ptr_arr_[static_cast<int>(conc_interp_func_type_)](phi);
+    const double hcphi = interp_func(conc_interp_func_type_, phi);
 
     const double tol = 1.e-8;
     double fl        = 0.;
@@ -397,9 +395,8 @@ double KKSFreeEnergyFunctionDiluteBinary::fchem(
         }
     }
 
-    const double hfphi
-        = fun_ptr_arr_[static_cast<int>(energy_interp_func_type_)](phi);
-    double e = (1.0 - hfphi) * fl + hfphi * fa;
+    const double hfphi = interp_func(energy_interp_func_type_, phi);
+    double e           = (1.0 - hfphi) * fl + hfphi * fa;
 
     return e;
 }
