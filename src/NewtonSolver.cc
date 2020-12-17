@@ -17,21 +17,22 @@ namespace Thermo4PFM
 NewtonSolver::NewtonSolver(const int ndim)
     : ndim_(ndim), max_iters_(50), tolerance_(1.0e-8), verbose_(false)
 {
-    if (ndim_ == 5)
+    switch (ndim_)
     {
-        fun_ptr_ = Determinant5;
-    }
-    else if (ndim_ == 4)
-    {
-        fun_ptr_ = Determinant4;
-    }
-    else if (ndim_ == 3)
-    {
-        fun_ptr_ = Determinant3;
-    }
-    else if (ndim_ == 2)
-    {
-        fun_ptr_ = Determinant2;
+        case 5:
+            fun_ptr_ = Determinant5;
+            break;
+        case 4:
+            fun_ptr_ = Determinant4;
+            break;
+        case 3:
+            fun_ptr_ = Determinant3;
+            break;
+        case 2:
+            fun_ptr_ = Determinant2;
+            break;
+        default:
+            fun_ptr_ = nullptr;
     }
 };
 
@@ -43,14 +44,6 @@ bool NewtonSolver::CheckTolerance(const double* const fvec)
     {
         if (fabs(fvec[ii]) >= tolerance_) return false;
     }
-    return true;
-}
-
-//=======================================================================
-
-bool NewtonSolver::CheckToleranceFirstEq(const double* const fvec)
-{
-    if (fabs(fvec[0]) >= tolerance_) return false;
     return true;
 }
 
@@ -84,8 +77,11 @@ double NewtonSolver::Determinant(double** const matrix)
 void NewtonSolver::UpdateSolution(
     double* const c, const double* const fvec, double** const fjac)
 {
-    double* mwork[3];
-    double mtmp[9];
+    double* mem   = new double[ndim_ * (1 + ndim_)];
+    double* mtmp  = mem;
+    double* del_c = mem + ndim_ * ndim_;
+
+    double** mwork = new double*[ndim_];
     for (int ii = 0; ii < ndim_; ii++)
     {
         mwork[ii] = &mtmp[ii * ndim_];
@@ -95,8 +91,6 @@ void NewtonSolver::UpdateSolution(
     const double D_inv = 1.0 / D;
 
     // std::cout << "D = " << D << std::endl;
-
-    double del_c[4];
 
     // use Cramer's rule to solve linear system
     for (int jj = 0; jj < ndim_; jj++)
@@ -116,6 +110,9 @@ void NewtonSolver::UpdateSolution(
     {
         c[ii] = c[ii] - del_c[ii];
     }
+
+    delete[] mwork;
+    delete[] mem;
 }
 
 //=======================================================================
@@ -137,9 +134,11 @@ int NewtonSolver::ComputeSolution(double* const conc)
     // std::cout<<endl;
 #endif
 
-    double* fvec  = new double[ndim_];
+    double* mem  = new double[ndim_ * (1 + ndim_)];
+    double* fvec = mem;
+    double* ftmp = mem + ndim_;
+
     double** fjac = new double*[ndim_];
-    double* ftmp  = new double[ndim_ * ndim_];
     for (int ii = 0; ii < ndim_; ii++)
     {
         fjac[ii] = &ftmp[ii * ndim_];
@@ -210,9 +209,8 @@ int NewtonSolver::ComputeSolution(double* const conc)
     }
 #endif
 
-    delete[] fvec;
     delete[] fjac;
-    delete[] ftmp;
+    delete[] mem;
 
     if (!converged) return -1;
 

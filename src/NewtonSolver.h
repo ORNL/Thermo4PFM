@@ -21,10 +21,6 @@ public:
 
     void SetVerbose(const bool verbose) { verbose_ = verbose; }
 
-    double Determinant(double** const mat);
-
-    void CopyMatrix(double** const dst, double** const src);
-
     int size() const { return ndim_; };
 
     virtual void UpdateSolution(
@@ -32,11 +28,14 @@ public:
 
     virtual void RHS(const double* const x, double* const fvec) = 0;
 
+protected:
+    double Determinant(double** const mat);
+    void CopyMatrix(double** const dst, double** const src);
+
 private:
     virtual void Jacobian(const double* const x, double** const fjac) = 0;
 
     bool CheckTolerance(const double* const fvec);
-    bool CheckToleranceFirstEq(const double* const fvec);
 
     /*
      * Number of equations in system
