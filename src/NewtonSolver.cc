@@ -15,7 +15,25 @@ namespace Thermo4PFM
 {
 
 NewtonSolver::NewtonSolver(const int ndim)
-    : ndim_(ndim), max_iters_(50), tolerance_(1.0e-8), verbose_(false){};
+    : ndim_(ndim), max_iters_(50), tolerance_(1.0e-8), verbose_(false)
+{
+    if (ndim_ == 5)
+    {
+        fun_ptr_ = Determinant5;
+    }
+    else if (ndim_ == 4)
+    {
+        fun_ptr_ = Determinant4;
+    }
+    else if (ndim_ == 3)
+    {
+        fun_ptr_ = Determinant3;
+    }
+    else if (ndim_ == 2)
+    {
+        fun_ptr_ = Determinant2;
+    }
+};
 
 //=======================================================================
 
@@ -54,28 +72,11 @@ void NewtonSolver::CopyMatrix(double** const dst, double** const src)
 
 //=======================================================================
 
-double NewtonSolver::Determinant(double** const m)
+double NewtonSolver::Determinant(double** const matrix)
 {
     assert(ndim_ == 2 || ndim_ == 3 || ndim_ == 4 || ndim_ == 5);
 
-    if (ndim_ == 5)
-    {
-        return DeterminantN(m, 5);
-    }
-    else if (ndim_ == 4)
-    {
-        return Determinant4(m);
-    }
-    else if (ndim_ == 3)
-    {
-        return Determinant3(m);
-    }
-    else if (ndim_ == 2)
-    {
-        return m[0][0] * m[1][1] - m[1][0] * m[0][1];
-    }
-
-    return 0.;
+    return (*fun_ptr_)(matrix);
 }
 
 //=======================================================================
@@ -111,10 +112,9 @@ void NewtonSolver::UpdateSolution(
         // std::cout << "del_c[" << jj << "] = " << del_c[jj] << std::endl;
     }
 
-    double w = 1.0;
     for (int ii = 0; ii < ndim_; ii++)
     {
-        c[ii] = c[ii] - w * del_c[ii];
+        c[ii] = c[ii] - del_c[ii];
     }
 }
 

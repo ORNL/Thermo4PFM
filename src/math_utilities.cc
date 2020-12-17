@@ -4,6 +4,11 @@
 namespace Thermo4PFM
 {
 
+double Determinant2(double** const m)
+{
+    return m[0][0] * m[1][1] - m[1][0] * m[0][1];
+}
+
 double Determinant3(double** const m)
 {
     double d = m[0][0] * m[1][1] * m[2][2] - m[0][0] * m[1][2] * m[2][1]
@@ -46,6 +51,10 @@ double Determinant4(double** const m)
 
     return d;
 }
+
+//=======================================================================
+
+double Determinant5(double** const m) { return DeterminantN(m, 5); }
 
 //=======================================================================
 

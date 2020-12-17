@@ -46,6 +46,8 @@ private:
     int max_iters_;
     double tolerance_;
     bool verbose_;
+
+    double (*fun_ptr_)(double** const matrix);
 };
 }
 
