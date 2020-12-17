@@ -1,17 +1,17 @@
 #ifndef included_CALPHADEqConcSolverBinary
 #define included_CALPHADEqConcSolverBinary
 
-#include "DampedNewtonSolver.h"
+#include "NewtonSolver.h"
 
 #include <cmath>
 
 namespace Thermo4PFM
 {
 
-class CALPHADEqConcSolverBinary : public DampedNewtonSolver
+class CALPHADEqConcSolverBinary : public NewtonSolver
 {
 public:
-    CALPHADEqConcSolverBinary() : DampedNewtonSolver(2)
+    CALPHADEqConcSolverBinary() : NewtonSolver(2)
     {
         for (unsigned i = 0; i < 4; i++)
             Lmix_L_[i] = std::nan("");

@@ -1,12 +1,12 @@
 #ifndef included_CALPHADEqConcSolverTernary
 #define included_CALPHADEqConcSolverTernary
 
-#include "DampedNewtonSolver.h"
+#include "NewtonSolver.h"
 
 namespace Thermo4PFM
 {
 
-class CALPHADEqConcentrationSolverTernary : public DampedNewtonSolver
+class CALPHADEqConcentrationSolverTernary : public NewtonSolver
 {
 public:
     CALPHADEqConcentrationSolverTernary();

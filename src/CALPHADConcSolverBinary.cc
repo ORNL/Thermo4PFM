@@ -111,6 +111,6 @@ int CALPHADConcSolverBinary::ComputeConcentration(double* const conc)
 {
     // std::cout<<"CALPHADConcSolverBinary::ComputeConcentration()"<<endl;
 
-    return DampedNewtonSolver::ComputeSolution(conc);
+    return NewtonSolver::ComputeSolution(conc);
 }
 }

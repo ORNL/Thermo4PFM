@@ -9,7 +9,7 @@ namespace Thermo4PFM
 {
 
 KKSdiluteBinaryConcentrationSolver::KKSdiluteBinaryConcentrationSolver()
-    : DampedNewtonSolver(2)
+    : NewtonSolver(2)
 {
 }
 

@@ -21,6 +21,8 @@ public:
 
     void SetVerbose(const bool verbose) { verbose_ = verbose; }
 
+    void SetDamping(const double alpha) { alpha_ = alpha; }
+
     int size() const { return ndim_; };
 
     virtual void UpdateSolution(
@@ -43,6 +45,10 @@ private:
     int ndim_;
 
     int max_iters_;
+
+    // damping factor
+    double alpha_;
+
     double tolerance_;
     bool verbose_;
 

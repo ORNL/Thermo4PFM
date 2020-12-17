@@ -15,7 +15,11 @@ namespace Thermo4PFM
 {
 
 NewtonSolver::NewtonSolver(const int ndim)
-    : ndim_(ndim), max_iters_(50), tolerance_(1.0e-8), verbose_(false)
+    : ndim_(ndim),
+      max_iters_(50),
+      alpha_(1.),
+      tolerance_(1.0e-8),
+      verbose_(false)
 {
     switch (ndim_)
     {
@@ -103,12 +107,16 @@ void NewtonSolver::UpdateSolution(
 
         del_c[jj] = D_inv * Determinant(mwork);
 
+        const double maxdel = 0.25;
+        if (fabs(del_c[jj]) > maxdel)
+            del_c[jj] = del_c[jj] > 0 ? maxdel : -maxdel;
+
         // std::cout << "del_c[" << jj << "] = " << del_c[jj] << std::endl;
     }
 
     for (int ii = 0; ii < ndim_; ii++)
     {
-        c[ii] = c[ii] - del_c[ii];
+        c[ii] = c[ii] - alpha_ * del_c[ii];
     }
 
     delete[] mwork;

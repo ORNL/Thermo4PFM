@@ -9,7 +9,7 @@ namespace Thermo4PFM
 {
 
 CALPHADConcentrationSolverTernary::CALPHADConcentrationSolverTernary()
-    : DampedNewtonSolver(4)
+    : NewtonSolver(4)
 {
 }
 

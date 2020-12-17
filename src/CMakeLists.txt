@@ -1,7 +1,6 @@
 set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
             ${CMAKE_SOURCE_DIR}/src/math_utilities.cc
             ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-            ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
             ${CMAKE_SOURCE_DIR}/src/xlogx.cc
             ${CMAKE_SOURCE_DIR}/src/functions.cc
             ${CMAKE_SOURCE_DIR}/src/well_functions.cc
@@ -33,7 +32,6 @@ set(PUBLIC_HEADERS
     FreeEnergyFunctions.h
     Phases.h
     NewtonSolver.h
-    DampedNewtonSolver.h
     xlogx.h
     functions.h
     well_functions.h

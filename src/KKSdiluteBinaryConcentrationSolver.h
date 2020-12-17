@@ -1,12 +1,12 @@
 #ifndef included_KKSdiluteBinaryConcentrationSolver
 #define included_KKSdiluteBinaryConcentrationSolver
 
-#include "DampedNewtonSolver.h"
+#include "NewtonSolver.h"
 
 namespace Thermo4PFM
 {
 
-class KKSdiluteBinaryConcentrationSolver : public DampedNewtonSolver
+class KKSdiluteBinaryConcentrationSolver : public NewtonSolver
 {
 public:
     KKSdiluteBinaryConcentrationSolver();

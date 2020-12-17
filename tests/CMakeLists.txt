@@ -32,7 +32,6 @@ add_executable(testCALPHADbinaryKKS
                ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverBinary.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary.cc
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
 add_executable(testCALPHADbinaryEquilibrium
                ${TEST_DIR}/testCALPHADbinaryEquilibrium.cc
@@ -47,7 +46,6 @@ add_executable(testCALPHADbinaryEquilibrium
                ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
                ${CMAKE_SOURCE_DIR}/src/xlogx.cc
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
 add_executable(testKKSdiluteBinaryKKS
                ${TEST_DIR}/testKKSdiluteBinaryKKS.cc
@@ -58,7 +56,6 @@ add_executable(testKKSdiluteBinaryKKS
                ${CMAKE_SOURCE_DIR}/src/KKSdiluteBinaryConcentrationSolver.cc
                ${CMAKE_SOURCE_DIR}/src/xlogx.cc
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
 add_executable(testKKSdiluteBinaryEquilibrium
                ${TEST_DIR}/testKKSdiluteBinaryEquilibrium.cc
@@ -69,7 +66,6 @@ add_executable(testKKSdiluteBinaryEquilibrium
                ${CMAKE_SOURCE_DIR}/src/KKSdiluteBinaryConcentrationSolver.cc
                ${CMAKE_SOURCE_DIR}/src/xlogx.cc
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
 add_executable(testCALPHADJacobianTernary
                ${TEST_DIR}/testCALPHADJacobianTernary.cc
@@ -78,7 +74,6 @@ add_executable(testCALPHADJacobianTernary
                ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
                ${CMAKE_SOURCE_DIR}/src/xlogx.cc
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
 add_executable(testCALPHADternaryKKS
                ${TEST_DIR}/testCALPHADternaryKKS.cc
@@ -94,7 +89,6 @@ add_executable(testCALPHADternaryKKS
                ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverTernary.cc
                ${CMAKE_SOURCE_DIR}/src/CALPHADEqPhaseConcSolverTernary.cc
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
 add_executable(testCALPHADternaryEquilibrium
                ${TEST_DIR}/testCALPHADternaryEquilibrium.cc
@@ -110,7 +104,6 @@ add_executable(testCALPHADternaryEquilibrium
                ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
                ${CMAKE_SOURCE_DIR}/src/xlogx.cc
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
 add_executable(testLoopCALPHADbinaryEquilibrium
                ${TEST_DIR}/testLoopCALPHADbinaryEquilibrium.cc
@@ -125,7 +118,6 @@ add_executable(testLoopCALPHADbinaryEquilibrium
                ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
                ${CMAKE_SOURCE_DIR}/src/xlogx.cc
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
 add_executable(testLoopCALPHADbinaryKKS
                ${TEST_DIR}/testLoopCALPHADbinaryKKS.cc
@@ -140,7 +132,6 @@ add_executable(testLoopCALPHADbinaryKKS
                ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
                ${CMAKE_SOURCE_DIR}/src/xlogx.cc
                ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/DampedNewtonSolver.cc
                ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
 
 if (${OPENMP_CXX_FOUND})

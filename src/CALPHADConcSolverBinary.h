@@ -1,15 +1,15 @@
 #ifndef included_CALPHADConcSolverBinary
 #define included_CALPHADConcSolverBinary
 
-#include "DampedNewtonSolver.h"
+#include "NewtonSolver.h"
 
 namespace Thermo4PFM
 {
 
-class CALPHADConcSolverBinary : public DampedNewtonSolver
+class CALPHADConcSolverBinary : public NewtonSolver
 {
 public:
-    CALPHADConcSolverBinary() : DampedNewtonSolver(2){};
+    CALPHADConcSolverBinary() : NewtonSolver(2){};
 
     virtual ~CALPHADConcSolverBinary(){};
 
@@ -38,7 +38,7 @@ private:
 
     void computeDxiDc(const double* const c, double dxidc[2]) const;
 
-    // virtual functions inherited from DampedNewtonSolver
+    // virtual functions inherited from NewtonSolver
     void RHS(const double* const x, double* const fvec);
 
     void Jacobian(const double* const x, double** const fjac);

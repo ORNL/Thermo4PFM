@@ -10,7 +10,7 @@ namespace Thermo4PFM
 
 CALPHADEqPhaseConcentrationSolverTernary::
     CALPHADEqPhaseConcentrationSolverTernary(const double c0, const double c1)
-    : DampedNewtonSolver(5)
+    : NewtonSolver(5)
 {
     fA_[0] = std::nan("");
     fA_[1] = std::nan("");
@@ -248,7 +248,7 @@ int CALPHADEqPhaseConcentrationSolverTernary::ComputeConcentration(
         fC_[ii] = fC[ii];
     }
 
-    return DampedNewtonSolver::ComputeSolution(x);
+    return NewtonSolver::ComputeSolution(x);
 }
 
 void CALPHADEqPhaseConcentrationSolverTernary::setup(const double RTinv,
@@ -291,6 +291,6 @@ void CALPHADEqPhaseConcentrationSolverTernary::setup(const double RTinv,
 int CALPHADEqPhaseConcentrationSolverTernary::ComputeConcentration(
     double* const x)
 {
-    return DampedNewtonSolver::ComputeSolution(x);
+    return NewtonSolver::ComputeSolution(x);
 }
 }

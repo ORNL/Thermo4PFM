@@ -92,6 +92,6 @@ int CALPHADEqConcSolverBinary::ComputeConcentration(double* const conc,
         fB_[ii] = fB[ii];
     }
 
-    return DampedNewtonSolver::ComputeSolution(conc);
+    return NewtonSolver::ComputeSolution(conc);
 }
 }
