@@ -26,7 +26,7 @@ public:
         const EnergyInterpolationType energy_interp_func_type,
         const ConcInterpolationType conc_interp_func_type);
 
-    ~CALPHADFreeEnergyFunctionsTernary() { delete solver_; };
+    ~CALPHADFreeEnergyFunctionsTernary(){};
 
     virtual double computeFreeEnergy(const double temperature,
         const double* const conc, const PhaseIndex pi, const bool gp = false);
@@ -35,13 +35,12 @@ public:
     virtual void computeSecondDerivativeFreeEnergy(const double temp,
         const double* const conc, const PhaseIndex pi, double* d2fdc2);
 
-    virtual bool computeCeqT(const double temperature, const PhaseIndex pi0,
-        const PhaseIndex pi1, double* ceq, const int maxits = 20,
-        const bool verbose = false);
-
-    virtual bool computeCeqT(const double temperature, const PhaseIndex pi0,
-        const PhaseIndex pi1, const double c0, const double c1, double* ceq,
+    virtual bool computeCeqT(const double temperature, double* ceq,
         const int maxits = 20, const bool verbose = false);
+
+    virtual bool computeCeqT(const double temperature, const double c0,
+        const double c1, double* ceq, const int maxits = 20,
+        const bool verbose = false);
 
     void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.)
     {
@@ -87,22 +86,22 @@ public:
         const double phi_well_scale, const int npts, std::ostream& os);
 
 private:
-    CALPHADConcentrationSolverTernary* solver_;
-
-    double ceq_l_[2];
-    double ceq_s_[2];
-
     EnergyInterpolationType energy_interp_func_type_;
     ConcInterpolationType conc_interp_func_type_;
 
     void readNewtonparameters(boost::property_tree::ptree& newton_db);
 
-    void setupValuesForTwoPhasesSolver(
-        const double temperature, const PhaseIndex pi0, const PhaseIndex pi1);
-
-    void setup(const double temperature);
+    void computeTdependentParameters(const double temperature, double* L_AB_L,
+        double* L_AC_L, double* L_BC_L, double* L_ABC_L, double* L_AB_S,
+        double* L_AC_S, double* L_BC_S, double* L_ABC_S, double* fA, double* fB,
+        double* fC);
 
     std::string fenergy_diag_filename_;
+
+    double newton_tol_;
+    double newton_alpha_;
+    int newton_maxits_;
+    bool newton_verbose_;
 
     // size 3 for species A, B, C
     CALPHADSpeciesPhaseGibbsEnergy g_species_phaseL_[3];
@@ -122,29 +121,10 @@ private:
     double LmixABCPhaseL_[3][2];
     double LmixABCPhaseA_[3][2];
 
-    double L_AB_L_[4];
-    double L_AC_L_[4];
-    double L_BC_L_[4];
-
-    double L_ABC_L_[3];
-
-    double L_AB_S_[4];
-    double L_AC_S_[4];
-    double L_BC_S_[4];
-
-    double L_ABC_S_[3];
-
-    double fA_[2];
-    double fB_[2];
-    double fC_[2];
-
     double (*fun_ptr_arr_[3])(const double){ linear_interp_func,
         pbg_interp_func, harmonic_interp_func };
 
     void readParameters(boost::property_tree::ptree& calphad_db);
-
-    void setupValuesL(const double temperature);
-    void setupValuesS(const double temperature);
 
     // energy of species "is" in phase L,A,B
     double getFenergyPhaseL(const short is, const double temperature)

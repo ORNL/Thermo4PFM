@@ -211,46 +211,6 @@ void CALPHADEqPhaseConcentrationSolverTernary::Jacobian(
 
 //=======================================================================
 // A,B,C refers to 3 species
-int CALPHADEqPhaseConcentrationSolverTernary::ComputeConcentration(
-    double* const x, const double RTinv, const double* const L_AB_L,
-    const double* const L_AC_L, const double* const L_BC_L,
-    const double* const L_AB_S, const double* const L_AC_S,
-    const double* const L_BC_S, const double* const L_ABC_L,
-    const double* const L_ABC_S, const double* const fA, const double* const fB,
-    const double* const fC)
-{
-    RTinv_ = RTinv;
-    RT_    = 1. / RTinv;
-
-    for (int ii = 0; ii < 4; ii++)
-    {
-        L_AB_L_[ii] = L_AB_L[ii];
-        L_AC_L_[ii] = L_AC_L[ii];
-        L_BC_L_[ii] = L_BC_L[ii];
-    }
-    for (int ii = 0; ii < 4; ii++)
-    {
-        L_AB_S_[ii] = L_AB_S[ii];
-        L_AC_S_[ii] = L_AC_S[ii];
-        L_BC_S_[ii] = L_BC_S[ii];
-    }
-    for (int ii = 0; ii < 3; ii++)
-    {
-        L_ABC_L_[ii] = L_ABC_L[ii];
-        L_ABC_S_[ii] = L_ABC_S[ii];
-    }
-
-    // loop over phases (L and S)
-    for (int ii = 0; ii < 2; ii++)
-    {
-        fA_[ii] = fA[ii];
-        fB_[ii] = fB[ii];
-        fC_[ii] = fC[ii];
-    }
-
-    return NewtonSolver::ComputeSolution(x);
-}
-
 void CALPHADEqPhaseConcentrationSolverTernary::setup(const double RTinv,
     const double* const L_AB_L, const double* const L_AC_L,
     const double* const L_BC_L, const double* const L_AB_S,

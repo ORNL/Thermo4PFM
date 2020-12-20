@@ -49,10 +49,6 @@ TEST_CASE("CALPHADternaryEquilibrium", "[CALPHADternaryEquilibrium]")
         = { { 0.329373, 0.327874 }, { 0.13675, 0.186999 } };
     double expected_fs[2] = { 0.959621, 0.157429 };
 
-    // choose pair of phases: phaseL, phaseA
-    const Thermo4PFM::PhaseIndex pi0 = Thermo4PFM::PhaseIndex::phaseL;
-    const Thermo4PFM::PhaseIndex pi1 = Thermo4PFM::PhaseIndex::phaseA;
-
     int maxits = 20;
 
     for (int itest = 0; itest < 2; itest++)
@@ -62,7 +58,7 @@ TEST_CASE("CALPHADternaryEquilibrium", "[CALPHADternaryEquilibrium]")
             init_guess[itest][2], init_guess[itest][3], // solid
             init_guess[itest][4] };
 
-        bool found_ceq = cafe.computeCeqT(temperature[itest], pi0, pi1,
+        bool found_ceq = cafe.computeCeqT(temperature[itest],
             nominalc[itest][0], nominalc[itest][1], &lceq[0], maxits);
         if (lceq[0] != lceq[0]) found_ceq = false;
         if (lceq[0] > 1.) found_ceq = false;
