@@ -12,13 +12,6 @@ CALPHADEqPhaseConcentrationSolverTernary::
     CALPHADEqPhaseConcentrationSolverTernary(const double c0, const double c1)
     : NewtonSolver(5)
 {
-    fA_[0] = std::nan("");
-    fA_[1] = std::nan("");
-    fB_[0] = std::nan("");
-    fB_[1] = std::nan("");
-    fC_[0] = std::nan("");
-    fC_[1] = std::nan("");
-
     conc_[0] = c0;
     conc_[1] = c1;
 }
