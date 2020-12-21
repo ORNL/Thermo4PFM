@@ -11,13 +11,7 @@ namespace Thermo4PFM
 class CALPHADEqConcSolverBinary : public NewtonSolver
 {
 public:
-    CALPHADEqConcSolverBinary() : NewtonSolver(2)
-    {
-        for (unsigned i = 0; i < 4; i++)
-            Lmix_L_[i] = std::nan("");
-        for (unsigned i = 0; i < 4; i++)
-            Lmix_A_[i] = std::nan("");
-    };
+    CALPHADEqConcSolverBinary() : NewtonSolver(2){};
 
     virtual ~CALPHADEqConcSolverBinary(){};
 

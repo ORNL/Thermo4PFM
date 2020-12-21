@@ -11,8 +11,6 @@ public:
 
     virtual ~NewtonSolver(){};
 
-    virtual void initialize(){};
-
     virtual int ComputeSolution(double* const conc);
 
     void SetTolerance(const double t) { tolerance_ = t; }
@@ -22,8 +20,6 @@ public:
     void SetVerbose(const bool verbose) { verbose_ = verbose; }
 
     void SetDamping(const double alpha) { alpha_ = alpha; }
-
-    int size() const { return ndim_; };
 
     virtual void UpdateSolution(
         double* const x, const double* const fvec, double** const fjac);
@@ -39,9 +35,7 @@ private:
 
     bool CheckTolerance(const double* const fvec);
 
-    /*
-     * Number of equations in system
-     */
+    // Number of equations in system
     int ndim_;
 
     int max_iters_;
@@ -52,7 +46,8 @@ private:
     double tolerance_;
     bool verbose_;
 
-    double (*fun_ptr_)(double** const matrix);
+    // function to compute determinant of matrix of size ndim_
+    double (*det_fun_ptr_)(double** const matrix);
 };
 }
 

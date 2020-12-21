@@ -11,12 +11,6 @@ namespace Thermo4PFM
 CALPHADEqConcentrationSolverTernary::CALPHADEqConcentrationSolverTernary()
     : NewtonSolver(4)
 {
-    fA_[0] = std::nan("");
-    fA_[1] = std::nan("");
-    fB_[0] = std::nan("");
-    fB_[1] = std::nan("");
-    fC_[0] = std::nan("");
-    fC_[1] = std::nan("");
 }
 
 void CALPHADEqConcentrationSolverTernary::RHS(

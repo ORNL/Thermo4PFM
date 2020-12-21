@@ -24,19 +24,19 @@ NewtonSolver::NewtonSolver(const int ndim)
     switch (ndim_)
     {
         case 5:
-            fun_ptr_ = Determinant5;
+            det_fun_ptr_ = Determinant5;
             break;
         case 4:
-            fun_ptr_ = Determinant4;
+            det_fun_ptr_ = Determinant4;
             break;
         case 3:
-            fun_ptr_ = Determinant3;
+            det_fun_ptr_ = Determinant3;
             break;
         case 2:
-            fun_ptr_ = Determinant2;
+            det_fun_ptr_ = Determinant2;
             break;
         default:
-            fun_ptr_ = nullptr;
+            det_fun_ptr_ = nullptr;
     }
 };
 
@@ -73,7 +73,7 @@ double NewtonSolver::Determinant(double** const matrix)
 {
     assert(ndim_ == 2 || ndim_ == 3 || ndim_ == 4 || ndim_ == 5);
 
-    return (*fun_ptr_)(matrix);
+    return (*det_fun_ptr_)(matrix);
 }
 
 //=======================================================================
@@ -154,8 +154,6 @@ int NewtonSolver::ComputeSolution(double* const conc)
 
     int iterations = 0;
     bool converged = false;
-
-    initialize();
 
     while (1)
     {
