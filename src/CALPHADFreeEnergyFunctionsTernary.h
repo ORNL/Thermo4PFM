@@ -14,6 +14,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <math.h>
 
 namespace Thermo4PFM
 {
@@ -42,32 +43,7 @@ public:
         const double c1, double* ceq, const int maxits = 20,
         const bool verbose = false);
 
-    void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.)
-    {
-        std::ofstream os1("FlC0vsT.dat", std::ios::out);
-        os1 << "#Species 0, Phase L" << std::endl;
-        g_species_phaseL_[0].plotFofT(os1, T0, T1);
-
-        std::ofstream os2("FlC1vsT.dat", std::ios::out);
-        os2 << "#Species 1, Phase L" << std::endl;
-        g_species_phaseL_[1].plotFofT(os2, T0, T1);
-
-        std::ofstream os3("FlC2vsT.dat", std::ios::out);
-        os3 << "#Species 2, Phase L" << std::endl;
-        g_species_phaseL_[2].plotFofT(os3, T0, T1);
-
-        std::ofstream os4("FsC0vsT.dat", std::ios::out);
-        os4 << "#Species 0, Phase A" << std::endl;
-        g_species_phaseA_[0].plotFofT(os4, T0, T1);
-
-        std::ofstream os5("FsC1vsT.dat", std::ios::out);
-        os5 << "#Species 1, Phase A" << std::endl;
-        g_species_phaseA_[1].plotFofT(os5, T0, T1);
-
-        std::ofstream os6("FsC2vsT.dat", std::ios::out);
-        os6 << "#Species 2, Phase A" << std::endl;
-        g_species_phaseA_[2].plotFofT(os6, T0, T1);
-    }
+    void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.);
 
     int computePhaseConcentrations(const double temperature,
         const double* const conc, const double phi, double* x);
@@ -145,11 +121,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix0ABPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix0ABPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -162,11 +134,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix1ABPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix1ABPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -179,11 +147,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix2ABPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix2ABPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -196,11 +160,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix3ABPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix3ABPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -253,11 +213,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix0ACPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix0ACPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -270,11 +226,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix1ACPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix1ACPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -287,11 +239,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix2ACPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix2ACPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -304,11 +252,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix3ACPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix3ACPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -361,11 +305,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix0BCPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix0BCPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -378,11 +318,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix1BCPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix1BCPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -395,11 +331,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix2BCPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix2BCPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -412,11 +344,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix3BCPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix3BCPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -470,11 +398,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix0ABCPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix0ABCPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -487,11 +411,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix1ABCPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix1ABCPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
@@ -504,11 +424,7 @@ private:
             case PhaseIndex::phaseA:
                 return lmix2ABCPhaseA(temperature);
             default:
-                std::cerr << "CALPHADFreeEnergyStrategy::lmix2ABCPhase(), "
-                             "undefined phase!!!"
-                          << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 

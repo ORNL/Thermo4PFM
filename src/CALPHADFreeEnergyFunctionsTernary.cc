@@ -882,4 +882,32 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
     }
     os6 << std::endl;
 }
+
+void CALPHADFreeEnergyFunctionsTernary::preRunDiagnostics(
+    const double T0, const double T1)
+{
+    std::ofstream os1("FlC0vsT.dat", std::ios::out);
+    os1 << "#Species 0, Phase L" << std::endl;
+    g_species_phaseL_[0].plotFofT(os1, T0, T1);
+
+    std::ofstream os2("FlC1vsT.dat", std::ios::out);
+    os2 << "#Species 1, Phase L" << std::endl;
+    g_species_phaseL_[1].plotFofT(os2, T0, T1);
+
+    std::ofstream os3("FlC2vsT.dat", std::ios::out);
+    os3 << "#Species 2, Phase L" << std::endl;
+    g_species_phaseL_[2].plotFofT(os3, T0, T1);
+
+    std::ofstream os4("FsC0vsT.dat", std::ios::out);
+    os4 << "#Species 0, Phase A" << std::endl;
+    g_species_phaseA_[0].plotFofT(os4, T0, T1);
+
+    std::ofstream os5("FsC1vsT.dat", std::ios::out);
+    os5 << "#Species 1, Phase A" << std::endl;
+    g_species_phaseA_[1].plotFofT(os5, T0, T1);
+
+    std::ofstream os6("FsC2vsT.dat", std::ios::out);
+    os6 << "#Species 2, Phase A" << std::endl;
+    g_species_phaseA_[2].plotFofT(os6, T0, T1);
+}
 }

@@ -12,6 +12,7 @@
 #include <cassert>
 #include <fstream>
 #include <iostream>
+#include <math.h>
 
 namespace Thermo4PFM
 {
@@ -36,24 +37,7 @@ public:
     virtual bool computeCeqT(const double temperature, double* ceq,
         const int maxits = 20, const bool verbose = false);
 
-    void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.)
-    {
-        std::ofstream os1("FlC0vsT.dat", std::ios::out);
-        os1 << "#Species 0, Phase L" << std::endl;
-        g_species_phaseL_[0].plotFofT(os1, T0, T1);
-
-        std::ofstream os2("FlC1vsT.dat", std::ios::out);
-        os2 << "#Species 1, Phase L" << std::endl;
-        g_species_phaseL_[1].plotFofT(os2, T0, T1);
-
-        std::ofstream os3("FsC0vsT.dat", std::ios::out);
-        os3 << "#Species 0, Phase A" << std::endl;
-        g_species_phaseA_[0].plotFofT(os3, T0, T1);
-
-        std::ofstream os4("FsC1vsT.dat", std::ios::out);
-        os4 << "#Species 1, Phase A" << std::endl;
-        g_species_phaseA_[1].plotFofT(os4, T0, T1);
-    }
+    void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.);
 
     int computePhaseConcentrations(const double temperature, const double* conc,
         const double phi, double* x);
@@ -135,11 +119,7 @@ private:
 #endif
                     ;
             default:
-                std::cout << "CALPHADFreeEnergyStrategy::lmixPhase(), "
-                             "undefined phase"
-                          << "!!!" << std::endl;
-                abort();
-                return 0.;
+                return NAN;
         }
     }
 
