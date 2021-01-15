@@ -14,14 +14,11 @@
 namespace Thermo4PFM
 {
 
-NewtonSolver::NewtonSolver(const int ndim)
-    : ndim_(ndim),
-      max_iters_(50),
-      alpha_(1.),
-      tolerance_(1.0e-8),
-      verbose_(false)
+template <unsigned int Dimension>
+NewtonSolver<Dimension>::NewtonSolver()
+    : max_iters_(50), alpha_(1.), tolerance_(1.0e-8), verbose_(false)
 {
-    switch (ndim_)
+    switch (Dimension)
     {
         case 5:
             det_fun_ptr_ = Determinant5;
@@ -42,9 +39,10 @@ NewtonSolver::NewtonSolver(const int ndim)
 
 //=======================================================================
 
-bool NewtonSolver::CheckTolerance(const double* const fvec)
+template <unsigned int Dimension>
+bool NewtonSolver<Dimension>::CheckTolerance(const double* const fvec)
 {
-    for (int ii = 0; ii < ndim_; ii++)
+    for (int ii = 0; ii < Dimension; ii++)
     {
         if (fabs(fvec[ii]) >= tolerance_) return false;
     }
@@ -53,14 +51,15 @@ bool NewtonSolver::CheckTolerance(const double* const fvec)
 
 //=======================================================================
 
-void NewtonSolver::CopyMatrix(double** const dst, double** const src)
+template <unsigned int Dimension>
+void NewtonSolver<Dimension>::CopyMatrix(double** const dst, double** const src)
 {
     assert(src != nullptr);
     assert(dst != nullptr);
 
-    for (int jj = 0; jj < ndim_; jj++)
+    for (int jj = 0; jj < Dimension; jj++)
     {
-        for (int ii = 0; ii < ndim_; ii++)
+        for (int ii = 0; ii < Dimension; ii++)
         {
             dst[jj][ii] = src[jj][ii];
         }
@@ -69,26 +68,26 @@ void NewtonSolver::CopyMatrix(double** const dst, double** const src)
 
 //=======================================================================
 
-double NewtonSolver::Determinant(double** const matrix)
+template <unsigned int Dimension>
+double NewtonSolver<Dimension>::Determinant(double** const matrix)
 {
-    assert(ndim_ == 2 || ndim_ == 3 || ndim_ == 4 || ndim_ == 5);
-
     return (*det_fun_ptr_)(matrix);
 }
 
 //=======================================================================
 
-void NewtonSolver::UpdateSolution(
+template <unsigned int Dimension>
+void NewtonSolver<Dimension>::UpdateSolution(
     double* const c, const double* const fvec, double** const fjac)
 {
-    double* mem   = new double[ndim_ * (1 + ndim_)];
+    double mem[Dimension * (1 + Dimension)];
     double* mtmp  = mem;
-    double* del_c = mem + ndim_ * ndim_;
+    double* del_c = mem + Dimension * Dimension;
 
-    double** mwork = new double*[ndim_];
-    for (int ii = 0; ii < ndim_; ii++)
+    double* mwork[Dimension];
+    for (int ii = 0; ii < Dimension; ii++)
     {
-        mwork[ii] = &mtmp[ii * ndim_];
+        mwork[ii] = &mtmp[ii * Dimension];
     }
 
     const double D     = Determinant(fjac);
@@ -97,10 +96,10 @@ void NewtonSolver::UpdateSolution(
     // std::cout << "D = " << D << std::endl;
 
     // use Cramer's rule to solve linear system
-    for (int jj = 0; jj < ndim_; jj++)
+    for (int jj = 0; jj < Dimension; jj++)
     {
         CopyMatrix(mwork, fjac);
-        for (int ii = 0; ii < ndim_; ii++)
+        for (int ii = 0; ii < Dimension; ii++)
         {
             mwork[ii][jj] = fvec[ii];
         }
@@ -114,24 +113,22 @@ void NewtonSolver::UpdateSolution(
         // std::cout << "del_c[" << jj << "] = " << del_c[jj] << std::endl;
     }
 
-    for (int ii = 0; ii < ndim_; ii++)
+    for (int ii = 0; ii < Dimension; ii++)
     {
         c[ii] = c[ii] - alpha_ * del_c[ii];
     }
-
-    delete[] mwork;
-    delete[] mem;
 }
 
 //=======================================================================
 // conc: initial guess and output solution
 //
 // Returns number of iterations used, or -1 if not converged
-int NewtonSolver::ComputeSolution(double* const conc)
+template <unsigned int Dimension>
+int NewtonSolver<Dimension>::ComputeSolution(double* const conc)
 {
     assert(max_iters_ > 1);
 
-    for (int ii = 0; ii < ndim_; ii++)
+    for (int ii = 0; ii < Dimension; ii++)
         assert(conc[ii] == conc[ii]);
 
 #ifdef DEBUG_CONVERGENCE
@@ -142,14 +139,14 @@ int NewtonSolver::ComputeSolution(double* const conc)
     // std::cout<<endl;
 #endif
 
-    double* mem  = new double[ndim_ * (1 + ndim_)];
+    double mem[Dimension * (1 + Dimension)];
     double* fvec = mem;
-    double* ftmp = mem + ndim_;
+    double* ftmp = mem + Dimension;
 
-    double** fjac = new double*[ndim_];
-    for (int ii = 0; ii < ndim_; ii++)
+    double* fjac[Dimension];
+    for (int ii = 0; ii < Dimension; ii++)
     {
-        fjac[ii] = &ftmp[ii * ndim_];
+        fjac[ii] = &ftmp[ii * Dimension];
     }
 
     int iterations = 0;
@@ -159,17 +156,17 @@ int NewtonSolver::ComputeSolution(double* const conc)
     {
 
 #ifdef DEBUG_CONVERGENCE
-        // for ( int ii = 0; ii < ndim_ ; ii++ )cout<<conc[ii]<<endl;
+        // for ( int ii = 0; ii < Dimension ; ii++ )cout<<conc[ii]<<endl;
         // std::cout<<endl;
 
-        for (int ii = 0; ii < ndim_; ii++)
+        for (int ii = 0; ii < Dimension; ii++)
             assert(conc[ii] == conc[ii]);
-        for (int ii = 0; ii < ndim_; ii++)
+        for (int ii = 0; ii < Dimension; ii++)
             ctmp.push_back(conc[ii]);
 #endif
         RHS(conc, fvec);
 #ifdef DEBUG_CONVERGENCE
-        for (int ii = 0; ii < ndim_; ii++)
+        for (int ii = 0; ii < Dimension; ii++)
             assert(fvec[ii] == fvec[ii]);
 #endif
 
@@ -193,20 +190,20 @@ int NewtonSolver::ComputeSolution(double* const conc)
     {
         std::cout << std::setprecision(12);
         std::cout << "Concentration history..." << std::endl;
-        for (unsigned j = 0; j < ctmp.size(); j = j + ndim_)
+        for (unsigned j = 0; j < ctmp.size(); j = j + Dimension)
         {
             std::cout << "  conc= ";
-            for (int ii = 0; ii < ndim_; ii++)
+            for (int ii = 0; ii < Dimension; ii++)
             {
                 std::cout << ctmp[j + ii] << "   ";
             }
             std::cout << std::endl;
         }
-        for (int ii = 0; ii < ndim_; ii++)
+        for (int ii = 0; ii < Dimension; ii++)
         {
             std::cout << "  conc[" << ii << "] = " << conc[ii] << std::endl;
         }
-        for (int ii = 0; ii < ndim_; ii++)
+        for (int ii = 0; ii < Dimension; ii++)
         {
             std::cout << "  rhs[" << ii << "] = " << fvec[ii] << std::endl;
         }
@@ -215,11 +212,12 @@ int NewtonSolver::ComputeSolution(double* const conc)
     }
 #endif
 
-    delete[] fjac;
-    delete[] mem;
-
     if (!converged) return -1;
 
     return iterations;
 }
+
+template class NewtonSolver<2>;
+template class NewtonSolver<4>;
+template class NewtonSolver<5>;
 }

@@ -4,10 +4,11 @@
 namespace Thermo4PFM
 {
 
+template <unsigned int Dimension>
 class NewtonSolver
 {
 public:
-    NewtonSolver(const int ndim);
+    NewtonSolver();
 
     virtual ~NewtonSolver(){};
 
@@ -35,9 +36,6 @@ private:
 
     bool CheckTolerance(const double* const fvec);
 
-    // Number of equations in system
-    int ndim_;
-
     int max_iters_;
 
     // damping factor
@@ -46,7 +44,7 @@ private:
     double tolerance_;
     bool verbose_;
 
-    // function to compute determinant of matrix of size ndim_
+    // function to compute determinant of matrix of size Dimension
     double (*det_fun_ptr_)(double** const matrix);
 };
 }

@@ -10,7 +10,7 @@ namespace Thermo4PFM
 
 CALPHADEqPhaseConcentrationSolverTernary::
     CALPHADEqPhaseConcentrationSolverTernary(const double c0, const double c1)
-    : NewtonSolver(5)
+    : NewtonSolver()
 {
     conc_[0] = c0;
     conc_[1] = c1;

@@ -6,10 +6,10 @@
 namespace Thermo4PFM
 {
 
-class CALPHADConcSolverBinary : public NewtonSolver
+class CALPHADConcSolverBinary : public NewtonSolver<2>
 {
 public:
-    CALPHADConcSolverBinary() : NewtonSolver(2){};
+    CALPHADConcSolverBinary() : NewtonSolver(){};
 
     virtual ~CALPHADConcSolverBinary(){};
 

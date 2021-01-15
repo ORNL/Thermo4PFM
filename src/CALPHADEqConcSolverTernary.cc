@@ -9,7 +9,7 @@ namespace Thermo4PFM
 {
 
 CALPHADEqConcentrationSolverTernary::CALPHADEqConcentrationSolverTernary()
-    : NewtonSolver(4)
+    : NewtonSolver()
 {
 }
 

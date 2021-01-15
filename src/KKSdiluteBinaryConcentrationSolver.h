@@ -6,7 +6,7 @@
 namespace Thermo4PFM
 {
 
-class KKSdiluteBinaryConcentrationSolver : public NewtonSolver
+class KKSdiluteBinaryConcentrationSolver : public NewtonSolver<2>
 {
 public:
     KKSdiluteBinaryConcentrationSolver();
