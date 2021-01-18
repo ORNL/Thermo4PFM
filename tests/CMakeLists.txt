@@ -8,147 +8,45 @@ add_executable(testPropertyTree
       ${TEST_DIR}/property_tree/testPropertyTree.cc)
 
 add_executable(testInterpolationFunctions
-               ${TEST_DIR}/testInterpolationFunctions.cc
-               ${CMAKE_SOURCE_DIR}/src/functions.cc )
+               ${TEST_DIR}/testInterpolationFunctions.cc )
 add_executable(testCALPHADFunctions
-               ${TEST_DIR}/testCALPHADFunctions.cc
-               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc )
+               ${TEST_DIR}/testCALPHADFunctions.cc )
 add_executable(testCALPHADGibbsEnergy
-               ${TEST_DIR}/testCALPHADGibbsEnergy.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergy.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergyExpansion.cc
-               )
+               ${TEST_DIR}/testCALPHADGibbsEnergy.cc )
 add_executable(testCALPHADbinaryKKS
-               ${TEST_DIR}/testCALPHADbinaryKKS.cc
-               ${CMAKE_SOURCE_DIR}/src/functions.cc
-               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
-               ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergy.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergyExpansion.cc
-               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+               ${TEST_DIR}/testCALPHADbinaryKKS.cc )
 add_executable(testCALPHADbinaryEquilibrium
-               ${TEST_DIR}/testCALPHADbinaryEquilibrium.cc
-               ${CMAKE_SOURCE_DIR}/src/functions.cc
-               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
-               ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergy.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergyExpansion.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
-               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
-               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+               ${TEST_DIR}/testCALPHADbinaryEquilibrium.cc )
 add_executable(testKKSdiluteBinaryKKS
-               ${TEST_DIR}/testKKSdiluteBinaryKKS.cc
-               ${CMAKE_SOURCE_DIR}/src/functions.cc
-               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
-               ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
-               ${CMAKE_SOURCE_DIR}/src/KKSFreeEnergyFunctionDiluteBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/KKSdiluteBinaryConcentrationSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
-               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+               ${TEST_DIR}/testKKSdiluteBinaryKKS.cc )
 add_executable(testKKSdiluteBinaryEquilibrium
-               ${TEST_DIR}/testKKSdiluteBinaryEquilibrium.cc
-               ${CMAKE_SOURCE_DIR}/src/functions.cc
-               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
-               ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
-               ${CMAKE_SOURCE_DIR}/src/KKSFreeEnergyFunctionDiluteBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/KKSdiluteBinaryConcentrationSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
-               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+               ${TEST_DIR}/testKKSdiluteBinaryEquilibrium.cc )
 add_executable(testCALPHADJacobianTernary
-               ${TEST_DIR}/testCALPHADJacobianTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADEqPhaseConcSolverTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
-               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
-               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+               ${TEST_DIR}/testCALPHADJacobianTernary.cc )
 add_executable(testCALPHADternaryKKS
-               ${TEST_DIR}/testCALPHADternaryKKS.cc
-               ${CMAKE_SOURCE_DIR}/src/functions.cc
-               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
-               ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergy.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergyExpansion.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
-               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADEqPhaseConcSolverTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+               ${TEST_DIR}/testCALPHADternaryKKS.cc )
 add_executable(testCALPHADternaryEquilibrium
-               ${TEST_DIR}/testCALPHADternaryEquilibrium.cc
-               ${CMAKE_SOURCE_DIR}/src/functions.cc
-               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
-               ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADEqPhaseConcSolverTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergy.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergyExpansion.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
-               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
-               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+               ${TEST_DIR}/testCALPHADternaryEquilibrium.cc )
 add_executable(testLoopCALPHADbinaryEquilibrium
-               ${TEST_DIR}/testLoopCALPHADbinaryEquilibrium.cc
-               ${CMAKE_SOURCE_DIR}/src/functions.cc
-               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
-               ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergy.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergyExpansion.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
-               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
-               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+               ${TEST_DIR}/testLoopCALPHADbinaryEquilibrium.cc )
 add_executable(testLoopCALPHADbinaryKKS
-               ${TEST_DIR}/testLoopCALPHADbinaryKKS.cc
-               ${CMAKE_SOURCE_DIR}/src/functions.cc
-               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
-               ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverBinary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergy.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergyExpansion.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
-               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
-               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+               ${TEST_DIR}/testLoopCALPHADbinaryKKS.cc )
 add_executable(testLoopCALPHADternaryEquilibrium
-               ${TEST_DIR}/testLoopCALPHADternaryEquilibrium.cc
-               ${CMAKE_SOURCE_DIR}/src/functions.cc
-               ${CMAKE_SOURCE_DIR}/src/well_functions.cc
-               ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADEqPhaseConcSolverTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverTernary.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergy.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergyExpansion.cc
-               ${CMAKE_SOURCE_DIR}/src/CALPHADFunctions.cc
-               ${CMAKE_SOURCE_DIR}/src/xlogx.cc
-               ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
-               ${CMAKE_SOURCE_DIR}/src/math_utilities.cc )
+               ${TEST_DIR}/testLoopCALPHADternaryEquilibrium.cc )
 
+target_link_libraries(testInterpolationFunctions thermo4pfm)
+target_link_libraries(testCALPHADFunctions thermo4pfm)
+target_link_libraries(testCALPHADGibbsEnergy thermo4pfm)
+target_link_libraries(testCALPHADbinaryKKS thermo4pfm)
+target_link_libraries(testCALPHADbinaryEquilibrium thermo4pfm)
+target_link_libraries(testCALPHADternaryKKS thermo4pfm)
+target_link_libraries(testCALPHADternaryEquilibrium thermo4pfm)
+target_link_libraries(testKKSdiluteBinaryKKS thermo4pfm)
+target_link_libraries(testKKSdiluteBinaryEquilibrium thermo4pfm)
+target_link_libraries(testLoopCALPHADbinaryKKS thermo4pfm)
+target_link_libraries(testLoopCALPHADbinaryEquilibrium thermo4pfm)
+target_link_libraries(testLoopCALPHADternaryEquilibrium thermo4pfm)
+target_link_libraries(testCALPHADJacobianTernary thermo4pfm)
 if (${OPENMP_CXX_FOUND})
   target_link_libraries(testLoopCALPHADbinaryEquilibrium OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADbinaryKKS OpenMP::OpenMP_CXX)
