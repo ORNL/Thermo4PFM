@@ -6,12 +6,13 @@
 namespace Thermo4PFM
 {
 
-class CALPHADConcentrationSolverTernary : public NewtonSolver<4>
+class CALPHADConcentrationSolverTernary
+    : public NewtonSolver<4, CALPHADConcentrationSolverTernary>
 {
 public:
     CALPHADConcentrationSolverTernary();
 
-    virtual ~CALPHADConcentrationSolverTernary(){};
+    ~CALPHADConcentrationSolverTernary(){};
 
     void setup(const double c0, const double c1, const double hphi,
         const double RTinv, const double* const L_AB_L,
@@ -23,7 +24,6 @@ public:
 
     int ComputeConcentration(double* const conc);
 
-    // virtual functions inherited from NewtonSolver
     void RHS(const double* const c, double* const fvec);
 
     void Jacobian(const double* const c, double** const fjac);

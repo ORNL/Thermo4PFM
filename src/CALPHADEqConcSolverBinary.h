@@ -8,22 +8,23 @@
 namespace Thermo4PFM
 {
 
-class CALPHADEqConcSolverBinary : public NewtonSolver<2>
+class CALPHADEqConcSolverBinary
+    : public NewtonSolver<2, CALPHADEqConcSolverBinary>
 {
 public:
     CALPHADEqConcSolverBinary() : NewtonSolver(){};
 
-    virtual ~CALPHADEqConcSolverBinary(){};
+    ~CALPHADEqConcSolverBinary(){};
 
     int ComputeConcentration(double* const conc, const double RTinv,
         const double* const Lmix_L, const double* const Lmix_A,
         const double* const fA, const double* const fB);
 
-protected:
-    virtual void RHS(const double* const x, double* const fvec);
+    void RHS(const double* const x, double* const fvec);
 
-    virtual void Jacobian(const double* const x, double** const fjac);
+    void Jacobian(const double* const x, double** const fjac);
 
+private:
     double RTinv_;
     double RT_;
     double c0_;

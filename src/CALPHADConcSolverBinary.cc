@@ -2,7 +2,6 @@
 #include "CALPHADFunctions.h"
 #include "xlogx.h"
 
-#include <cassert>
 #include <cmath>
 #include <iostream>
 
@@ -35,6 +34,7 @@ void CALPHADConcSolverBinary::computeXi(
         // std::cout << "L2_["<<ii<<"] = " << L2_[ii] << std::endl;
     }
 }
+
 //=======================================================================
 
 // solve for c=(c_L, c_A, c_B)

@@ -6,12 +6,13 @@
 namespace Thermo4PFM
 {
 
-class CALPHADEqConcentrationSolverTernary : public NewtonSolver<4>
+class CALPHADEqConcentrationSolverTernary
+    : public NewtonSolver<4, CALPHADEqConcentrationSolverTernary>
 {
 public:
     CALPHADEqConcentrationSolverTernary();
 
-    virtual ~CALPHADEqConcentrationSolverTernary(){};
+    ~CALPHADEqConcentrationSolverTernary(){};
 
     int ComputeConcentration(double* const conc, const double RTinv,
         const double* const L_AB_L, const double* const L_AC_L,
@@ -20,11 +21,11 @@ public:
         const double* const L_ABC_L, const double* const L_ABC_S,
         const double* const fA, const double* const fB, const double* const fC);
 
-protected:
-    virtual void RHS(const double* const x, double* const fvec);
+    void RHS(const double* const x, double* const fvec);
 
-    virtual void Jacobian(const double* const x, double** const fjac);
+    void Jacobian(const double* const x, double** const fjac);
 
+private:
     double RTinv_;
     double RT_;
     double c0_;

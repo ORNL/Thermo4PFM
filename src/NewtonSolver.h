@@ -3,16 +3,15 @@
 
 namespace Thermo4PFM
 {
-
-template <unsigned int Dimension>
+template <unsigned int Dimension, typename SolverType>
 class NewtonSolver
 {
 public:
     NewtonSolver();
 
-    virtual ~NewtonSolver(){};
+    ~NewtonSolver(){};
 
-    virtual int ComputeSolution(double* const conc);
+    int ComputeSolution(double* conc);
 
     void SetTolerance(const double t) { tolerance_ = t; }
 
@@ -22,17 +21,22 @@ public:
 
     void SetDamping(const double alpha) { alpha_ = alpha; }
 
-    virtual void UpdateSolution(
+private:
+    void UpdateSolution(
         double* const x, const double* const fvec, double** const fjac);
 
-    virtual void RHS(const double* const x, double* const fvec) = 0;
+    void internalRHS(const double* const x, double* const fvec)
+    {
+        static_cast<SolverType*>(this)->RHS(x, fvec);
+    }
 
-protected:
     double Determinant(double** const mat);
     void CopyMatrix(double** const dst, double** const src);
 
-private:
-    virtual void Jacobian(const double* const x, double** const fjac) = 0;
+    void internalJacobian(const double* const x, double** const fjac)
+    {
+        static_cast<SolverType*>(this)->Jacobian(x, fjac);
+    }
 
     bool CheckTolerance(const double* const fvec);
 

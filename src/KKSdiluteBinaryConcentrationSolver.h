@@ -6,7 +6,8 @@
 namespace Thermo4PFM
 {
 
-class KKSdiluteBinaryConcentrationSolver : public NewtonSolver<2>
+class KKSdiluteBinaryConcentrationSolver
+    : public NewtonSolver<2, KKSdiluteBinaryConcentrationSolver>
 {
 public:
     KKSdiluteBinaryConcentrationSolver();
@@ -17,13 +18,13 @@ public:
         const double hphi, const double RTinv, const double fA,
         const double fB);
 
-private:
-    double fA_;
-    double fB_;
-
     void RHS(const double* const x, double* const fvec);
 
     void Jacobian(const double* const x, double** const fjac);
+
+private:
+    double fA_;
+    double fB_;
 
     double c0_;
     double hphi_;

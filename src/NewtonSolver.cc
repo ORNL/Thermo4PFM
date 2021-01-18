@@ -1,3 +1,10 @@
+#include "CALPHADConcSolverBinary.h"
+#include "CALPHADConcSolverTernary.h"
+#include "CALPHADEqConcSolverBinary.h"
+#include "CALPHADEqConcSolverTernary.h"
+#include "CALPHADEqPhaseConcSolverTernary.h"
+#include "KKSdiluteBinaryConcentrationSolver.h"
+
 #include "NewtonSolver.h"
 #include "math_utilities.h"
 
@@ -14,8 +21,8 @@
 namespace Thermo4PFM
 {
 
-template <unsigned int Dimension>
-NewtonSolver<Dimension>::NewtonSolver()
+template <unsigned int Dimension, typename SolverType>
+NewtonSolver<Dimension, SolverType>::NewtonSolver()
     : max_iters_(50), alpha_(1.), tolerance_(1.0e-8), verbose_(false)
 {
     switch (Dimension)
@@ -39,8 +46,9 @@ NewtonSolver<Dimension>::NewtonSolver()
 
 //=======================================================================
 
-template <unsigned int Dimension>
-bool NewtonSolver<Dimension>::CheckTolerance(const double* const fvec)
+template <unsigned int Dimension, typename SolverType>
+bool NewtonSolver<Dimension, SolverType>::CheckTolerance(
+    const double* const fvec)
 {
     for (int ii = 0; ii < Dimension; ii++)
     {
@@ -51,8 +59,9 @@ bool NewtonSolver<Dimension>::CheckTolerance(const double* const fvec)
 
 //=======================================================================
 
-template <unsigned int Dimension>
-void NewtonSolver<Dimension>::CopyMatrix(double** const dst, double** const src)
+template <unsigned int Dimension, typename SolverType>
+void NewtonSolver<Dimension, SolverType>::CopyMatrix(
+    double** const dst, double** const src)
 {
     assert(src != nullptr);
     assert(dst != nullptr);
@@ -68,16 +77,16 @@ void NewtonSolver<Dimension>::CopyMatrix(double** const dst, double** const src)
 
 //=======================================================================
 
-template <unsigned int Dimension>
-double NewtonSolver<Dimension>::Determinant(double** const matrix)
+template <unsigned int Dimension, typename SolverType>
+double NewtonSolver<Dimension, SolverType>::Determinant(double** const matrix)
 {
     return (*det_fun_ptr_)(matrix);
 }
 
 //=======================================================================
 
-template <unsigned int Dimension>
-void NewtonSolver<Dimension>::UpdateSolution(
+template <unsigned int Dimension, typename SolverType>
+void NewtonSolver<Dimension, SolverType>::UpdateSolution(
     double* const c, const double* const fvec, double** const fjac)
 {
     double mem[Dimension * (1 + Dimension)];
@@ -123,8 +132,8 @@ void NewtonSolver<Dimension>::UpdateSolution(
 // conc: initial guess and output solution
 //
 // Returns number of iterations used, or -1 if not converged
-template <unsigned int Dimension>
-int NewtonSolver<Dimension>::ComputeSolution(double* const conc)
+template <unsigned int Dimension, typename SolverType>
+int NewtonSolver<Dimension, SolverType>::ComputeSolution(double* conc)
 {
     assert(max_iters_ > 1);
 
@@ -164,7 +173,7 @@ int NewtonSolver<Dimension>::ComputeSolution(double* const conc)
         for (int ii = 0; ii < Dimension; ii++)
             ctmp.push_back(conc[ii]);
 #endif
-        RHS(conc, fvec);
+        internalRHS(conc, fvec);
 #ifdef DEBUG_CONVERGENCE
         for (int ii = 0; ii < Dimension; ii++)
             assert(fvec[ii] == fvec[ii]);
@@ -178,8 +187,7 @@ int NewtonSolver<Dimension>::ComputeSolution(double* const conc)
 
         if (iterations == max_iters_) break;
 
-        Jacobian(conc, fjac);
-
+        internalJacobian(conc, fjac);
         UpdateSolution(conc, fvec, fjac);
 
         iterations++;
@@ -217,7 +225,10 @@ int NewtonSolver<Dimension>::ComputeSolution(double* const conc)
     return iterations;
 }
 
-template class NewtonSolver<2>;
-template class NewtonSolver<4>;
-template class NewtonSolver<5>;
+template class NewtonSolver<2, CALPHADConcSolverBinary>;
+template class NewtonSolver<2, CALPHADEqConcSolverBinary>;
+template class NewtonSolver<4, CALPHADConcentrationSolverTernary>;
+template class NewtonSolver<4, CALPHADEqConcentrationSolverTernary>;
+template class NewtonSolver<5, CALPHADEqPhaseConcentrationSolverTernary>;
+template class NewtonSolver<2, KKSdiluteBinaryConcentrationSolver>;
 }
