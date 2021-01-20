@@ -28,13 +28,10 @@ public:
         const double* const conc, const PhaseIndex pi, double* d2fdc2)
         = 0;
 
-    virtual bool computeCeqT(const double temperature, const PhaseIndex pi0,
-        const PhaseIndex pi1, double* ceq, const int maxits,
-        const bool verbose = false)
+    virtual bool computeCeqT(const double temperature, double* ceq,
+        const int maxits, const bool verbose = false)
     {
         (void)temperature;
-        (void)pi0;
-        (void)pi1;
         (void)ceq;
         (void)maxits;
         (void)verbose;

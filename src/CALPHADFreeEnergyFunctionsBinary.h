@@ -32,15 +32,15 @@ public:
     virtual void computeDerivFreeEnergy(const double temperature,
         const double* const conc, const PhaseIndex pi, double*);
     virtual void computeSecondDerivativeFreeEnergy(const double temp,
-        const double* const conc, const PhaseIndex pi, double* d2fdc2);
+        const double* const conc, const PhaseIndex pi, double* d2fdc2) override;
 
     virtual bool computeCeqT(const double temperature, double* ceq,
-        const int maxits = 20, const bool verbose = false);
+        const int maxits = 20, const bool verbose = false) override;
 
     void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.);
 
     int computePhaseConcentrations(const double temperature, const double* conc,
-        const double phi, double* x);
+        const double phi, double* x) override;
     void energyVsPhiAndC(const double temperature, const double* const ceq,
         const bool found_ceq, const double phi_well_scale,
         const int npts_phi = 51,

@@ -172,9 +172,8 @@ void KKSFreeEnergyFunctionDiluteBinary::setupFB(const double temperature)
 //=======================================================================
 
 // compute equilibrium concentrations in various phases for given temperature
-bool KKSFreeEnergyFunctionDiluteBinary::computeCeqT(const double temperature,
-    const PhaseIndex pi0, const PhaseIndex pi1, double* ceq, const int maxits,
-    const bool verbose)
+bool KKSFreeEnergyFunctionDiluteBinary::computeCeqT(
+    const double temperature, double* ceq, const int maxits, const bool verbose)
 {
     if (verbose)
         std::cout << "KKSFreeEnergyFunctionDiluteBinary::computeCeqT()"

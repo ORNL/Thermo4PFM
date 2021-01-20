@@ -17,10 +17,6 @@ public:
     virtual int computePhaseConcentrations(const double temperature,
         const double* conc, const double phi, double* x)
         = 0;
-
-    virtual void computeSecondDerivativeFreeEnergy(const double temp,
-        const double* const conc, const PhaseIndex pi, double* d2fdc2)
-        = 0;
 };
 }
 

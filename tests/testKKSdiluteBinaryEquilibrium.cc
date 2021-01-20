@@ -46,7 +46,7 @@ TEST_CASE("Dilute binary equilibrium", "[dilute binary equilibrium]")
 
     // compute equilibrium compositions
     double ceq[2];
-    cafe.computeCeqT(temperature, pi0, pi1, &ceq[0]);
+    cafe.computeCeqT(temperature, &ceq[0]);
     std::cout << "   ceL = " << ceq[0] << std::endl;
     std::cout << "   ceS = " << ceq[1] << std::endl;
 
