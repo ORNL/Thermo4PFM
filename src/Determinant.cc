@@ -60,7 +60,7 @@ double evalDeterminant<4>(double** const m)
 template <int N>
 double evalDeterminant(double** mat)
 {
-    double* submat[5];
+    double* submat[N - 1];
 
     double d = 0.;
     for (short c = 0; c < N; c++)
