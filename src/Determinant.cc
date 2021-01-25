@@ -1,4 +1,5 @@
 #include "Determinant.h"
+
 #include <math.h>
 
 namespace Thermo4PFM
@@ -57,6 +58,9 @@ double evalDeterminant<4>(double** const m)
 
 //=======================================================================
 
+// return pow(-1,i)
+int minus1pow(const short i) { return i & 1 ? -1 : 1; }
+
 template <int N>
 double evalDeterminant(double** mat)
 {
@@ -74,7 +78,7 @@ double evalDeterminant(double** mat)
             submat[subi] = &mat[i][1];
             subi++;
         }
-        d += (pow(-1, c) * mat[c][0] * evalDeterminant<N - 1>(submat));
+        d += (minus1pow(c) * mat[c][0] * evalDeterminant<N - 1>(submat));
     }
     return d;
 }
