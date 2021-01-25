@@ -72,7 +72,7 @@ void NewtonSolver<Dimension, SolverType>::UpdateSolution(
         mwork[ii] = &mtmp[ii * Dimension];
     }
 
-    const double D     = Determinant::evaluate<Dimension>(fjac);
+    const double D     = evalDeterminant<Dimension>(fjac);
     const double D_inv = 1.0 / D;
 
     // std::cout << "D = " << D << std::endl;
@@ -86,7 +86,7 @@ void NewtonSolver<Dimension, SolverType>::UpdateSolution(
             mwork[ii][jj] = fvec[ii];
         }
 
-        del_c[jj] = D_inv * Determinant::evaluate<Dimension>(mwork);
+        del_c[jj] = D_inv * evalDeterminant<Dimension>(mwork);
 
         const double maxdel = 0.25;
         if (fabs(del_c[jj]) > maxdel)

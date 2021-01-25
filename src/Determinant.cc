@@ -5,13 +5,13 @@ namespace Thermo4PFM
 {
 
 template <>
-double Determinant::evaluate<2>(double** const m)
+double evalDeterminant<2>(double** const m)
 {
     return m[0][0] * m[1][1] - m[1][0] * m[0][1];
 }
 
 template <>
-double Determinant::evaluate<3>(double** const m)
+double evalDeterminant<3>(double** const m)
 {
     double d = m[0][0] * m[1][1] * m[2][2] - m[0][0] * m[1][2] * m[2][1]
                - m[0][1] * m[1][0] * m[2][2] + m[0][1] * m[1][2] * m[2][0]
@@ -23,7 +23,7 @@ double Determinant::evaluate<3>(double** const m)
 //=======================================================================
 
 template <>
-double Determinant::evaluate<4>(double** const m)
+double evalDeterminant<4>(double** const m)
 {
     double d
         = m[0][0]
@@ -58,7 +58,7 @@ double Determinant::evaluate<4>(double** const m)
 //=======================================================================
 
 template <int N>
-double Determinant::evaluate(double** mat)
+double evalDeterminant(double** mat)
 {
     double* submat[5];
 
@@ -74,10 +74,10 @@ double Determinant::evaluate(double** mat)
             submat[subi] = &mat[i][1];
             subi++;
         }
-        d += (pow(-1, c) * mat[c][0] * Determinant::evaluate<N - 1>(submat));
+        d += (pow(-1, c) * mat[c][0] * evalDeterminant<N - 1>(submat));
     }
     return d;
 }
 
-template double Determinant::evaluate<5>(double**);
+template double evalDeterminant<5>(double**);
 }

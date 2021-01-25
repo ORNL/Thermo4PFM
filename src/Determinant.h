@@ -3,14 +3,7 @@
 
 namespace Thermo4PFM
 {
-
-class Determinant
-{
-public:
-    Determinant(){};
-
-    template <int N>
-    static double evaluate(double** const matrix);
-};
+template <int N>
+double evalDeterminant(double** const matrix);
 }
 #endif
