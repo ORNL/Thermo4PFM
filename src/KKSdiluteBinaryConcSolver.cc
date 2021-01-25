@@ -4,6 +4,9 @@
 namespace Thermo4PFM
 {
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 void KKSdiluteBinaryConcSolver::RHS(const double* const c, double* const fvec)
 {
     fvec[0] = -c0_ + (1.0 - hphi_) * c[0] + hphi_ * c[1];
@@ -31,4 +34,7 @@ void KKSdiluteBinaryConcSolver::setup(
     fA_   = fA;
     fB_   = fB;
 }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 }

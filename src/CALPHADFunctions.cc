@@ -1,13 +1,16 @@
 #include "CALPHADFunctions.h"
 #include "xlogx.h"
 
-#include <cassert>
+//#include <cassert>
 
 namespace pt = boost::property_tree;
 
 namespace Thermo4PFM
 {
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 double CALPHADcomputeFMixBinary(const double l0, const double l1,
     const double l2, const double l3, const double conc)
 {
@@ -209,7 +212,7 @@ void CALPHADcomputeFMix_deriv2Ternary(const double* lAB, const double* lAC,
     const double* lBC, const double* lABC, const double cA, const double cB,
     double* deriv)
 {
-    assert(deriv != 0);
+    // assert(deriv != 0);
 
     double cC = 1. - cA - cB;
 
@@ -408,6 +411,9 @@ void CALPHADcomputeFIdealMix_derivTernary(
 
     deriv[1] = rt * (xlogx_deriv(cB) - xlogx_deriv(1.0 - cA - cB));
 }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 
 void readLmixBinary(pt::ptree& db, double LmixPhase[4][MAX_POL_T_INDEX])
 {

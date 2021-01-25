@@ -1,13 +1,12 @@
 #include "CALPHADEqConcSolverBinary.h"
 #include "CALPHADFunctions.h"
 
-#include <cassert>
-#include <cmath>
-#include <iostream>
-
 namespace Thermo4PFM
 {
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 void CALPHADEqConcSolverBinary::RHS(
     const double* const c, // composition of species A in various phases
     double* const fvec)
@@ -43,7 +42,6 @@ void CALPHADEqConcSolverBinary::RHS(
 void CALPHADEqConcSolverBinary::Jacobian(
     const double* const c, double** const fjac)
 {
-    // tbox::pout<<"Compute Jacobian for CALPHAD..."<<endl;
     double dfdci[2];
 
     // loop over phases
@@ -92,4 +90,7 @@ void CALPHADEqConcSolverBinary::setup(const double RTinv,
         fB_[ii] = fB[ii];
     }
 }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 }

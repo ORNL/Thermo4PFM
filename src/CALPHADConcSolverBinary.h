@@ -5,10 +5,12 @@
 
 namespace Thermo4PFM
 {
-
 class CALPHADConcSolverBinary : public NewtonSolver<2, CALPHADConcSolverBinary>
 {
 public:
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
     /// compute "internal" concentrations cL, cS by solving KKK
     /// equations
     /// conc: initial guess and final solution (concentration in each phase)
@@ -32,6 +34,9 @@ public:
     /// evaluate Jacobian of system of equations
     /// specific to this solver
     void Jacobian(const double* const x, double** const fjac);
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 
 private:
     ///

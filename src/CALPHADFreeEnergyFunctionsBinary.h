@@ -17,7 +17,7 @@
 namespace Thermo4PFM
 {
 
-class CALPHADFreeEnergyFunctionsBinary : public FreeEnergyFunctions
+class CALPHADFreeEnergyFunctionsBinary
 {
 public:
     CALPHADFreeEnergyFunctionsBinary(boost::property_tree::ptree& input_db,
@@ -28,25 +28,25 @@ public:
     ~CALPHADFreeEnergyFunctionsBinary(){};
 
     double computeFreeEnergy(const double temperature, const double* const conc,
-        const PhaseIndex pi, const bool gp = false) override;
+        const PhaseIndex pi, const bool gp = false);
     void computeDerivFreeEnergy(const double temperature,
-        const double* const conc, const PhaseIndex pi, double*) override;
+        const double* const conc, const PhaseIndex pi, double*);
     void computeSecondDerivativeFreeEnergy(const double temp,
-        const double* const conc, const PhaseIndex pi, double* d2fdc2) override;
+        const double* const conc, const PhaseIndex pi, double* d2fdc2);
 
     bool computeCeqT(const double temperature, double* ceq,
-        const int maxits = 20, const bool verbose = false) override;
+        const int maxits = 20, const bool verbose = false);
 
     void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.);
 
     int computePhaseConcentrations(const double temperature, const double* conc,
-        const double phi, double* x) override;
+        const double phi, double* x);
     void energyVsPhiAndC(const double temperature, const double* const ceq,
         const bool found_ceq, const double phi_well_scale,
         const int npts_phi = 51,
-        const int npts_c   = 50) override; // # of compositions to use (>1)
-    void printEnergyVsComposition(const double temperature, std::ostream& os,
-        const int npts = 100) override;
+        const int npts_c   = 50); // # of compositions to use (>1)
+    void printEnergyVsComposition(
+        const double temperature, std::ostream& os, const int npts = 100);
     double fchem(
         const double phi, const double* const conc, const double temperature);
     void printEnergyVsPhiHeader(const double temperature, const int nphi,
@@ -65,7 +65,7 @@ private:
     void computeTdependentParameters(const double temperature, double* Lmix_L,
         double* Lmix_A, double* fA, double* fB);
 
-    std::string fenergy_diag_filename_;
+    char* fenergy_diag_filename_;
 
     double newton_tol_;
     double newton_alpha_;
@@ -88,6 +88,9 @@ private:
 
     void readParameters(boost::property_tree::ptree& calphad_db);
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
     // energy of species "is" in phase L,A
     double getFenergyPhaseL(const short is, const double temperature)
     {
@@ -101,7 +104,7 @@ private:
     double lmixPhase(
         const unsigned index, const PhaseIndex pi, const double temperature)
     {
-        assert(index < 4);
+        // assert(index < 4);
 
         switch (pi)
         {
@@ -123,6 +126,9 @@ private:
                 return NAN;
         }
     }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 
     void computePhasesFreeEnergies(const double temperature, const double hphi,
         const double conc, double& fl, double& fa);

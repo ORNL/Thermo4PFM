@@ -1,8 +1,8 @@
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 
 #include <cassert>
-#include <cmath>
 #include <iostream>
+#include <math.h>
 #include <vector>
 
 #ifndef CALPHAD4PFM_ERROR
@@ -10,9 +10,11 @@
 #define CALPHAD4PFM_ERROR(X)                                                   \
     do                                                                         \
     {                                                                          \
-        std::cerr << "ERROR in file " << __FILE__ << " at line " << __LINE__   \
-                  << std::endl;                                                \
-        std::cerr << "Error Message: " << X << std::endl;                      \
+        /*        std::cerr << "ERROR in file " << __FILE__ << " at line " <<  \
+           __LINE__                                                            \
+                          << std::endl;                                        \
+                std::cerr << "Error Message: " << X << std::endl;              \
+          */                                                                   \
         abort();                                                               \
     } while (0)
 
@@ -47,7 +49,9 @@ void CALPHADSpeciesPhaseGibbsEnergy::initialize(
     assert(tc_ == nullptr);
     assert(expansion_ == nullptr);
 
-    name_ = name;
+    name_ = new char[name.length() + 1];
+    strcpy(name_, name.c_str());
+
     std::vector<double> tmp;
     for (pt::ptree::value_type& tc : db.get_child("Tc"))
     {
@@ -123,13 +127,41 @@ void CALPHADSpeciesPhaseGibbsEnergy::initialize(
     }
 
     // expansion_.resize(nintervals);
-    expansion_ = new CALPHADSpeciesPhaseGibbsEnergyExpansion[nintervals];
-    for (unsigned i = 0; i < nintervals; i++)
+    double* pa   = a.data();
+    double* pb   = b.data();
+    double* pc   = c.data();
+    double* pd2  = d2.data();
+    double* pd3  = d3.data();
+    double* pd4  = d4.data();
+    double* pd7  = d7.data();
+    double* pdm1 = dm1.data();
+    double* pdm9 = dm9.data();
+
+    CALPHADSpeciesPhaseGibbsEnergyExpansion* expansion
+        = new CALPHADSpeciesPhaseGibbsEnergyExpansion[nintervals];
+    expansion_ = expansion;
+
+#ifdef HAVE_OPENMP_OFFLOAD
+// clang-format off
+#pragma omp target data map(to : pa[:nintervals],     \
+                                 pb[:nintervals],     \
+                                 pc[:nintervals],     \
+                                 pd2[:nintervals],    \
+                                 pd3[:nintervals],    \
+                                 pd4[:nintervals],    \
+                                 pd7[:nintervals],    \
+                                 pdm1[:nintervals],   \
+                                 pdm9[:nintervals])   \
+                        map(to : expansion [0:nintervals])
+// clang-format on
+#endif
     {
-        CALPHADSpeciesPhaseGibbsEnergyExpansion expan;
-        expan.init(
-            a[i], b[i], c[i], d2[i], d3[i], d4[i], d7[i], dm1[i], dm9[i]);
-        expansion_[i] = expan;
+#pragma omp parallel for
+        for (unsigned i = 0; i < nintervals; i++)
+        {
+            expansion[i].init(pa[i], pb[i], pc[i], pd2[i], pd3[i], pd4[i],
+                pd7[i], pdm1[i], pdm9[i]);
+        }
     }
 }
 
@@ -137,10 +169,13 @@ void CALPHADSpeciesPhaseGibbsEnergy::initialize(
 // Free energy function
 // parameters are in J/mol
 // returned values are in J/mol
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 double CALPHADSpeciesPhaseGibbsEnergy::fenergy(
     const double T) // expect T in Kelvin
 {
-    assert(nintervals_ > 0);
+    // assert(nintervals_ > 0);
 
     for (int i = 0; i < nintervals_; i++)
         if (T >= tc_[i] && T < tc_[i + 1])
@@ -148,19 +183,19 @@ double CALPHADSpeciesPhaseGibbsEnergy::fenergy(
             return expansion_[i].value(T);
         }
 
-    std::cerr << "T=" << T << ", Tmin=" << tc_[0]
-              << ", Tmax=" << tc_[nintervals_] << std::endl;
-    CALPHAD4PFM_ERROR("T out of range for fenergy");
-
-    return 0.;
+    return NAN;
 }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 
 void CALPHADSpeciesPhaseGibbsEnergy::plotFofT(
     std::ostream& os, const double T0, const double T1)
 {
     const double dT = 10.;
     const int npts  = (int)std::trunc((T1 - T0) / dT);
-    os << "# fenergy(J/mol) vs. T(K) for species " << name_ << std::endl;
+    std::string name(name_);
+    os << "# fenergy(J/mol) vs. T(K) for species " << name << std::endl;
     for (int i = 0; i < npts; i++)
     {
         double testT = T0 + dT * i;

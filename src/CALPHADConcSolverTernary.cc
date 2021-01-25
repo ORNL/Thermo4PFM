@@ -1,16 +1,15 @@
 #include "CALPHADConcSolverTernary.h"
 #include "CALPHADFunctions.h"
 
-#include <cassert>
-
 namespace Thermo4PFM
 {
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 
 // solve for c=(c_L, c_A)
 void CALPHADConcSolverTernary::RHS(const double* const c, double* const fvec)
 {
-    assert(fC_[0] == fC_[0]);
-
     const double* const cL = &c[0];
     const double* const cS = &c[2];
 
@@ -63,11 +62,6 @@ void CALPHADConcSolverTernary::RHS(const double* const c, double* const fvec)
 
     // equal chemical potential equation for 2nd species
     fvec[3] = dfLdciL[1] - dfSdciS[1];
-
-    assert(fvec[0] == fvec[0]);
-    assert(fvec[1] == fvec[1]);
-    assert(fvec[2] == fvec[2]);
-    assert(fvec[3] == fvec[3]);
 }
 
 //=======================================================================
@@ -138,9 +132,6 @@ void CALPHADConcSolverTernary::setup(const double c0, const double c1,
     const double* const L_ABC_S, const double* const fA, const double* const fB,
     const double* const fC)
 {
-    assert(fC[0] == fC[0]);
-
-    // std::cout<<"CALPHADConcSolverTernary::ComputeConcentration()"<<endl;
     c0_[0] = c0;
     c0_[1] = c1;
     hphi_  = hphi;
@@ -173,4 +164,7 @@ void CALPHADConcSolverTernary::setup(const double c0, const double c1,
     for (int ii = 0; ii < 2; ii++)
         fC_[ii] = fC[ii];
 }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 }

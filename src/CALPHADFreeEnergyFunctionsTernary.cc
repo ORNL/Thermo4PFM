@@ -1,5 +1,8 @@
 #include "CALPHADFreeEnergyFunctionsTernary.h"
+#include "CALPHADConcSolverTernary.h"
+#include "CALPHADEqConcSolverTernary.h"
 #include "CALPHADFunctions.h"
+#include "CALPHADTieLineConcSolverTernary.h"
 #include "PhysicalConstants.h"
 #include "functions.h"
 #include "well_functions.h"
@@ -64,13 +67,16 @@ CALPHADFreeEnergyFunctionsTernary::CALPHADFreeEnergyFunctionsTernary(
     const ConcInterpolationType conc_interp_func_type)
     : energy_interp_func_type_(energy_interp_func_type),
       conc_interp_func_type_(conc_interp_func_type),
-      fenergy_diag_filename_("energy.vtk"),
       newton_tol_(1.e-8),
       newton_alpha_(1.),
       newton_maxits_(20),
       newton_verbose_(false)
 
 {
+    std::string fenergy_diag_filename("energy.vtk");
+    fenergy_diag_filename_ = new char[fenergy_diag_filename.length() + 1];
+    strcpy(fenergy_diag_filename_, fenergy_diag_filename.c_str());
+
     readParameters(calphad_db);
 
     if (newton_db) readNewtonparameters(newton_db.get());
@@ -190,6 +196,10 @@ void CALPHADFreeEnergyFunctionsTernary::readParameters(pt::ptree& calphad_db)
 
 //-----------------------------------------------------------------------
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
+
 double CALPHADFreeEnergyFunctionsTernary::computeFreeEnergy(
     const double temperature, const double* conc, const PhaseIndex pi,
     const bool gp)
@@ -221,9 +231,9 @@ double CALPHADFreeEnergyFunctionsTernary::computeFreeEnergy(
             g_species = &g_species_phaseA_[0];
             break;
         default:
-            std::cout << "CALPHADFreeEnergyFunctionsTernary::"
-                         "computeFreeEnergy(), undefined phase!!!"
-                      << std::endl;
+            //            std::cout << "CALPHADFreeEnergyFunctionsTernary::"
+            //                         "computeFreeEnergy(), undefined phase!!!"
+            //                      << std::endl;
             abort();
             return 0.;
     }
@@ -263,6 +273,7 @@ void CALPHADFreeEnergyFunctionsTernary::computeDerivFreeEnergy(
     double lBC[4]
         = { lmix0BCPhase(pi, temperature), lmix1BCPhase(pi, temperature),
               lmix2BCPhase(pi, temperature), lmix3BCPhase(pi, temperature) };
+
     double lABC[3] = { lmix0ABCPhase(pi, temperature),
         lmix1ABCPhase(pi, temperature), lmix2ABCPhase(pi, temperature) };
 
@@ -277,9 +288,9 @@ void CALPHADFreeEnergyFunctionsTernary::computeDerivFreeEnergy(
             g_species = &g_species_phaseA_[0];
             break;
         default:
-            std::cout << "CALPHADFreeEnergyFunctionsTernary::"
-                         "computeFreeEnergy(), undefined phase!!!"
-                      << std::endl;
+            //            std::cout << "CALPHADFreeEnergyFunctionsTernary::"
+            //                         "computeFreeEnergy(), undefined phase!!!"
+            //                      << std::endl;
             abort();
             return;
     }
@@ -306,10 +317,10 @@ void CALPHADFreeEnergyFunctionsTernary::computeSecondDerivativeFreeEnergy(
     const double temp, const double* const conc, const PhaseIndex pi,
     double* d2fdc2)
 {
-    assert(conc[0] >= 0.);
-    assert(conc[0] <= 1.);
-    assert(conc[1] >= 0.);
-    assert(conc[1] <= 1.);
+    // assert(conc[0] >= 0.);
+    // assert(conc[0] <= 1.);
+    // assert(conc[1] >= 0.);
+    // assert(conc[1] <= 1.);
 
     double lAB[4]   = { lmix0ABPhase(pi, temp), lmix1ABPhase(pi, temp),
         lmix2ABPhase(pi, temp), lmix3ABPhase(pi, temp) };
@@ -381,8 +392,8 @@ void CALPHADFreeEnergyFunctionsTernary::computeTdependentParameters(
     L_ABC_S[1] = lmix1ABCPhaseA(temperature);
     L_ABC_S[2] = lmix2ABCPhaseA(temperature);
 
-    assert(L_ABC_L[0] == L_ABC_L[0]);
-    assert(fC[0] == fC[0]);
+    // assert(L_ABC_L[0] == L_ABC_L[0]);
+    // assert(fC[0] == fC[0]);
 }
 
 //=======================================================================
@@ -391,10 +402,10 @@ void CALPHADFreeEnergyFunctionsTernary::computeTdependentParameters(
 bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(
     const double temperature, double* ceq, const int maxits, const bool verbose)
 {
-    if (verbose)
-        std::cout << "CALPHADFreeEnergyFunctionsTernary::computeCeqT()"
-                  << std::endl;
-    assert(temperature > 0.);
+    // if (verbose)
+    //    std::cout << "CALPHADFreeEnergyFunctionsTernary::computeCeqT()"
+    //              << std::endl;
+    // assert(temperature > 0.);
 
     double L_AB_L[4];
     double L_AC_L[4];
@@ -421,7 +432,7 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(
     eq_solver.setup(RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S, L_BC_S,
         L_ABC_L, L_ABC_S, fA, fB, fC);
     int ret = eq_solver.ComputeConcentration(ceq, newton_tol_, maxits);
-
+#ifndef HAVE_OPENMP_OFFLOAD
     if (ret >= 0)
     {
         if (verbose)
@@ -438,7 +449,7 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(
                      "computation did not converge"
                   << std::endl;
     }
-
+#endif
     return (ret >= 0);
 }
 
@@ -448,8 +459,6 @@ bool CALPHADFreeEnergyFunctionsTernary::computeTieLine(const double temperature,
     const double c0, const double c1, double* ceq, const int maxits,
     const bool verbose)
 {
-    assert(temperature > 0.);
-
     double L_AB_L[4];
     double L_AC_L[4];
     double L_BC_L[4];
@@ -475,6 +484,7 @@ bool CALPHADFreeEnergyFunctionsTernary::computeTieLine(const double temperature,
     eq_solver.setup(c0, c1, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S,
         L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
     int ret = eq_solver.ComputeConcentration(ceq, newton_tol_, newton_maxits_);
+#ifndef HAVE_OPENMP_OFFLOAD
     if (ret >= 0)
     {
         if (verbose)
@@ -491,7 +501,7 @@ bool CALPHADFreeEnergyFunctionsTernary::computeTieLine(const double temperature,
                      "computation did not converge"
                   << std::endl;
     }
-
+#endif
     return (ret >= 0);
 }
 
@@ -524,14 +534,13 @@ void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
     computeTdependentParameters(temperature, L_AB_L, L_AC_L, L_BC_L, L_ABC_L,
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
 
-    assert(fC[0] == fC[0]);
-
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
     CALPHADConcSolverTernary solver;
     solver.setup(conc0, conc1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S,
         L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
     int ret
         = solver.ComputeConcentration(cauxilliary, newton_tol_, newton_maxits_);
+#ifndef HAVE_OPENMP_OFFLOAD
     if (ret < 0)
     {
         std::cerr << "ERROR in "
@@ -544,10 +553,10 @@ void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
     }
 
     assert(conc0 >= 0.);
+#endif
     double concl[2] = { cauxilliary[0], cauxilliary[1] };
     fl = computeFreeEnergy(temperature, &concl[0], PhaseIndex::phaseL, false);
 
-    assert(conc1 >= 0.);
     double conca[2] = { cauxilliary[2], cauxilliary[3] };
     fa = computeFreeEnergy(temperature, &conca[0], PhaseIndex::phaseA, false);
 }
@@ -558,12 +567,12 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
     const double temperature, const double* const conc, const double phi,
     double* x)
 {
-    assert(conc[0] == conc[0]);
-    assert(conc[1] == conc[1]);
-    assert(x[0] >= 0.);
-    assert(x[1] >= 0.);
-    assert(x[0] <= 1.);
-    assert(x[1] <= 1.);
+    // assert(conc[0] == conc[0]);
+    // assert(conc[1] == conc[1]);
+    // assert(x[0] >= 0.);
+    // assert(x[1] >= 0.);
+    // assert(x[0] <= 1.);
+    // assert(x[1] <= 1.);
 
     const double conc0 = conc[0];
     const double conc1 = conc[1];
@@ -588,7 +597,7 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
 
     computeTdependentParameters(temperature, L_AB_L, L_AC_L, L_BC_L, L_ABC_L,
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
-    assert(fC[0] == fC[0]);
+    // assert(fC[0] == fC[0]);
 
     const double hphi = interp_func(conc_interp_func_type_, phi);
 
@@ -602,6 +611,7 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
     solver.setup(c0, c1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S,
         L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
     int ret = solver.ComputeConcentration(x, newton_tol_, newton_maxits_);
+#ifndef HAVE_OPENMP_OFFLOAD
     if (ret == -1)
     {
         std::cerr << "ERROR, "
@@ -610,11 +620,14 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
                      "failed for conc0="
                   << conc0 << ", conc1=" << conc1 << ", hphi=" << hphi
                   << std::endl;
-        abort();
     }
-
+#endif
     return ret;
 }
+
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -670,7 +683,7 @@ void CALPHADFreeEnergyFunctionsTernary::energyVsPhiAndC(
         std::clog << "Range for c0: " << c0min << " to " << c0max << std::endl;
         std::clog << "Range for c1: " << c1min << " to " << c1max << std::endl;
 
-        std::ofstream tfile(fenergy_diag_filename_.data(), std::ios::out);
+        std::ofstream tfile(fenergy_diag_filename_, std::ios::out);
 
         printEnergyVsPhiHeader(temperature, npts_phi, npts_c, npts_c, c0min,
             c0max, c1min, c1max, tfile);

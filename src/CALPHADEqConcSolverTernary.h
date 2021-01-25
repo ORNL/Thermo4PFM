@@ -10,6 +10,7 @@ class CALPHADEqConcSolverTernary
     : public NewtonSolver<4, CALPHADEqConcSolverTernary>
 {
 public:
+#pragma omp declare target
     /// compute equilibrium concentrations cL, cS
     /// conc: initial guess and final solution
     /// cL: conc[0], conc[1]
@@ -36,7 +37,7 @@ public:
     /// evaluate Jacobian of system of equations
     /// specific to this solver
     void Jacobian(const double* const x, double** const fjac);
-
+#pragma omp end declare target
 private:
     double RTinv_;
     double RT_;

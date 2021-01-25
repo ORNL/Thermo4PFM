@@ -1,9 +1,11 @@
 #include "Determinant.h"
 
-#include <math.h>
-
 namespace Thermo4PFM
 {
+
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 
 template <>
 double evalDeterminant<2>(double** const m)
@@ -82,6 +84,10 @@ double evalDeterminant(double** mat)
     }
     return d;
 }
+
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 
 template double evalDeterminant<5>(double**);
 }

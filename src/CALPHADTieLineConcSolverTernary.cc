@@ -1,18 +1,17 @@
 #include "CALPHADTieLineConcSolverTernary.h"
 #include "CALPHADFunctions.h"
 
-#include <cassert>
-#include <cmath>
-#include <iostream>
-
 namespace Thermo4PFM
 {
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 void CALPHADTieLineConcSolverTernary::RHS(
     const double* const x, double* const fvec)
 {
-    assert(fA_[0] == fA_[0]);
-    assert(fC_[1] == fC_[1]);
+    // assert(fA_[0] == fA_[0]);
+    // assert(fC_[1] == fC_[1]);
 
     const double* const cL = &x[0]; // composition of Species A and B in phase L
     const double* const cS = &x[2]; // composition of Species A and B in phase S
@@ -112,7 +111,7 @@ void CALPHADTieLineConcSolverTernary::Jacobian(
     double deriv2FMixL[4];
     CALPHADcomputeFMix_deriv2Ternary(
         L_AB_L_, L_AC_L_, L_BC_L_, L_ABC_L_, cL[0], cL[1], deriv2FMixL);
-    assert(fabs(deriv2FMixL[2] - deriv2FMixL[1]) < 1.e-6);
+    // assert(fabs(deriv2FMixL[2] - deriv2FMixL[1]) < 1.e-6);
 
     double dfLdciL[2];
     // 1st species
@@ -140,7 +139,7 @@ void CALPHADTieLineConcSolverTernary::Jacobian(
     double deriv2FMixS[4];
     CALPHADcomputeFMix_deriv2Ternary(
         L_AB_S_, L_AC_S_, L_BC_S_, L_ABC_S_, cS[0], cS[1], deriv2FMixS);
-    assert(fabs(deriv2FMixS[2] - deriv2FMixS[1]) < 1.e-6);
+    // assert(fabs(deriv2FMixS[2] - deriv2FMixS[1]) < 1.e-6);
 
     double dfSdciS[2];
     // 1st species
@@ -237,4 +236,7 @@ void CALPHADTieLineConcSolverTernary::setup(const double c0, const double c1,
         fC_[ii] = fC[ii];
     }
 }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 }

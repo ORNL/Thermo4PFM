@@ -1,10 +1,7 @@
 #ifndef included_CALPHADFreeEnergyFunctionsTernary
 #define included_CALPHADFreeEnergyFunctionsTernary
 
-#include "CALPHADConcSolverTernary.h"
-#include "CALPHADEqConcSolverTernary.h"
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
-#include "CALPHADTieLineConcSolverTernary.h"
 #include "FreeEnergyFunctions.h"
 #include "InterpolationType.h"
 #include "Phases.h"
@@ -19,7 +16,7 @@
 namespace Thermo4PFM
 {
 
-class CALPHADFreeEnergyFunctionsTernary : public FreeEnergyFunctions
+class CALPHADFreeEnergyFunctionsTernary
 {
 public:
     CALPHADFreeEnergyFunctionsTernary(boost::property_tree::ptree& input_db,
@@ -30,14 +27,14 @@ public:
     ~CALPHADFreeEnergyFunctionsTernary(){};
 
     double computeFreeEnergy(const double temperature, const double* const conc,
-        const PhaseIndex pi, const bool gp = false) override;
+        const PhaseIndex pi, const bool gp = false);
     void computeDerivFreeEnergy(const double temperature,
-        const double* const conc, const PhaseIndex pi, double* deriv) override;
+        const double* const conc, const PhaseIndex pi, double* deriv);
     void computeSecondDerivativeFreeEnergy(const double temp,
-        const double* const conc, const PhaseIndex pi, double* d2fdc2) override;
+        const double* const conc, const PhaseIndex pi, double* d2fdc2);
 
     bool computeCeqT(const double temperature, double* ceq,
-        const int maxits = 20, const bool verbose = false) override;
+        const int maxits = 20, const bool verbose = false);
 
     /// Compute compositions and phase fractions ate ends of tie line
     /// passing through nominal composition (c0,c1)
@@ -48,13 +45,13 @@ public:
     void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.);
 
     int computePhaseConcentrations(const double temperature,
-        const double* const conc, const double phi, double* x) override;
+        const double* const conc, const double phi, double* x);
     void energyVsPhiAndC(const double temperature, const double* const ceq,
         const bool found_ceq, const double phi_well_scale,
         const int npts_phi = 51,
-        const int npts_c   = 50) override; // number of compositions to use (>1)
-    void printEnergyVsComposition(const double temperature, std::ostream& os,
-        const int npts = 100) override;
+        const int npts_c   = 50); // number of compositions to use (>1)
+    void printEnergyVsComposition(
+        const double temperature, std::ostream& os, const int npts = 100);
     double fchem(
         const double phi, const double* const conc, const double temperature);
     void printEnergyVsPhiHeader(const double temperature, const int nphi,
@@ -74,7 +71,7 @@ private:
         double* L_AC_S, double* L_BC_S, double* L_ABC_S, double* fA, double* fB,
         double* fC);
 
-    std::string fenergy_diag_filename_;
+    char* fenergy_diag_filename_;
 
     double newton_tol_;
     double newton_alpha_;
@@ -105,6 +102,9 @@ private:
 
     void readParameters(boost::property_tree::ptree& calphad_db);
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
     // energy of species "is" in phase L,A,B
     double getFenergyPhaseL(const short is, const double temperature)
     {
@@ -434,8 +434,6 @@ private:
     // ABC liquid
     double lmix0ABCPhaseL(const double temperature)
     {
-        assert(LmixABCPhaseL_[0][0] == LmixABCPhaseL_[0][0]);
-
         return LmixABCPhaseL_[0][0] + LmixABCPhaseL_[0][1] * temperature;
     }
 
@@ -464,9 +462,15 @@ private:
     {
         return LmixABCPhaseA_[2][0] + LmixABCPhaseA_[2][1] * temperature;
     }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 
     void computePhasesFreeEnergies(const double temperature, const double hphi,
         const double conc0, const double conc1, double& fl, double& fa);
 };
+
+void readLmixTernaryParameters(
+    boost::property_tree::ptree& Lmix_db, double LmixABC[3][2]);
 }
 #endif

@@ -3,6 +3,9 @@
 namespace Thermo4PFM
 {
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 char concInterpChar(ConcInterpolationType interp_func_type)
 {
     switch (interp_func_type)
@@ -32,4 +35,7 @@ char energyInterpChar(EnergyInterpolationType interp_func_type)
             return '0';
     }
 }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 }

@@ -53,8 +53,9 @@ TEST_CASE("CALPHAD binary equilibrium", "[binary equilibrium]")
     std::vector<double> cel(nTintervals + 1);
     std::vector<double> ces(nTintervals + 1);
 
-    Thermo4PFM::CALPHADFreeEnergyFunctionsBinary cafe(
-        calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
+    Thermo4PFM::CALPHADFreeEnergyFunctionsBinary* cafe
+        = new Thermo4PFM::CALPHADFreeEnergyFunctionsBinary(calphad_db,
+            newton_db, energy_interp_func_type, conc_interp_func_type);
 
     {
         // serial loop
@@ -65,7 +66,7 @@ TEST_CASE("CALPHAD binary equilibrium", "[binary equilibrium]")
             double lceq[2] = { init_guess[0], init_guess[1] };
 
             // compute equilibrium concentrations in each phase
-            bool found_ceq = cafe.computeCeqT(temperature, &lceq[0]);
+            bool found_ceq = cafe->computeCeqT(temperature, &lceq[0]);
             if (lceq[0] > 1.) found_ceq = false;
             if (lceq[0] < 0.) found_ceq = false;
             if (lceq[1] > 1.) found_ceq = false;
@@ -93,10 +94,42 @@ TEST_CASE("CALPHAD binary equilibrium", "[binary equilibrium]")
         double lceq[2] = { init_guess[0], init_guess[1] };
 
         // compute equilibrium concentrations in each phase
-        bool found_ceq = cafe.computeCeqT(temperature, &lceq[0]);
+        bool found_ceq = cafe->computeCeqT(temperature, &lceq[0]);
 
         CHECK(found_ceq);
         CHECK(lceq[0] == Approx(cel[i]).margin(1.e-6));
         CHECK(lceq[1] == Approx(ces[i]).margin(1.e-6));
     }
+
+#ifdef HAVE_OPENMP_OFFLOAD
+    double* xdev = new double[2 * (nTintervals + 1)];
+
+// clang-format off
+#pragma omp target map(to : cafe [0:1]) \
+                   map(to : init_guess[:2]) \
+                   map(from : xdev[:2 * (nTintervals + 1)])
+// clang-format on
+#pragma omp parallel for
+    for (int i = 0; i < nTintervals + 1; i++)
+    {
+        const double temperature = Tmin + i * deltaT;
+
+        xdev[2 * i]     = init_guess[0];
+        xdev[2 * i + 1] = init_guess[1];
+
+        // compute concentrations in each phase
+        cafe->computeCeqT(temperature, &xdev[2 * i]);
+    }
+
+    for (int i = 0; i < nTintervals; i++)
+    {
+        std::cout << "Device: x=" << xdev[2 * i] << "," << xdev[2 * i + 1]
+                  << std::endl;
+        CHECK(xdev[2 * i] == Approx(cel[i]).margin(1.e-6));
+        CHECK(xdev[2 * i + 1] == Approx(ces[i]).margin(1.e-6));
+    }
+    delete[] xdev;
+#endif
+
+    delete cafe;
 }
