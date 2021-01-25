@@ -30,7 +30,6 @@ private:
         static_cast<SolverType*>(this)->RHS(x, fvec);
     }
 
-    double Determinant(double** const mat);
     void CopyMatrix(double** const dst, double** const src);
 
     void internalJacobian(const double* const x, double** const fjac)
@@ -47,9 +46,6 @@ private:
 
     double tolerance_;
     bool verbose_;
-
-    // function to compute determinant of matrix of size Dimension
-    double (*det_fun_ptr_)(double** const matrix);
 };
 }
 

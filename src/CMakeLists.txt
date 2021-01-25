@@ -1,5 +1,5 @@
 set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
-            ${CMAKE_SOURCE_DIR}/src/math_utilities.cc
+            ${CMAKE_SOURCE_DIR}/src/Determinant.cc
             ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
             ${CMAKE_SOURCE_DIR}/src/xlogx.cc
             ${CMAKE_SOURCE_DIR}/src/functions.cc
@@ -28,7 +28,7 @@ set(PUBLIC_HEADERS
     PhysicalConstants.h
     KKSFreeEnergyFunctionDiluteBinary.h
     InterpolationType.h
-    math_utilities.h
+    Determinant.h
     FreeEnergyFunctions.h
     Phases.h
     NewtonSolver.h

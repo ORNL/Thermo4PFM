@@ -5,8 +5,8 @@
 #include "CALPHADEqPhaseConcSolverTernary.h"
 #include "KKSdiluteBinaryConcentrationSolver.h"
 
+#include "Determinant.h"
 #include "NewtonSolver.h"
-#include "math_utilities.h"
 
 #include <cassert>
 #include <cmath>
@@ -23,26 +23,7 @@ namespace Thermo4PFM
 
 template <unsigned int Dimension, typename SolverType>
 NewtonSolver<Dimension, SolverType>::NewtonSolver()
-    : max_iters_(50), alpha_(1.), tolerance_(1.0e-8), verbose_(false)
-{
-    switch (Dimension)
-    {
-        case 5:
-            det_fun_ptr_ = Determinant5;
-            break;
-        case 4:
-            det_fun_ptr_ = Determinant4;
-            break;
-        case 3:
-            det_fun_ptr_ = Determinant3;
-            break;
-        case 2:
-            det_fun_ptr_ = Determinant2;
-            break;
-        default:
-            det_fun_ptr_ = nullptr;
-    }
-};
+    : max_iters_(50), alpha_(1.), tolerance_(1.0e-8), verbose_(false){};
 
 //=======================================================================
 
@@ -78,14 +59,6 @@ void NewtonSolver<Dimension, SolverType>::CopyMatrix(
 //=======================================================================
 
 template <unsigned int Dimension, typename SolverType>
-double NewtonSolver<Dimension, SolverType>::Determinant(double** const matrix)
-{
-    return (*det_fun_ptr_)(matrix);
-}
-
-//=======================================================================
-
-template <unsigned int Dimension, typename SolverType>
 void NewtonSolver<Dimension, SolverType>::UpdateSolution(
     double* const c, const double* const fvec, double** const fjac)
 {
@@ -99,7 +72,7 @@ void NewtonSolver<Dimension, SolverType>::UpdateSolution(
         mwork[ii] = &mtmp[ii * Dimension];
     }
 
-    const double D     = Determinant(fjac);
+    const double D     = Determinant::evaluate<Dimension>(fjac);
     const double D_inv = 1.0 / D;
 
     // std::cout << "D = " << D << std::endl;
@@ -113,7 +86,7 @@ void NewtonSolver<Dimension, SolverType>::UpdateSolution(
             mwork[ii][jj] = fvec[ii];
         }
 
-        del_c[jj] = D_inv * Determinant(mwork);
+        del_c[jj] = D_inv * Determinant::evaluate<Dimension>(mwork);
 
         const double maxdel = 0.25;
         if (fabs(del_c[jj]) > maxdel)
