@@ -221,8 +221,8 @@ bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(
     CALPHADEqConcSolverBinary eq_solver;
     eq_solver.SetMaxIterations(maxits);
 
-    int ret
-        = eq_solver.ComputeConcentration(ceq, RTinv, Lmix_L, Lmix_A, fA, fB);
+    eq_solver.setup(RTinv, Lmix_L, Lmix_A, fA, fB);
+    int ret = eq_solver.ComputeConcentration(ceq);
 
     if (ret >= 0)
     {

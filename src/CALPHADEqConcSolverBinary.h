@@ -16,9 +16,11 @@ public:
 
     ~CALPHADEqConcSolverBinary(){};
 
-    int ComputeConcentration(double* const conc, const double RTinv,
-        const double* const Lmix_L, const double* const Lmix_A,
-        const double* const fA, const double* const fB);
+    int ComputeConcentration(double* const conc);
+
+    void setup(const double RTinv, const double* const Lmix_L,
+        const double* const Lmix_A, const double* const fA,
+        const double* const fB);
 
     void RHS(const double* const x, double* const fvec);
 

@@ -33,14 +33,10 @@ void KKSdiluteBinaryConcSolver::Jacobian(
 }
 
 /*
- ********************************************************************
- * conc: initial guess and final solution (concentration in each phase)
  * c0: local composition
- ********************************************************************
  */
-int KKSdiluteBinaryConcSolver::ComputeConcentration(double* const conc,
-    const double c0, const double hphi, const double RTinv, const double fA,
-    const double fB)
+void KKSdiluteBinaryConcSolver::setup(const double c0, const double hphi,
+    const double RTinv, const double fA, const double fB)
 {
     (void)RTinv;
 
@@ -49,7 +45,14 @@ int KKSdiluteBinaryConcSolver::ComputeConcentration(double* const conc,
     hphi_ = hphi;
     fA_   = fA;
     fB_   = fB;
+}
 
+/*
+ * conc: initial guess and final solution (concentration in each phase)
+ */
+
+int KKSdiluteBinaryConcSolver::ComputeConcentration(double* const conc)
+{
     int ret = NewtonSolver::ComputeSolution(conc);
     return ret;
 }

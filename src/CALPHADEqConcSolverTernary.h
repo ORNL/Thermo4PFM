@@ -10,12 +10,14 @@ class CALPHADEqConcSolverTernary
     : public NewtonSolver<4, CALPHADEqConcSolverTernary>
 {
 public:
-    int ComputeConcentration(double* const conc, const double RTinv,
-        const double* const L_AB_L, const double* const L_AC_L,
-        const double* const L_BC_L, const double* const L_AB_S,
-        const double* const L_AC_S, const double* const L_BC_S,
-        const double* const L_ABC_L, const double* const L_ABC_S,
-        const double* const fA, const double* const fB, const double* const fC);
+    int ComputeConcentration(double* const conc);
+
+    void setup(const double RTinv, const double* const L_AB_L,
+        const double* const L_AC_L, const double* const L_BC_L,
+        const double* const L_AB_S, const double* const L_AC_S,
+        const double* const L_BC_S, const double* const L_ABC_L,
+        const double* const L_ABC_S, const double* const fA,
+        const double* const fB, const double* const fC);
 
     void RHS(const double* const x, double* const fvec);
 

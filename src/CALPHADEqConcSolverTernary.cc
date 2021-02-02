@@ -169,8 +169,8 @@ void CALPHADEqConcSolverTernary::Jacobian(
 
 //=======================================================================
 
-int CALPHADEqConcSolverTernary::ComputeConcentration(double* const conc,
-    const double RTinv, const double* const L_AB_L, const double* const L_AC_L,
+void CALPHADEqConcSolverTernary::setup(const double RTinv,
+    const double* const L_AB_L, const double* const L_AC_L,
     const double* const L_BC_L, const double* const L_AB_S,
     const double* const L_AC_S, const double* const L_BC_S,
     const double* const L_ABC_L, const double* const L_ABC_S,
@@ -204,7 +204,10 @@ int CALPHADEqConcSolverTernary::ComputeConcentration(double* const conc,
         fB_[ii] = fB[ii];
         fC_[ii] = fC[ii];
     }
+}
 
+int CALPHADEqConcSolverTernary::ComputeConcentration(double* const conc)
+{
     return NewtonSolver::ComputeSolution(conc);
 }
 }

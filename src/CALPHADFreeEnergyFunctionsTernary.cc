@@ -418,8 +418,9 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(
     CALPHADEqConcSolverTernary eq_solver;
     eq_solver.SetMaxIterations(maxits);
 
-    int ret = eq_solver.ComputeConcentration(ceq, RTinv, L_AB_L, L_AC_L, L_BC_L,
-        L_AB_S, L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
+    eq_solver.setup(RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S, L_BC_S,
+        L_ABC_L, L_ABC_S, fA, fB, fC);
+    int ret = eq_solver.ComputeConcentration(ceq);
 
     if (ret >= 0)
     {

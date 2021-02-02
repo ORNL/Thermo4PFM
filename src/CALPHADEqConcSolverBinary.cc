@@ -74,8 +74,8 @@ void CALPHADEqConcSolverBinary::Jacobian(
 
 //=======================================================================
 
-int CALPHADEqConcSolverBinary::ComputeConcentration(double* const conc,
-    const double RTinv, const double* const Lmix_L, const double* const Lmix_A,
+void CALPHADEqConcSolverBinary::setup(const double RTinv,
+    const double* const Lmix_L, const double* const Lmix_A,
     const double* const fA, const double* const fB)
 {
     RTinv_ = RTinv;
@@ -91,7 +91,10 @@ int CALPHADEqConcSolverBinary::ComputeConcentration(double* const conc,
         fA_[ii] = fA[ii];
         fB_[ii] = fB[ii];
     }
+}
 
+int CALPHADEqConcSolverBinary::ComputeConcentration(double* const conc)
+{
     return NewtonSolver::ComputeSolution(conc);
 }
 }
