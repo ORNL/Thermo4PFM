@@ -8,13 +8,7 @@
 namespace Thermo4PFM
 {
 
-CALPHADEqConcentrationSolverTernary::CALPHADEqConcentrationSolverTernary()
-    : NewtonSolver()
-{
-}
-
-void CALPHADEqConcentrationSolverTernary::RHS(
-    const double* const c, double* const fvec)
+void CALPHADEqConcSolverTernary::RHS(const double* const c, double* const fvec)
 {
     assert(fA_[0] == fA_[0]);
     assert(fC_[1] == fC_[1]);
@@ -78,7 +72,7 @@ void CALPHADEqConcentrationSolverTernary::RHS(
 
 //=======================================================================
 
-void CALPHADEqConcentrationSolverTernary::Jacobian(
+void CALPHADEqConcSolverTernary::Jacobian(
     const double* const c, double** const fjac)
 {
     // tbox::pout<<"Compute Jacobian for CALPHAD..."<<endl;
@@ -175,13 +169,12 @@ void CALPHADEqConcentrationSolverTernary::Jacobian(
 
 //=======================================================================
 
-int CALPHADEqConcentrationSolverTernary::ComputeConcentration(
-    double* const conc, const double RTinv, const double* const L_AB_L,
-    const double* const L_AC_L, const double* const L_BC_L,
-    const double* const L_AB_S, const double* const L_AC_S,
-    const double* const L_BC_S, const double* const L_ABC_L,
-    const double* const L_ABC_S, const double* const fA, const double* const fB,
-    const double* const fC)
+int CALPHADEqConcSolverTernary::ComputeConcentration(double* const conc,
+    const double RTinv, const double* const L_AB_L, const double* const L_AC_L,
+    const double* const L_BC_L, const double* const L_AB_S,
+    const double* const L_AC_S, const double* const L_BC_S,
+    const double* const L_ABC_L, const double* const L_ABC_S,
+    const double* const fA, const double* const fB, const double* const fC)
 {
     RTinv_ = RTinv;
     RT_    = 1. / RTinv;

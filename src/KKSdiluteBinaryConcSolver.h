@@ -1,18 +1,18 @@
-#ifndef included_KKSdiluteBinaryConcentrationSolver
-#define included_KKSdiluteBinaryConcentrationSolver
+#ifndef included_KKSdiluteBinaryConcSolver
+#define included_KKSdiluteBinaryConcSolver
 
 #include "NewtonSolver.h"
 
 namespace Thermo4PFM
 {
 
-class KKSdiluteBinaryConcentrationSolver
-    : public NewtonSolver<2, KKSdiluteBinaryConcentrationSolver>
+class KKSdiluteBinaryConcSolver
+    : public NewtonSolver<2, KKSdiluteBinaryConcSolver>
 {
 public:
-    KKSdiluteBinaryConcentrationSolver();
+    KKSdiluteBinaryConcSolver();
 
-    ~KKSdiluteBinaryConcentrationSolver(){};
+    ~KKSdiluteBinaryConcSolver(){};
 
     int ComputeConcentration(double* const conc, const double c0,
         const double hphi, const double RTinv, const double fA,

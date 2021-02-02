@@ -3,7 +3,7 @@
 #include "CALPHADEqConcSolverBinary.h"
 #include "CALPHADEqConcSolverTernary.h"
 #include "CALPHADEqPhaseConcSolverTernary.h"
-#include "KKSdiluteBinaryConcentrationSolver.h"
+#include "KKSdiluteBinaryConcSolver.h"
 
 #include "Determinant.h"
 #include "NewtonSolver.h"
@@ -200,8 +200,8 @@ int NewtonSolver<Dimension, SolverType>::ComputeSolution(double* conc)
 
 template class NewtonSolver<2, CALPHADConcSolverBinary>;
 template class NewtonSolver<2, CALPHADEqConcSolverBinary>;
-template class NewtonSolver<4, CALPHADConcentrationSolverTernary>;
-template class NewtonSolver<4, CALPHADEqConcentrationSolverTernary>;
-template class NewtonSolver<5, CALPHADEqPhaseConcentrationSolverTernary>;
-template class NewtonSolver<2, KKSdiluteBinaryConcentrationSolver>;
+template class NewtonSolver<4, CALPHADConcSolverTernary>;
+template class NewtonSolver<4, CALPHADEqConcSolverTernary>;
+template class NewtonSolver<5, CALPHADEqPhaseConcSolverTernary>;
+template class NewtonSolver<2, KKSdiluteBinaryConcSolver>;
 }

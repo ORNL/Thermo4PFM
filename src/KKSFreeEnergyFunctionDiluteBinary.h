@@ -3,7 +3,7 @@
 
 #include "FreeEnergyFunctions.h"
 #include "InterpolationType.h"
-#include "KKSdiluteBinaryConcentrationSolver.h"
+#include "KKSdiluteBinaryConcSolver.h"
 #include "Phases.h"
 #include "functions.h"
 
@@ -55,7 +55,7 @@ public:
         const int npts, const double slopec, std::ostream& os);
 
 private:
-    KKSdiluteBinaryConcentrationSolver* solver_;
+    KKSdiluteBinaryConcSolver* solver_;
 
     double ceq_l_;
     double ceq_a_;

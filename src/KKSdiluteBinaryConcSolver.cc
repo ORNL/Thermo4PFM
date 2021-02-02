@@ -1,4 +1,4 @@
-#include "KKSdiluteBinaryConcentrationSolver.h"
+#include "KKSdiluteBinaryConcSolver.h"
 #include "xlogx.h"
 
 #include <cassert>
@@ -8,16 +8,12 @@
 namespace Thermo4PFM
 {
 
-KKSdiluteBinaryConcentrationSolver::KKSdiluteBinaryConcentrationSolver()
-    : NewtonSolver()
-{
-}
+KKSdiluteBinaryConcSolver::KKSdiluteBinaryConcSolver() : NewtonSolver() {}
 
 //=======================================================================
 
 // solve for c=(c_L, c_A)
-void KKSdiluteBinaryConcentrationSolver::RHS(
-    const double* const c, double* const fvec)
+void KKSdiluteBinaryConcSolver::RHS(const double* const c, double* const fvec)
 {
     fvec[0] = -c0_ + (1.0 - hphi_) * c[0] + hphi_ * c[1];
     fvec[1] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[1])
@@ -26,7 +22,7 @@ void KKSdiluteBinaryConcentrationSolver::RHS(
 
 //=======================================================================
 
-void KKSdiluteBinaryConcentrationSolver::Jacobian(
+void KKSdiluteBinaryConcSolver::Jacobian(
     const double* const c, double** const fjac)
 {
     fjac[0][0] = (1.0 - hphi_);
@@ -42,13 +38,13 @@ void KKSdiluteBinaryConcentrationSolver::Jacobian(
  * c0: local composition
  ********************************************************************
  */
-int KKSdiluteBinaryConcentrationSolver::ComputeConcentration(double* const conc,
+int KKSdiluteBinaryConcSolver::ComputeConcentration(double* const conc,
     const double c0, const double hphi, const double RTinv, const double fA,
     const double fB)
 {
     (void)RTinv;
 
-    // std::cout<<"KKSdiluteBinaryConcentrationSolver::ComputeConcentration()"<<endl;
+    // std::cout<<"KKSdiluteBinaryConcSolver::ComputeConcentration()"<<endl;
     c0_   = c0;
     hphi_ = hphi;
     fA_   = fA;

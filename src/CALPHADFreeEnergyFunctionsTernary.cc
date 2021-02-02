@@ -415,7 +415,7 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
-    CALPHADEqConcentrationSolverTernary eq_solver;
+    CALPHADEqConcSolverTernary eq_solver;
     eq_solver.SetMaxIterations(maxits);
 
     int ret = eq_solver.ComputeConcentration(ceq, RTinv, L_AB_L, L_AC_L, L_BC_L,
@@ -469,7 +469,7 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(const double temperature,
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
-    CALPHADEqPhaseConcentrationSolverTernary eq_solver(c0, c1);
+    CALPHADEqPhaseConcSolverTernary eq_solver(c0, c1);
     eq_solver.SetMaxIterations(maxits);
 
     eq_solver.setup(RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S, L_BC_S,
@@ -527,7 +527,7 @@ void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
     assert(fC[0] == fC[0]);
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
-    CALPHADConcentrationSolverTernary solver;
+    CALPHADConcSolverTernary solver;
     solver.setup(conc0, conc1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S,
         L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
     int ret = solver.ComputeConcentration(cauxilliary);
@@ -597,7 +597,7 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
     double c1 = conc1 >= 0. ? conc1 : 0.;
     c1        = c1 <= 1. ? c1 : 1.;
 
-    CALPHADConcentrationSolverTernary solver;
+    CALPHADConcSolverTernary solver;
     solver.setup(c0, c1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S,
         L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
     int ret = solver.ComputeConcentration(x);

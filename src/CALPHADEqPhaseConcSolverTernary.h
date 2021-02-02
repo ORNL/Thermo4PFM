@@ -6,13 +6,13 @@
 namespace Thermo4PFM
 {
 
-class CALPHADEqPhaseConcentrationSolverTernary
-    : public NewtonSolver<5, CALPHADEqPhaseConcentrationSolverTernary>
+class CALPHADEqPhaseConcSolverTernary
+    : public NewtonSolver<5, CALPHADEqPhaseConcSolverTernary>
 {
 public:
-    CALPHADEqPhaseConcentrationSolverTernary(const double c0, const double c1);
+    CALPHADEqPhaseConcSolverTernary(const double c0, const double c1);
 
-    ~CALPHADEqPhaseConcentrationSolverTernary(){};
+    ~CALPHADEqPhaseConcSolverTernary(){};
 
     int ComputeConcentration(double* const conc);
 

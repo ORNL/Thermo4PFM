@@ -6,13 +6,13 @@
 namespace Thermo4PFM
 {
 
-class CALPHADConcentrationSolverTernary
-    : public NewtonSolver<4, CALPHADConcentrationSolverTernary>
+class CALPHADConcSolverTernary
+    : public NewtonSolver<4, CALPHADConcSolverTernary>
 {
 public:
-    CALPHADConcentrationSolverTernary();
+    CALPHADConcSolverTernary();
 
-    ~CALPHADConcentrationSolverTernary(){};
+    ~CALPHADConcSolverTernary(){};
 
     void setup(const double c0, const double c1, const double hphi,
         const double RTinv, const double* const L_AB_L,

@@ -40,7 +40,7 @@ void KKSFreeEnergyFunctionDiluteBinary::setupSolver(
 {
     std::cout << "KKSFreeEnergyFunctionDiluteBinary::setupSolver()..."
               << std::endl;
-    solver_ = new KKSdiluteBinaryConcentrationSolver();
+    solver_ = new KKSdiluteBinaryConcSolver();
 
     if (newton_db) readNewtonparameters(newton_db.get());
 }

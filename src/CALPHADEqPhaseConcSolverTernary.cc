@@ -8,15 +8,15 @@
 namespace Thermo4PFM
 {
 
-CALPHADEqPhaseConcentrationSolverTernary::
-    CALPHADEqPhaseConcentrationSolverTernary(const double c0, const double c1)
+CALPHADEqPhaseConcSolverTernary::CALPHADEqPhaseConcSolverTernary(
+    const double c0, const double c1)
     : NewtonSolver()
 {
     conc_[0] = c0;
     conc_[1] = c1;
 }
 
-void CALPHADEqPhaseConcentrationSolverTernary::RHS(
+void CALPHADEqPhaseConcSolverTernary::RHS(
     const double* const x, double* const fvec)
 {
     assert(fA_[0] == fA_[0]);
@@ -92,7 +92,7 @@ void CALPHADEqPhaseConcentrationSolverTernary::RHS(
 
 //=======================================================================
 
-void CALPHADEqPhaseConcentrationSolverTernary::Jacobian(
+void CALPHADEqPhaseConcSolverTernary::Jacobian(
     const double* const x, double** const fjac)
 {
     // tbox::pout<<"Compute Jacobian for CALPHAD..."<<endl;
@@ -204,7 +204,7 @@ void CALPHADEqPhaseConcentrationSolverTernary::Jacobian(
 
 //=======================================================================
 // A,B,C refers to 3 species
-void CALPHADEqPhaseConcentrationSolverTernary::setup(const double RTinv,
+void CALPHADEqPhaseConcSolverTernary::setup(const double RTinv,
     const double* const L_AB_L, const double* const L_AC_L,
     const double* const L_BC_L, const double* const L_AB_S,
     const double* const L_AC_S, const double* const L_BC_S,
@@ -241,8 +241,7 @@ void CALPHADEqPhaseConcentrationSolverTernary::setup(const double RTinv,
     }
 }
 
-int CALPHADEqPhaseConcentrationSolverTernary::ComputeConcentration(
-    double* const x)
+int CALPHADEqPhaseConcSolverTernary::ComputeConcentration(double* const x)
 {
     return NewtonSolver::ComputeSolution(x);
 }

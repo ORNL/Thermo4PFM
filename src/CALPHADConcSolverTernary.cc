@@ -8,16 +8,12 @@
 namespace Thermo4PFM
 {
 
-CALPHADConcentrationSolverTernary::CALPHADConcentrationSolverTernary()
-    : NewtonSolver()
-{
-}
+CALPHADConcSolverTernary::CALPHADConcSolverTernary() : NewtonSolver() {}
 
 //=======================================================================
 
 // solve for c=(c_L, c_A)
-void CALPHADConcentrationSolverTernary::RHS(
-    const double* const c, double* const fvec)
+void CALPHADConcSolverTernary::RHS(const double* const c, double* const fvec)
 {
     assert(fC_[0] == fC_[0]);
 
@@ -82,7 +78,7 @@ void CALPHADConcentrationSolverTernary::RHS(
 
 //=======================================================================
 
-void CALPHADConcentrationSolverTernary::Jacobian(
+void CALPHADConcSolverTernary::Jacobian(
     const double* const c, double** const fjac)
 {
     const double* const cL = &c[0];
@@ -140,7 +136,7 @@ void CALPHADConcentrationSolverTernary::Jacobian(
 
 //=======================================================================
 
-void CALPHADConcentrationSolverTernary::setup(const double c0, const double c1,
+void CALPHADConcSolverTernary::setup(const double c0, const double c1,
     const double hphi, const double RTinv, const double* const L_AB_L,
     const double* const L_AC_L, const double* const L_BC_L,
     const double* const L_AB_S, const double* const L_AC_S,
@@ -150,7 +146,7 @@ void CALPHADConcentrationSolverTernary::setup(const double c0, const double c1,
 {
     assert(fC[0] == fC[0]);
 
-    // std::cout<<"CALPHADConcentrationSolverTernary::ComputeConcentration()"<<endl;
+    // std::cout<<"CALPHADConcSolverTernary::ComputeConcentration()"<<endl;
     c0_[0] = c0;
     c0_[1] = c1;
     hphi_  = hphi;
@@ -184,7 +180,7 @@ void CALPHADConcentrationSolverTernary::setup(const double c0, const double c1,
         fC_[ii] = fC[ii];
 }
 
-int CALPHADConcentrationSolverTernary::ComputeConcentration(double* const conc)
+int CALPHADConcSolverTernary::ComputeConcentration(double* const conc)
 {
     return NewtonSolver::ComputeSolution(conc);
 }
