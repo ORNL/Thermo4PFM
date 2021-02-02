@@ -10,7 +10,11 @@ class KKSdiluteBinaryConcSolver
     : public NewtonSolver<2, KKSdiluteBinaryConcSolver>
 {
 public:
-    int ComputeConcentration(double* const conc);
+    // conc: initial guess and final solution (concentration in each phase)
+    int ComputeConcentration(double* const conc)
+    {
+        return NewtonSolver::ComputeSolution(conc);
+    }
 
     void setup(
         const double c0, const double hphi, const double fA, const double fB);

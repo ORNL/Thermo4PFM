@@ -18,7 +18,10 @@ public:
         const double* const L_ABC_S, const double* const fA,
         const double* const fB, const double* const fC);
 
-    int ComputeConcentration(double* const conc);
+    int ComputeConcentration(double* const conc)
+    {
+        return NewtonSolver::ComputeSolution(conc);
+    }
 
     void RHS(const double* const c, double* const fvec);
 

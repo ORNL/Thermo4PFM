@@ -46,9 +46,4 @@ void KKSdiluteBinaryConcSolver::setup(
 /*
  * conc: initial guess and final solution (concentration in each phase)
  */
-
-int KKSdiluteBinaryConcSolver::ComputeConcentration(double* const conc)
-{
-    return NewtonSolver::ComputeSolution(conc);
-}
 }

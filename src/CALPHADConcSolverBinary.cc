@@ -101,16 +101,4 @@ void CALPHADConcSolverBinary::setup(const double c0, const double hphi,
     for (int ii = 0; ii < 2; ii++)
         fB_[ii] = fB[ii];
 }
-
-/*
- ********************************************************************
- * conc: initial guess and final solution (concentration in each phase)
- ********************************************************************
- */
-int CALPHADConcSolverBinary::ComputeConcentration(double* const conc)
-{
-    // std::cout<<"CALPHADConcSolverBinary::ComputeConcentration()"<<endl;
-
-    return NewtonSolver::ComputeSolution(conc);
-}
 }

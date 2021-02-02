@@ -175,9 +175,4 @@ void CALPHADConcSolverTernary::setup(const double c0, const double c1,
     for (int ii = 0; ii < 2; ii++)
         fC_[ii] = fC[ii];
 }
-
-int CALPHADConcSolverTernary::ComputeConcentration(double* const conc)
-{
-    return NewtonSolver::ComputeSolution(conc);
-}
 }

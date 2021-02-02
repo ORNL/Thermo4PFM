@@ -12,7 +12,10 @@ class CALPHADEqConcSolverBinary
     : public NewtonSolver<2, CALPHADEqConcSolverBinary>
 {
 public:
-    int ComputeConcentration(double* const conc);
+    int ComputeConcentration(double* const conc)
+    {
+        return NewtonSolver::ComputeSolution(conc);
+    }
 
     void setup(const double RTinv, const double* const Lmix_L,
         const double* const Lmix_A, const double* const fA,

@@ -235,9 +235,4 @@ void CALPHADEqPhaseConcSolverTernary::setup(const double c0, const double c1,
         fC_[ii] = fC[ii];
     }
 }
-
-int CALPHADEqPhaseConcSolverTernary::ComputeConcentration(double* const x)
-{
-    return NewtonSolver::ComputeSolution(x);
-}
 }

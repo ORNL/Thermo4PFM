@@ -11,7 +11,11 @@ class CALPHADConcSolverBinary : public NewtonSolver<2, CALPHADConcSolverBinary>
 public:
     // compute "internal" concentrations cL, cS by solving KKK
     // equations
-    int ComputeConcentration(double* const conc);
+    // conc: initial guess and final solution (concentration in each phase)
+    int ComputeConcentration(double* const conc)
+    {
+        return NewtonSolver::ComputeSolution(conc);
+    }
 
     void setup(const double c0, const double hphi, const double RTinv,
         const double* const Lmix_L_, const double* const Lmix_A_,

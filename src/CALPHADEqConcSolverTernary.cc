@@ -205,9 +205,4 @@ void CALPHADEqConcSolverTernary::setup(const double RTinv,
         fC_[ii] = fC[ii];
     }
 }
-
-int CALPHADEqConcSolverTernary::ComputeConcentration(double* const conc)
-{
-    return NewtonSolver::ComputeSolution(conc);
-}
 }

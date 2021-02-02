@@ -10,7 +10,10 @@ class CALPHADEqConcSolverTernary
     : public NewtonSolver<4, CALPHADEqConcSolverTernary>
 {
 public:
-    int ComputeConcentration(double* const conc);
+    int ComputeConcentration(double* const conc)
+    {
+        return NewtonSolver::ComputeSolution(conc);
+    }
 
     void setup(const double RTinv, const double* const L_AB_L,
         const double* const L_AC_L, const double* const L_BC_L,

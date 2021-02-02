@@ -92,9 +92,4 @@ void CALPHADEqConcSolverBinary::setup(const double RTinv,
         fB_[ii] = fB[ii];
     }
 }
-
-int CALPHADEqConcSolverBinary::ComputeConcentration(double* const conc)
-{
-    return NewtonSolver::ComputeSolution(conc);
-}
 }
