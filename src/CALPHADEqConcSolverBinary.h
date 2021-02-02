@@ -12,10 +12,6 @@ class CALPHADEqConcSolverBinary
     : public NewtonSolver<2, CALPHADEqConcSolverBinary>
 {
 public:
-    CALPHADEqConcSolverBinary() : NewtonSolver(){};
-
-    ~CALPHADEqConcSolverBinary(){};
-
     int ComputeConcentration(double* const conc);
 
     void setup(const double RTinv, const double* const Lmix_L,
@@ -29,8 +25,6 @@ public:
 private:
     double RTinv_;
     double RT_;
-    double c0_;
-    double hphi_;
 
     // energies of 2 species (A and B), in two phase each
     double fA_[2];

@@ -26,8 +26,6 @@ public:
 private:
     double RTinv_;
     double RT_;
-    double c0_;
-    double hphi_;
 
     // energies of 3 species, in two phase each
     double fA_[2];
