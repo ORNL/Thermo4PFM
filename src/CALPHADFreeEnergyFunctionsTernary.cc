@@ -415,12 +415,11 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
-    CALPHADEqConcSolverTernary eq_solver;
-    eq_solver.SetMaxIterations(maxits);
 
+    CALPHADEqConcSolverTernary eq_solver;
     eq_solver.setup(RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S, L_BC_S,
         L_ABC_L, L_ABC_S, fA, fB, fC);
-    int ret = eq_solver.ComputeConcentration(ceq);
+    int ret = eq_solver.ComputeConcentration(ceq, newton_tol_, maxits);
 
     if (ret >= 0)
     {
@@ -470,12 +469,11 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(const double temperature,
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
-    CALPHADEqPhaseConcSolverTernary eq_solver;
-    eq_solver.SetMaxIterations(maxits);
 
+    CALPHADEqPhaseConcSolverTernary eq_solver;
     eq_solver.setup(c0, c1, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S,
         L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
-    int ret = eq_solver.ComputeConcentration(ceq);
+    int ret = eq_solver.ComputeConcentration(ceq, newton_tol_, newton_maxits_);
     if (ret >= 0)
     {
         if (verbose)
@@ -531,7 +529,8 @@ void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
     CALPHADConcSolverTernary solver;
     solver.setup(conc0, conc1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S,
         L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
-    int ret = solver.ComputeConcentration(cauxilliary);
+    int ret
+        = solver.ComputeConcentration(cauxilliary, newton_tol_, newton_maxits_);
     if (ret < 0)
     {
         std::cerr << "ERROR in "
@@ -601,7 +600,7 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
     CALPHADConcSolverTernary solver;
     solver.setup(c0, c1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S,
         L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
-    int ret = solver.ComputeConcentration(x);
+    int ret = solver.ComputeConcentration(x, newton_tol_, newton_maxits_);
     if (ret == -1)
     {
         std::cerr << "ERROR, "

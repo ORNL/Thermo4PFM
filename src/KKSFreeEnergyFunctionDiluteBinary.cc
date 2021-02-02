@@ -17,7 +17,10 @@ KKSFreeEnergyFunctionDiluteBinary::KKSFreeEnergyFunctionDiluteBinary(
     pt::ptree& conc_db, const EnergyInterpolationType energy_interp_func_type,
     const ConcInterpolationType conc_interp_func_type)
     : energy_interp_func_type_(energy_interp_func_type),
-      conc_interp_func_type_(conc_interp_func_type)
+      conc_interp_func_type_(conc_interp_func_type),
+      tol_(1.e-8),
+      maxiters_(20),
+      alpha_(1.)
 {
     fenergy_diag_filename_ = "energy.vtk";
 
@@ -50,15 +53,12 @@ void KKSFreeEnergyFunctionDiluteBinary::setupSolver(
 void KKSFreeEnergyFunctionDiluteBinary::readNewtonparameters(
     pt::ptree& newton_db)
 {
-    double tol         = newton_db.get<double>("tol", 1.e-8);
-    double alpha       = newton_db.get<double>("alpha", 1.);
-    int maxits         = newton_db.get<int>("max_its", 20);
+    tol_               = newton_db.get<double>("tol", 1.e-8);
+    alpha_             = newton_db.get<double>("alpha", 1.);
+    maxiters_          = newton_db.get<int>("max_its", 20);
     const bool verbose = newton_db.get<bool>("verbose", false);
 
-    solver_->SetTolerance(tol);
-    solver_->SetMaxIterations(maxits);
-    solver_->SetDamping(alpha);
-    solver_->SetVerbose(verbose);
+    assert(maxiters_ > 1);
 }
 
 //=======================================================================
@@ -204,7 +204,7 @@ void KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies(
     setupFB(temperature);
 
     solver_->setup(conc, hphi, fA_, fB_);
-    int ret = solver_->ComputeConcentration(c);
+    int ret = solver_->ComputeConcentration(c, tol_, maxiters_);
 
     if (ret < 0)
     {
@@ -234,6 +234,7 @@ int KKSFreeEnergyFunctionDiluteBinary::computePhaseConcentrations(
     assert(x[1] >= 0.);
     assert(x[0] <= 1.);
     assert(x[1] <= 1.);
+    assert(maxiters_ > 1);
 
     const double conc0 = conc[0];
 
@@ -245,7 +246,7 @@ int KKSFreeEnergyFunctionDiluteBinary::computePhaseConcentrations(
     double c0 = conc[0] >= 0. ? conc[0] : 0.;
     c0        = c0 <= 1. ? c0 : 1.;
     solver_->setup(c0, hphi, fA_, fB_);
-    int ret = solver_->ComputeConcentration(x);
+    int ret = solver_->ComputeConcentration(x, tol_, maxiters_);
     if (ret == -1)
     {
         std::cerr << "ERROR, "

@@ -22,18 +22,12 @@ namespace Thermo4PFM
 {
 
 template <unsigned int Dimension, typename SolverType>
-NewtonSolver<Dimension, SolverType>::NewtonSolver()
-    : max_iters_(50), alpha_(1.), tolerance_(1.0e-8), verbose_(false){};
-
-//=======================================================================
-
-template <unsigned int Dimension, typename SolverType>
 bool NewtonSolver<Dimension, SolverType>::CheckTolerance(
-    const double* const fvec)
+    const double* const fvec, const double tol)
 {
     for (int ii = 0; ii < Dimension; ii++)
     {
-        if (fabs(fvec[ii]) >= tolerance_) return false;
+        if (fabs(fvec[ii]) >= tol) return false;
     }
     return true;
 }
@@ -59,8 +53,8 @@ void NewtonSolver<Dimension, SolverType>::CopyMatrix(
 //=======================================================================
 
 template <unsigned int Dimension, typename SolverType>
-void NewtonSolver<Dimension, SolverType>::UpdateSolution(
-    double* const c, const double* const fvec, double** const fjac)
+void NewtonSolver<Dimension, SolverType>::UpdateSolution(double* const c,
+    const double* const fvec, double** const fjac, const double alpha)
 {
     double mem[Dimension * (1 + Dimension)];
     double* mtmp  = mem;
@@ -97,7 +91,7 @@ void NewtonSolver<Dimension, SolverType>::UpdateSolution(
 
     for (int ii = 0; ii < Dimension; ii++)
     {
-        c[ii] = c[ii] - alpha_ * del_c[ii];
+        c[ii] = c[ii] - alpha * del_c[ii];
     }
 }
 
@@ -106,9 +100,10 @@ void NewtonSolver<Dimension, SolverType>::UpdateSolution(
 //
 // Returns number of iterations used, or -1 if not converged
 template <unsigned int Dimension, typename SolverType>
-int NewtonSolver<Dimension, SolverType>::ComputeSolution(double* conc)
+int NewtonSolver<Dimension, SolverType>::ComputeSolution(
+    double* conc, const double tol, const int max_iters, const double alpha)
 {
-    assert(max_iters_ > 1);
+    assert(max_iters > 1);
 
     for (int ii = 0; ii < Dimension; ii++)
         assert(conc[ii] == conc[ii]);
@@ -152,16 +147,16 @@ int NewtonSolver<Dimension, SolverType>::ComputeSolution(double* conc)
             assert(fvec[ii] == fvec[ii]);
 #endif
 
-        if (CheckTolerance(fvec))
+        if (CheckTolerance(fvec, tol))
         {
             converged = true;
             break;
         }
 
-        if (iterations == max_iters_) break;
+        if (iterations == max_iters) break;
 
         internalJacobian(conc, fjac);
-        UpdateSolution(conc, fvec, fjac);
+        UpdateSolution(conc, fvec, fjac, alpha);
 
         iterations++;
     }

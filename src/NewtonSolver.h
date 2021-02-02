@@ -7,23 +7,12 @@ template <unsigned int Dimension, typename SolverType>
 class NewtonSolver
 {
 public:
-    NewtonSolver();
-
-    ~NewtonSolver(){};
-
-    int ComputeSolution(double* conc);
-
-    void SetTolerance(const double t) { tolerance_ = t; }
-
-    void SetMaxIterations(const int m) { max_iters_ = m; }
-
-    void SetVerbose(const bool verbose) { verbose_ = verbose; }
-
-    void SetDamping(const double alpha) { alpha_ = alpha; }
+    int ComputeSolution(double* conc, const double tol, const int max_iters,
+        const double alpha = 1.);
 
 private:
-    void UpdateSolution(
-        double* const x, const double* const fvec, double** const fjac);
+    void UpdateSolution(double* const x, const double* const fvec,
+        double** const fjac, const double alpha);
 
     void internalRHS(const double* const x, double* const fvec)
     {
@@ -37,15 +26,12 @@ private:
         static_cast<SolverType*>(this)->Jacobian(x, fjac);
     }
 
-    bool CheckTolerance(const double* const fvec);
-
-    int max_iters_;
+    bool CheckTolerance(const double* const fvec, const double tol);
 
     // damping factor
     double alpha_;
 
     double tolerance_;
-    bool verbose_;
 };
 }
 

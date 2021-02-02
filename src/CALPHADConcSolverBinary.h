@@ -12,9 +12,10 @@ public:
     // compute "internal" concentrations cL, cS by solving KKK
     // equations
     // conc: initial guess and final solution (concentration in each phase)
-    int ComputeConcentration(double* const conc)
+    int ComputeConcentration(double* const conc, const double tol,
+        const int max_iters, const double alpha = 1.)
     {
-        return NewtonSolver::ComputeSolution(conc);
+        return NewtonSolver::ComputeSolution(conc, tol, max_iters, alpha);
     }
 
     void setup(const double c0, const double hphi, const double RTinv,
