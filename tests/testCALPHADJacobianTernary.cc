@@ -47,9 +47,9 @@ TEST_CASE("CALPHAD Jacobian ternary", "[CALPHAD Jacobian ternary]")
     double x[5] = { 0.1, 0.2, 0.3, 0.4, 0.5 };
 
     {
-        Thermo4PFM::CALPHADEqPhaseConcSolverTernary solver(cA, cB);
-        solver.setup(RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S, L_BC_S,
-            L_ABC_L, L_ABC_S, fA, fB, fC);
+        Thermo4PFM::CALPHADEqPhaseConcSolverTernary solver;
+        solver.setup(cA, cB, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S,
+            L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
 
         solver.RHS(x, fvec1);
 

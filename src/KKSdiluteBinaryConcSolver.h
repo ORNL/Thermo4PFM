@@ -10,14 +10,10 @@ class KKSdiluteBinaryConcSolver
     : public NewtonSolver<2, KKSdiluteBinaryConcSolver>
 {
 public:
-    KKSdiluteBinaryConcSolver();
-
-    ~KKSdiluteBinaryConcSolver(){};
-
     int ComputeConcentration(double* const conc);
 
-    void setup(const double c0, const double hphi, const double RTinv,
-        const double fA, const double fB);
+    void setup(
+        const double c0, const double hphi, const double fA, const double fB);
 
     void RHS(const double* const x, double* const fvec);
 

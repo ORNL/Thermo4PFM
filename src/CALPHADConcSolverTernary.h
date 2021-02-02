@@ -10,10 +10,6 @@ class CALPHADConcSolverTernary
     : public NewtonSolver<4, CALPHADConcSolverTernary>
 {
 public:
-    CALPHADConcSolverTernary();
-
-    ~CALPHADConcSolverTernary(){};
-
     void setup(const double c0, const double c1, const double hphi,
         const double RTinv, const double* const L_AB_L,
         const double* const L_AC_L, const double* const L_BC_L,

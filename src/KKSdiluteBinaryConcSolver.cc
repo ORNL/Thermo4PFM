@@ -8,8 +8,6 @@
 namespace Thermo4PFM
 {
 
-KKSdiluteBinaryConcSolver::KKSdiluteBinaryConcSolver() : NewtonSolver() {}
-
 //=======================================================================
 
 // solve for c=(c_L, c_A)
@@ -35,11 +33,9 @@ void KKSdiluteBinaryConcSolver::Jacobian(
 /*
  * c0: local composition
  */
-void KKSdiluteBinaryConcSolver::setup(const double c0, const double hphi,
-    const double RTinv, const double fA, const double fB)
+void KKSdiluteBinaryConcSolver::setup(
+    const double c0, const double hphi, const double fA, const double fB)
 {
-    (void)RTinv;
-
     // std::cout<<"KKSdiluteBinaryConcSolver::ComputeConcentration()"<<endl;
     c0_   = c0;
     hphi_ = hphi;
@@ -53,7 +49,6 @@ void KKSdiluteBinaryConcSolver::setup(const double c0, const double hphi,
 
 int KKSdiluteBinaryConcSolver::ComputeConcentration(double* const conc)
 {
-    int ret = NewtonSolver::ComputeSolution(conc);
-    return ret;
+    return NewtonSolver::ComputeSolution(conc);
 }
 }

@@ -10,18 +10,14 @@ class CALPHADEqPhaseConcSolverTernary
     : public NewtonSolver<5, CALPHADEqPhaseConcSolverTernary>
 {
 public:
-    CALPHADEqPhaseConcSolverTernary(const double c0, const double c1);
-
-    ~CALPHADEqPhaseConcSolverTernary(){};
-
     int ComputeConcentration(double* const conc);
 
-    void setup(const double RTinv, const double* const L_AB_L,
-        const double* const L_AC_L, const double* const L_BC_L,
-        const double* const L_AB_S, const double* const L_AC_S,
-        const double* const L_BC_S, const double* const L_ABC_L,
-        const double* const L_ABC_S, const double* const fA,
-        const double* const fB, const double* const fC);
+    void setup(const double c0, const double c1, const double RTinv,
+        const double* const L_AB_L, const double* const L_AC_L,
+        const double* const L_BC_L, const double* const L_AB_S,
+        const double* const L_AC_S, const double* const L_BC_S,
+        const double* const L_ABC_L, const double* const L_ABC_S,
+        const double* const fA, const double* const fB, const double* const fC);
 
     void RHS(const double* const x, double* const fvec);
 
@@ -30,7 +26,6 @@ public:
 private:
     double RTinv_;
     double RT_;
-    double hphi_;
 
     // energies of 3 species, in two phase each
     double fA_[2];

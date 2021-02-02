@@ -9,10 +9,6 @@ namespace Thermo4PFM
 class CALPHADConcSolverBinary : public NewtonSolver<2, CALPHADConcSolverBinary>
 {
 public:
-    CALPHADConcSolverBinary() : NewtonSolver(){};
-
-    ~CALPHADConcSolverBinary(){};
-
     // compute "internal" concentrations cL, cS by solving KKK
     // equations
     int ComputeConcentration(double* const conc);

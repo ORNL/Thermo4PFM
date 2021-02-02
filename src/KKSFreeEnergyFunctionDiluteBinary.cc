@@ -203,8 +203,7 @@ void KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies(
 
     setupFB(temperature);
 
-    double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
-    solver_->setup(conc, hphi, RTinv, fA_, fB_);
+    solver_->setup(conc, hphi, fA_, fB_);
     int ret = solver_->ComputeConcentration(c);
 
     if (ret < 0)
@@ -245,9 +244,7 @@ int KKSFreeEnergyFunctionDiluteBinary::computePhaseConcentrations(
     // conc could be outside of [0.,1.] in a trial step
     double c0 = conc[0] >= 0. ? conc[0] : 0.;
     c0        = c0 <= 1. ? c0 : 1.;
-    solver_->setup(c0, hphi,
-        -1., // unused parameter
-        fA_, fB_);
+    solver_->setup(c0, hphi, fA_, fB_);
     int ret = solver_->ComputeConcentration(x);
     if (ret == -1)
     {

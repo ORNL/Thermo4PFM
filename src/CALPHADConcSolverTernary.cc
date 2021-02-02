@@ -8,10 +8,6 @@
 namespace Thermo4PFM
 {
 
-CALPHADConcSolverTernary::CALPHADConcSolverTernary() : NewtonSolver() {}
-
-//=======================================================================
-
 // solve for c=(c_L, c_A)
 void CALPHADConcSolverTernary::RHS(const double* const c, double* const fvec)
 {
