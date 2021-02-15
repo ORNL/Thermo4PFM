@@ -43,8 +43,8 @@ TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
 
     boost::optional<pt::ptree&> newton_db;
 
-    // initial guesses
-    const double init_guess[2] = { 0.2, 0.1 };
+    // nominal concentration for which to solve KKS eqs.
+    const double nominalc = 0.2;
 
     std::vector<double> cl(nTintervals + 1);
     std::vector<double> cs(nTintervals + 1);
@@ -62,7 +62,7 @@ TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
             double conc[2];
 
             // compute concentrations in each phase
-            cafe.computePhaseConcentrations(temperature, init_guess, phi, conc);
+            cafe.computePhaseConcentrations(temperature, &nominalc, phi, conc);
 
             std::cout << "Temperature = " << temperature << std::endl;
             std::cout << "Concentrations: cl = " << conc[0]
@@ -83,7 +83,7 @@ TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
         double conc[2];
 
         // compute concentrations in each phase
-        cafe.computePhaseConcentrations(temperature, init_guess, phi, conc);
+        cafe.computePhaseConcentrations(temperature, &nominalc, phi, conc);
 
         REQUIRE(conc[0] == Approx(cl[i]).margin(1.e-1));
         REQUIRE(conc[1] == Approx(cs[i]).margin(1.e-1));
