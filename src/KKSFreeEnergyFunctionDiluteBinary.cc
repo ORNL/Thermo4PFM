@@ -204,7 +204,7 @@ void KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies(
     setupFB(temperature);
 
     solver_->setup(conc, hphi, fA_, fB_);
-    int ret = solver_->ComputeConcentration(c, tol_, maxiters_);
+    int ret = solver_->ComputeConcentration(c, tol_, maxiters_, alpha_);
 
     if (ret < 0)
     {

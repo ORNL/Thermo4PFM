@@ -27,11 +27,6 @@ private:
     }
 
     bool CheckTolerance(const double* const fvec, const double tol);
-
-    // damping factor
-    double alpha_;
-
-    double tolerance_;
 };
 }
 

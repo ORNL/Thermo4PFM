@@ -33,6 +33,9 @@ Current functionalities include:
 Solvers are based on internal Newton solver.
 Specific solvers are derived classes of base class "Newton" and
 implement specific Jacobian and right handside calculations.
+Cramer's rule is used to solve the linear system at each Newton iteration.
+Solvers are templated on the dimension of the system of equations
+to be solved.
 
 Issues related to compositions possibly taking values outside of [0,1]
 during iterative solve are mostly handled by using continuous extensions

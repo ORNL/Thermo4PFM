@@ -11,7 +11,7 @@ class CALPHADEqConcSolverTernary
 {
 public:
     int ComputeConcentration(double* const conc, const double tol,
-        const int max_iters, const double alpha = 1)
+        const int max_iters, const double alpha = 1.)
     {
         return NewtonSolver::ComputeSolution(conc, tol, max_iters, alpha);
     }
