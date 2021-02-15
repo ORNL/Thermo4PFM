@@ -776,16 +776,15 @@ double CALPHADFreeEnergyFunctionsTernary::fchem(
 //=======================================================================
 
 void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
-    const double temperature, const int npts)
+    const double temperature, std::ostream& os, const int npts)
 {
     const double dc = 1.0 / (double)(npts - 1);
 
-    std::string filename1("Fl");
-    filename1 += g_species_phaseL_[0].name();
-    filename1 += g_species_phaseL_[2].name();
-    filename1 += ".dat";
-    std::ofstream os1(filename1.c_str(), std::ios::out);
-    os1 << "#phi=0, c1=0, temperature=" << temperature << std::endl;
+    std::string name1("Fl");
+    name1 += g_species_phaseL_[0].name();
+    name1 += g_species_phaseL_[2].name();
+    os << "#" << name1 << std::endl;
+    os << "#phi=0, c1=0, temperature=" << temperature << std::endl;
     for (int i = 0; i < npts; i++)
     {
         double conc[2];
@@ -793,16 +792,15 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
         conc[1] = 0.;
 
         double e = fchem(0., conc, temperature);
-        os1 << conc[0] << "\t" << e << std::endl;
+        os << conc[0] << "\t" << e << std::endl;
     }
-    os1 << std::endl;
+    os << std::endl;
 
-    std::string filename2("Fs");
-    filename2 += g_species_phaseA_[0].name();
-    filename2 += g_species_phaseA_[2].name();
-    filename2 += ".dat";
-    std::ofstream os2(filename2.c_str(), std::ios::out);
-    os2 << "#phi=1, c1=0, temperature=" << temperature << std::endl;
+    std::string name2("Fs");
+    name2 += g_species_phaseA_[0].name();
+    name2 += g_species_phaseA_[2].name();
+    os << "#" << name2 << std::endl;
+    os << "#phi=1, c1=0, temperature=" << temperature << std::endl;
     for (int i = 0; i < npts; i++)
     {
         double conc[2];
@@ -810,16 +808,15 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
         conc[1] = 0.;
 
         double e = fchem(1., conc, temperature);
-        os2 << conc[0] << "\t" << e << std::endl;
+        os << conc[0] << "\t" << e << std::endl;
     }
-    os2 << std::endl;
+    os << std::endl;
 
-    std::string filename3("Fl");
-    filename3 += g_species_phaseL_[1].name();
-    filename3 += g_species_phaseL_[2].name();
-    filename3 += ".dat";
-    std::ofstream os3(filename3.c_str(), std::ios::out);
-    os3 << "#phi=0, c0=0, temperature=" << temperature << std::endl;
+    std::string name3("Fl");
+    name3 += g_species_phaseL_[1].name();
+    name3 += g_species_phaseL_[2].name();
+    os << "#" << name3 << std::endl;
+    os << "#phi=0, c0=0, temperature=" << temperature << std::endl;
     for (int i = 0; i < npts; i++)
     {
         double conc[2];
@@ -827,16 +824,15 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
         conc[1] = i * dc;
 
         double e = fchem(0., conc, temperature);
-        os3 << conc[1] << "\t" << e << std::endl;
+        os << conc[1] << "\t" << e << std::endl;
     }
-    os3 << std::endl;
+    os << std::endl;
 
-    std::string filename4("Fs");
-    filename4 += g_species_phaseA_[1].name();
-    filename4 += g_species_phaseA_[2].name();
-    filename4 += ".dat";
-    std::ofstream os4(filename4.c_str(), std::ios::out);
-    os4 << "#phi=1, c0=0, temperature=" << temperature << std::endl;
+    std::string name4("Fs");
+    name4 += g_species_phaseA_[1].name();
+    name4 += g_species_phaseA_[2].name();
+    os << "#" << name4 << std::endl;
+    os << "#phi=1, c0=0, temperature=" << temperature << std::endl;
     for (int i = 0; i < npts; i++)
     {
         double conc[2];
@@ -844,16 +840,15 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
         conc[1] = i * dc;
 
         double e = fchem(1., conc, temperature);
-        os4 << conc[1] << "\t" << e << std::endl;
+        os << conc[1] << "\t" << e << std::endl;
     }
-    os4 << std::endl;
+    os << std::endl;
 
-    std::string filename5("Fl");
-    filename5 += g_species_phaseL_[0].name();
-    filename5 += g_species_phaseL_[1].name();
-    filename5 += ".dat";
-    std::ofstream os5(filename5.c_str(), std::ios::out);
-    os5 << "#phi=0, temperature=" << temperature << std::endl;
+    std::string name5("Fl");
+    name5 += g_species_phaseL_[0].name();
+    name5 += g_species_phaseL_[1].name();
+    os << "#" << name5 << std::endl;
+    os << "#phi=0, temperature=" << temperature << std::endl;
     for (int i = 0; i < npts; i++)
     {
         double conc[2];
@@ -861,16 +856,15 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
         conc[1] = 1. - i * dc;
 
         double e = fchem(0., conc, temperature);
-        os5 << conc[0] << "\t" << e << std::endl;
+        os << conc[0] << "\t" << e << std::endl;
     }
-    os5 << std::endl;
+    os << std::endl;
 
-    std::string filename6("Fs");
-    filename6 += g_species_phaseA_[0].name();
-    filename6 += g_species_phaseA_[1].name();
-    filename6 += ".dat";
-    std::ofstream os6(filename6.c_str(), std::ios::out);
-    os6 << "#phi=1, temperature=" << temperature << std::endl;
+    std::string name6("Fs");
+    name6 += g_species_phaseA_[0].name();
+    name6 += g_species_phaseA_[1].name();
+    os << "#" << name6 << std::endl;
+    os << "#phi=1, temperature=" << temperature << std::endl;
     for (int i = 0; i < npts; i++)
     {
         double conc[2];
@@ -878,9 +872,9 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
         conc[1] = 1. - i * dc;
 
         double e = fchem(1., conc, temperature);
-        os6 << conc[0] << "\t" << e << std::endl;
+        os << conc[0] << "\t" << e << std::endl;
     }
-    os6 << std::endl;
+    os << std::endl;
 }
 
 void CALPHADFreeEnergyFunctionsTernary::preRunDiagnostics(

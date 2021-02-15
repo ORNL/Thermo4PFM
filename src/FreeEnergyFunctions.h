@@ -21,7 +21,7 @@ public:
         const int npts_c = 50)
         = 0;
     virtual void printEnergyVsComposition(
-        const double temperature, const int npts = 100)
+        const double temperature, std::ostream& os, const int npts = 100)
         = 0;
 
     virtual void computeSecondDerivativeFreeEnergy(const double temp,

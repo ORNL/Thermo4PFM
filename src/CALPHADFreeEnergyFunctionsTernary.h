@@ -51,8 +51,8 @@ public:
         const bool found_ceq, const double phi_well_scale,
         const int npts_phi = 51,
         const int npts_c   = 50) override; // number of compositions to use (>1)
-    void printEnergyVsComposition(
-        const double temperature, const int npts = 100) override;
+    void printEnergyVsComposition(const double temperature, std::ostream& os,
+        const int npts = 100) override;
     double fchem(
         const double phi, const double* const conc, const double temperature);
     void printEnergyVsPhiHeader(const double temperature, const int nphi,

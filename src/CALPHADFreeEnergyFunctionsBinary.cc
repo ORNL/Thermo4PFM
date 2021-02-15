@@ -461,10 +461,8 @@ double CALPHADFreeEnergyFunctionsBinary::fchem(
 //=======================================================================
 
 void CALPHADFreeEnergyFunctionsBinary::printEnergyVsComposition(
-    const double temperature, const int npts)
+    const double temperature, std::ostream& os, const int npts)
 {
-    std::ofstream os("FvsC.dat", std::ios::out);
-
     const double dc = 1.0 / (double)(npts - 1);
 
     os << "#phi=0" << std::endl;
