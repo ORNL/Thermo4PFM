@@ -27,10 +27,13 @@ add_executable(testCALPHADternaryKKS
                ${TEST_DIR}/testCALPHADternaryKKS.cc )
 add_executable(testCALPHADternaryEquilibrium
                ${TEST_DIR}/testCALPHADternaryEquilibrium.cc )
+
 add_executable(testLoopCALPHADbinaryEquilibrium
                ${TEST_DIR}/testLoopCALPHADbinaryEquilibrium.cc )
 add_executable(testLoopCALPHADbinaryKKS
                ${TEST_DIR}/testLoopCALPHADbinaryKKS.cc )
+add_executable(testLoopCALPHADternaryKKS
+               ${TEST_DIR}/testLoopCALPHADternaryKKS.cc )
 add_executable(testLoopCALPHADternaryEquilibrium
                ${TEST_DIR}/testLoopCALPHADternaryEquilibrium.cc )
 
@@ -43,8 +46,10 @@ target_link_libraries(testCALPHADternaryKKS thermo4pfm)
 target_link_libraries(testCALPHADternaryEquilibrium thermo4pfm)
 target_link_libraries(testKKSdiluteBinaryKKS thermo4pfm)
 target_link_libraries(testKKSdiluteBinaryEquilibrium thermo4pfm)
+
 target_link_libraries(testLoopCALPHADbinaryKKS thermo4pfm)
 target_link_libraries(testLoopCALPHADbinaryEquilibrium thermo4pfm)
+target_link_libraries(testLoopCALPHADternaryKKS thermo4pfm)
 target_link_libraries(testLoopCALPHADternaryEquilibrium thermo4pfm)
 target_link_libraries(testCALPHADJacobianTernary thermo4pfm)
 
@@ -52,6 +57,7 @@ if (${OPENMP_CXX_FOUND})
   target_link_libraries(testLoopCALPHADbinaryEquilibrium OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADbinaryKKS OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADternaryEquilibrium OpenMP::OpenMP_CXX)
+  target_link_libraries(testLoopCALPHADternaryKKS OpenMP::OpenMP_CXX)
 endif()
 
 add_test(NAME testPropertyTree
@@ -91,6 +97,9 @@ add_test(NAME testLoopCALPHADbinaryEquilibrium
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testLoopCALPHADbinaryKKS
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testLoopCALPHADbinaryKKS
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testLoopCALPHADternaryKKS
+         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testLoopCALPHADternaryKKS
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testLoopCALPHADternaryEquilibriumternaryEquilibrium
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testLoopCALPHADternaryEquilibrium
