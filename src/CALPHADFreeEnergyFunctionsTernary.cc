@@ -443,7 +443,7 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(
 
 //=======================================================================
 
-bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(const double temperature,
+bool CALPHADFreeEnergyFunctionsTernary::computeTieLine(const double temperature,
     const double c0, const double c1, double* ceq, const int maxits,
     const bool verbose)
 {
@@ -470,7 +470,7 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(const double temperature,
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
 
-    CALPHADEqPhaseConcSolverTernary eq_solver;
+    CALPHADTieLineConcSolverTernary eq_solver;
     eq_solver.setup(c0, c1, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S,
         L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
     int ret = eq_solver.ComputeConcentration(ceq, newton_tol_, newton_maxits_);

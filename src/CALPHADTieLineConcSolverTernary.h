@@ -1,5 +1,5 @@
-#ifndef included_CALPHADEqPhaseConcSolverTernary
-#define included_CALPHADEqPhaseConcSolverTernary
+#ifndef included_CALPHADTieLineConcSolverTernary
+#define included_CALPHADTieLineConcSolverTernary
 
 #include "NewtonSolver.h"
 
@@ -7,8 +7,8 @@ namespace Thermo4PFM
 {
 /// solve for equilibrium compositions along a tie line
 /// passing through nominal composition
-class CALPHADEqPhaseConcSolverTernary
-    : public NewtonSolver<5, CALPHADEqPhaseConcSolverTernary>
+class CALPHADTieLineConcSolverTernary
+    : public NewtonSolver<5, CALPHADTieLineConcSolverTernary>
 {
 public:
     /// input x: initial values for cL_0, cL_1, cS_0, cS_1

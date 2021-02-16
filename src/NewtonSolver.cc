@@ -2,7 +2,7 @@
 #include "CALPHADConcSolverTernary.h"
 #include "CALPHADEqConcSolverBinary.h"
 #include "CALPHADEqConcSolverTernary.h"
-#include "CALPHADEqPhaseConcSolverTernary.h"
+#include "CALPHADTieLineConcSolverTernary.h"
 #include "KKSdiluteBinaryConcSolver.h"
 
 #include "Determinant.h"
@@ -197,6 +197,6 @@ template class NewtonSolver<2, CALPHADConcSolverBinary>;
 template class NewtonSolver<2, CALPHADEqConcSolverBinary>;
 template class NewtonSolver<4, CALPHADConcSolverTernary>;
 template class NewtonSolver<4, CALPHADEqConcSolverTernary>;
-template class NewtonSolver<5, CALPHADEqPhaseConcSolverTernary>;
+template class NewtonSolver<5, CALPHADTieLineConcSolverTernary>;
 template class NewtonSolver<2, KKSdiluteBinaryConcSolver>;
 }

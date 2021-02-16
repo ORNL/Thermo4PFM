@@ -14,7 +14,7 @@
 
 namespace pt = boost::property_tree;
 
-TEST_CASE("CALPHADternaryEquilibrium", "[CALPHADternaryEquilibrium]")
+TEST_CASE("CALPHADternaryTieLine", "[CALPHADternaryTieLine]")
 {
     Thermo4PFM::EnergyInterpolationType energy_interp_func_type
         = Thermo4PFM::EnergyInterpolationType::PBG;
@@ -42,8 +42,10 @@ TEST_CASE("CALPHADternaryEquilibrium", "[CALPHADternaryEquilibrium]")
     double init_guess[2][5]
         = { { 0.33, 0.38, 0.32, 0.33, 0.8 }, { 0.13, 0.21, 0.12, 0.15, 0.8 } };
 
+    // nominal composition
     double nominalc[2][2] = { { 0.33, 0.33 }, { 0.16, 0.225 } };
 
+    // expected compositions and phase fractions
     double expected_cl[2][2] = { { 0.344909, 0.380528 }, { 0.164344, 0.2321 } };
     double expected_cs[2][2]
         = { { 0.329373, 0.327874 }, { 0.13675, 0.186999 } };
@@ -58,7 +60,7 @@ TEST_CASE("CALPHADternaryEquilibrium", "[CALPHADternaryEquilibrium]")
             init_guess[itest][2], init_guess[itest][3], // solid
             init_guess[itest][4] };
 
-        bool found_ceq = cafe.computeCeqT(temperature[itest],
+        bool found_ceq = cafe.computeTieLine(temperature[itest],
             nominalc[itest][0], nominalc[itest][1], &lceq[0], maxits);
         if (lceq[0] != lceq[0]) found_ceq = false;
         if (lceq[0] > 1.) found_ceq = false;

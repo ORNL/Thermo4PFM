@@ -3,9 +3,9 @@
 
 #include "CALPHADConcSolverTernary.h"
 #include "CALPHADEqConcSolverTernary.h"
-#include "CALPHADEqPhaseConcSolverTernary.h"
 #include "CALPHADFreeEnergyFunctions.h"
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
+#include "CALPHADTieLineConcSolverTernary.h"
 #include "InterpolationType.h"
 #include "Phases.h"
 #include "functions.h"
@@ -39,7 +39,9 @@ public:
     virtual bool computeCeqT(const double temperature, double* ceq,
         const int maxits = 20, const bool verbose = false) override;
 
-    virtual bool computeCeqT(const double temperature, const double c0,
+    /// Compute compositions and phase fractions ate ends of tie line
+    /// passing through nominal composition (c0,c1)
+    virtual bool computeTieLine(const double temperature, const double c0,
         const double c1, double* ceq, const int maxits = 20,
         const bool verbose = false);
 

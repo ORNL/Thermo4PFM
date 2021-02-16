@@ -49,7 +49,9 @@ TEST_CASE("CALPHAD ternary equilibrium", "[ternary equilibrium]")
 
     // initial guesses
     const double init_guess[5] = { 0.33, 0.38, 0.32, 0.33, 0.8 };
-    double nominalc[2]         = { 0.2, 0.3 };
+
+    // nominal composition
+    double nominalc[2] = { 0.2, 0.3 };
 
     std::vector<double> cel(2 * (nTintervals + 1));
     std::vector<double> ces(2 * (nTintervals + 1));
@@ -68,7 +70,8 @@ TEST_CASE("CALPHAD ternary equilibrium", "[ternary equilibrium]")
                 init_guess[4] };
 
             // compute equilibrium concentrations in each phase
-            bool found_ceq = cafe.computeCeqT(
+            // at ends of tie line
+            bool found_ceq = cafe.computeTieLine(
                 temperature, nominalc[0], nominalc[1], &lceq[0]);
             if (lceq[0] > 1.) found_ceq = false;
             if (lceq[0] < 0.) found_ceq = false;
@@ -102,8 +105,8 @@ TEST_CASE("CALPHAD ternary equilibrium", "[ternary equilibrium]")
             init_guess[4] };
 
         // compute equilibrium concentrations in each phase
-        bool found_ceq
-            = cafe.computeCeqT(temperature, nominalc[0], nominalc[1], &lceq[0]);
+        bool found_ceq = cafe.computeTieLine(
+            temperature, nominalc[0], nominalc[1], &lceq[0]);
 
         CHECK(found_ceq);
         CHECK(lceq[0] == Approx(cel[2 * i]).margin(1.e-6));

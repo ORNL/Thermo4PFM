@@ -1,4 +1,4 @@
-#include "CALPHADEqPhaseConcSolverTernary.h"
+#include "CALPHADTieLineConcSolverTernary.h"
 #include "CALPHADFunctions.h"
 
 #include <cassert>
@@ -8,7 +8,7 @@
 namespace Thermo4PFM
 {
 
-void CALPHADEqPhaseConcSolverTernary::RHS(
+void CALPHADTieLineConcSolverTernary::RHS(
     const double* const x, double* const fvec)
 {
     assert(fA_[0] == fA_[0]);
@@ -86,7 +86,7 @@ void CALPHADEqPhaseConcSolverTernary::RHS(
 
 //=======================================================================
 
-void CALPHADEqPhaseConcSolverTernary::Jacobian(
+void CALPHADTieLineConcSolverTernary::Jacobian(
     const double* const x, double** const fjac)
 {
     // tbox::pout<<"Compute Jacobian for CALPHAD..."<<endl;
@@ -198,7 +198,7 @@ void CALPHADEqPhaseConcSolverTernary::Jacobian(
 
 //=======================================================================
 // A,B,C refers to 3 species
-void CALPHADEqPhaseConcSolverTernary::setup(const double c0, const double c1,
+void CALPHADTieLineConcSolverTernary::setup(const double c0, const double c1,
     const double RTinv, const double* const L_AB_L, const double* const L_AC_L,
     const double* const L_BC_L, const double* const L_AB_S,
     const double* const L_AC_S, const double* const L_BC_S,

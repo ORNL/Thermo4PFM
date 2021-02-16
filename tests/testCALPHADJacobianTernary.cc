@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 
 #include "CALPHADConcSolverTernary.h"
-#include "CALPHADEqPhaseConcSolverTernary.h"
+#include "CALPHADTieLineConcSolverTernary.h"
 
 #include "catch.hpp"
 
@@ -47,7 +47,7 @@ TEST_CASE("CALPHAD Jacobian ternary", "[CALPHAD Jacobian ternary]")
     double x[5] = { 0.1, 0.2, 0.3, 0.4, 0.5 };
 
     {
-        Thermo4PFM::CALPHADEqPhaseConcSolverTernary solver;
+        Thermo4PFM::CALPHADTieLineConcSolverTernary solver;
         solver.setup(cA, cB, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S,
             L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
 

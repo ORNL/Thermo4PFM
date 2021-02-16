@@ -15,7 +15,7 @@ set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverTernary.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverTernary.cc
-            ${CMAKE_SOURCE_DIR}/src/CALPHADEqPhaseConcSolverTernary.cc
+            ${CMAKE_SOURCE_DIR}/src/CALPHADTieLineConcSolverTernary.cc
             ${CMAKE_SOURCE_DIR}/src/KKSdiluteBinaryConcSolver.cc
             ${CMAKE_SOURCE_DIR}/src/KKSFreeEnergyFunctionDiluteBinary.cc
             ${CMAKE_SOURCE_DIR}/src/xlogx.cc)
@@ -45,7 +45,7 @@ set(PUBLIC_HEADERS
     CALPHADConcSolverTernary.h
     CALPHADEqConcSolverBinary.h
     CALPHADEqConcSolverTernary.h
-    CALPHADEqPhaseConcSolverTernary.h
+    CALPHADTieLineConcSolverTernary.h
     KKSdiluteBinaryConcSolver.h
    )
 install(TARGETS thermo4pfm DESTINATION ${INSTALL_DIR}/lib)

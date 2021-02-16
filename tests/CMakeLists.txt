@@ -25,8 +25,8 @@ add_executable(testCALPHADJacobianTernary
                ${TEST_DIR}/testCALPHADJacobianTernary.cc )
 add_executable(testCALPHADternaryKKS
                ${TEST_DIR}/testCALPHADternaryKKS.cc )
-add_executable(testCALPHADternaryEquilibrium
-               ${TEST_DIR}/testCALPHADternaryEquilibrium.cc )
+add_executable(testCALPHADternaryTieLine
+               ${TEST_DIR}/testCALPHADternaryTieLine.cc )
 
 add_executable(testLoopCALPHADbinaryEquilibrium
                ${TEST_DIR}/testLoopCALPHADbinaryEquilibrium.cc )
@@ -34,8 +34,8 @@ add_executable(testLoopCALPHADbinaryKKS
                ${TEST_DIR}/testLoopCALPHADbinaryKKS.cc )
 add_executable(testLoopCALPHADternaryKKS
                ${TEST_DIR}/testLoopCALPHADternaryKKS.cc )
-add_executable(testLoopCALPHADternaryEquilibrium
-               ${TEST_DIR}/testLoopCALPHADternaryEquilibrium.cc )
+add_executable(testLoopCALPHADternaryTieLine
+               ${TEST_DIR}/testLoopCALPHADternaryTieLine.cc )
 
 target_link_libraries(testInterpolationFunctions thermo4pfm)
 target_link_libraries(testCALPHADFunctions thermo4pfm)
@@ -43,20 +43,20 @@ target_link_libraries(testCALPHADGibbsEnergy thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKS thermo4pfm)
 target_link_libraries(testCALPHADbinaryEquilibrium thermo4pfm)
 target_link_libraries(testCALPHADternaryKKS thermo4pfm)
-target_link_libraries(testCALPHADternaryEquilibrium thermo4pfm)
+target_link_libraries(testCALPHADternaryTieLine thermo4pfm)
 target_link_libraries(testKKSdiluteBinaryKKS thermo4pfm)
 target_link_libraries(testKKSdiluteBinaryEquilibrium thermo4pfm)
 
 target_link_libraries(testLoopCALPHADbinaryKKS thermo4pfm)
 target_link_libraries(testLoopCALPHADbinaryEquilibrium thermo4pfm)
 target_link_libraries(testLoopCALPHADternaryKKS thermo4pfm)
-target_link_libraries(testLoopCALPHADternaryEquilibrium thermo4pfm)
+target_link_libraries(testLoopCALPHADternaryTieLine thermo4pfm)
 target_link_libraries(testCALPHADJacobianTernary thermo4pfm)
 
 if (${OPENMP_CXX_FOUND})
   target_link_libraries(testLoopCALPHADbinaryEquilibrium OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADbinaryKKS OpenMP::OpenMP_CXX)
-  target_link_libraries(testLoopCALPHADternaryEquilibrium OpenMP::OpenMP_CXX)
+  target_link_libraries(testLoopCALPHADternaryTieLine OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADternaryKKS OpenMP::OpenMP_CXX)
 endif()
 
@@ -89,8 +89,8 @@ add_test(NAME testCALPHADJacobianTernary
 add_test(NAME testCALPHADternaryKKS
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADternaryKKS
          WORKING_DIRECTORY ${TEST_DIR})
-add_test(NAME testCALPHADternaryEquilibrium
-         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADternaryEquilibrium
+add_test(NAME testCALPHADternaryTieLine
+         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADternaryTieLine
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testLoopCALPHADbinaryEquilibrium
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testLoopCALPHADbinaryEquilibrium
@@ -101,6 +101,6 @@ add_test(NAME testLoopCALPHADbinaryKKS
 add_test(NAME testLoopCALPHADternaryKKS
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testLoopCALPHADternaryKKS
          WORKING_DIRECTORY ${TEST_DIR})
-add_test(NAME testLoopCALPHADternaryEquilibriumternaryEquilibrium
-         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testLoopCALPHADternaryEquilibrium
+add_test(NAME testLoopCALPHADternaryTieLine
+         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testLoopCALPHADternaryTieLine
          WORKING_DIRECTORY ${TEST_DIR})
