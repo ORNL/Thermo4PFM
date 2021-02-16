@@ -7,6 +7,9 @@ template <unsigned int Dimension, typename SolverType>
 class NewtonSolver
 {
 public:
+    /// Solve system of equations for tolerance tol, using at most
+    /// max_iters iterations
+    /// Solution: conc
     int ComputeSolution(double* conc, const double tol, const int max_iters,
         const double alpha = 1.);
 

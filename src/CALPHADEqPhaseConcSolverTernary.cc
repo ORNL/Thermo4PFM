@@ -65,20 +65,22 @@ void CALPHADEqPhaseConcSolverTernary::RHS(
     fvec[1] = dfLdciL[0] - dfSdciS[0];
     fvec[2] = dfLdciL[1] - dfSdciS[1];
 
-    //
+    // satisfy nominal composition overall
     fvec[3] = phi * cS[0] + (1. - phi) * cL[0] - conc_[0];
     fvec[4] = phi * cS[1] + (1. - phi) * cL[1] - conc_[1];
 
 #if 0
-   std::cout<<"nominal c="<<conc_[0]<<","<<d_c[1]<<endl;
-   std::cout<<"cL="<<cL[0]<<","<<cL[1]<<", cS="<<cS[0]<<","<<cS[1]<<endl;
-   std::cout<<"phi="<<phi<<endl;
-   std::cout<<"fvec="<<fvec[0]<<","<<fvec[1]<<","<<fvec[2]<<","<<fvec[3]<<","<<fvec[4]<<endl;
-   std::cout<<"dfLdciL[0]="<<dfLdciL[0]<<endl;
-   std::cout<<"dfLdciL[1]="<<dfLdciL[1]<<endl;
-   std::cout<<"dfSdciS[0]="<<dfSdciS[0]<<endl;
-   std::cout<<"dfSdciS[1]="<<dfSdciS[1]<<endl;
-   std::cout<<"fL="<<fL<<", fS="<<fS<<endl;
+    std::cout << "nominal c=" << conc_[0] << "," << d_c[1] << endl;
+    std::cout << "cL=" << cL[0] << "," << cL[1] << ", cS=" << cS[0] << ","
+              << cS[1] << endl;
+    std::cout << "phi=" << phi << endl;
+    std::cout << "fvec=" << fvec[0] << "," << fvec[1] << "," << fvec[2] << ","
+              << fvec[3] << "," << fvec[4] << endl;
+    std::cout << "dfLdciL[0]=" << dfLdciL[0] << endl;
+    std::cout << "dfLdciL[1]=" << dfLdciL[1] << endl;
+    std::cout << "dfSdciS[0]=" << dfSdciS[0] << endl;
+    std::cout << "dfSdciS[1]=" << dfSdciS[1] << endl;
+    std::cout << "fL=" << fL << ", fS=" << fS << endl;
 #endif
 }
 

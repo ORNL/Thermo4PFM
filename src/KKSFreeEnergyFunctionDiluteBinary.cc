@@ -356,19 +356,6 @@ void KKSFreeEnergyFunctionDiluteBinary::printEnergyVsPhi(
 }
 
 //=======================================================================
-
-void KKSFreeEnergyFunctionDiluteBinary::printEnergyVsEta(
-    const double* const conc, const double temperature, const int npts,
-    const double slopec, std::ostream& os)
-{
-    (void)conc;
-    (void)temperature;
-    (void)npts;
-    (void)slopec;
-    (void)os;
-}
-
-//=======================================================================
 // compute free energy in [J/mol]
 double KKSFreeEnergyFunctionDiluteBinary::fchem(
     const double phi, const double* const conc, const double temperature)

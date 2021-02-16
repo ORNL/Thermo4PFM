@@ -51,8 +51,6 @@ public:
     void printEnergyVsPhi(const double* const conc, const double temperature,
         const double phi_well_scale, const int npts, const double slopec,
         std::ostream& os);
-    void printEnergyVsEta(const double* const conc, const double temperature,
-        const int npts, const double slopec, std::ostream& os);
 
 private:
     KKSdiluteBinaryConcSolver* solver_;
