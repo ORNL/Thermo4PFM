@@ -1,8 +1,8 @@
 #ifndef included_CALPHADFreeEnergyFunctionsBinary
 #define included_CALPHADFreeEnergyFunctionsBinary
 
-#include "CALPHADFreeEnergyFunctions.h"
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
+#include "FreeEnergyFunctions.h"
 #include "InterpolationType.h"
 #include "Phases.h"
 #include "functions.h"
@@ -17,7 +17,7 @@
 namespace Thermo4PFM
 {
 
-class CALPHADFreeEnergyFunctionsBinary : public CALPHADFreeEnergyFunctions
+class CALPHADFreeEnergyFunctionsBinary : public FreeEnergyFunctions
 {
 public:
     CALPHADFreeEnergyFunctionsBinary(boost::property_tree::ptree& input_db,
@@ -27,14 +27,14 @@ public:
 
     ~CALPHADFreeEnergyFunctionsBinary(){};
 
-    virtual double computeFreeEnergy(const double temperature,
-        const double* const conc, const PhaseIndex pi, const bool gp = false);
-    virtual void computeDerivFreeEnergy(const double temperature,
-        const double* const conc, const PhaseIndex pi, double*);
-    virtual void computeSecondDerivativeFreeEnergy(const double temp,
+    double computeFreeEnergy(const double temperature, const double* const conc,
+        const PhaseIndex pi, const bool gp = false) override;
+    void computeDerivFreeEnergy(const double temperature,
+        const double* const conc, const PhaseIndex pi, double*) override;
+    void computeSecondDerivativeFreeEnergy(const double temp,
         const double* const conc, const PhaseIndex pi, double* d2fdc2) override;
 
-    virtual bool computeCeqT(const double temperature, double* ceq,
+    bool computeCeqT(const double temperature, double* ceq,
         const int maxits = 20, const bool verbose = false) override;
 
     void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.);
@@ -72,6 +72,7 @@ private:
     int newton_maxits_;
     bool newton_verbose_;
 
+    // Single species energies in each phase
     // size 2 for species 0 and 1
     CALPHADSpeciesPhaseGibbsEnergy g_species_phaseL_[2];
     CALPHADSpeciesPhaseGibbsEnergy g_species_phaseA_[2];

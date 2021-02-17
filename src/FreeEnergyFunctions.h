@@ -15,17 +15,33 @@ public:
 
     virtual ~FreeEnergyFunctions(){};
 
+    virtual double computeFreeEnergy(const double temperature,
+        const double* conc, const PhaseIndex pi, const bool gp)
+        = 0;
+
+    virtual void computeDerivFreeEnergy(const double temperature,
+        const double* const conc, const PhaseIndex pi, double*)
+        = 0;
+
+    virtual void computeSecondDerivativeFreeEnergy(const double temp,
+        const double* const conc, const PhaseIndex pi, double* d2fdc2)
+        = 0;
+
+    /// Solve KKS equations:
+    /// Given a nominal composition and a phase fraction, solve
+    /// for the internal composition x
+    virtual int computePhaseConcentrations(const double temperature,
+        const double* conc, const double phi, double* x)
+        = 0;
+
     virtual void energyVsPhiAndC(const double temperature,
         const double* const ceq, const bool found_ceq,
         const double phi_well_scale, const int npts_phi = 51,
         const int npts_c = 50)
         = 0;
+
     virtual void printEnergyVsComposition(
         const double temperature, std::ostream& os, const int npts = 100)
-        = 0;
-
-    virtual void computeSecondDerivativeFreeEnergy(const double temp,
-        const double* const conc, const PhaseIndex pi, double* d2fdc2)
         = 0;
 
     virtual bool computeCeqT(const double temperature, double* ceq,

@@ -23,14 +23,14 @@ public:
 
     ~KKSFreeEnergyFunctionDiluteBinary() { delete solver_; };
 
-    virtual double computeFreeEnergy(const double temperature,
-        const double* const conc, const PhaseIndex pi, const bool gp = false);
-    virtual void computeDerivFreeEnergy(const double temperature,
-        const double* const conc, const PhaseIndex pi, double*);
-    virtual void computeSecondDerivativeFreeEnergy(const double temp,
+    double computeFreeEnergy(const double temperature, const double* const conc,
+        const PhaseIndex pi, const bool gp = false) override;
+    void computeDerivFreeEnergy(const double temperature,
+        const double* const conc, const PhaseIndex pi, double*) override;
+    void computeSecondDerivativeFreeEnergy(const double temp,
         const double* const conc, const PhaseIndex pi, double* d2fdc2) override;
 
-    virtual bool computeCeqT(const double temperature, double* ceq,
+    bool computeCeqT(const double temperature, double* ceq,
         const int maxits = 20, const bool verbose = false) override;
 
     void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.) {}

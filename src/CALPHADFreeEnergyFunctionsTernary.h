@@ -3,9 +3,9 @@
 
 #include "CALPHADConcSolverTernary.h"
 #include "CALPHADEqConcSolverTernary.h"
-#include "CALPHADFreeEnergyFunctions.h"
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 #include "CALPHADTieLineConcSolverTernary.h"
+#include "FreeEnergyFunctions.h"
 #include "InterpolationType.h"
 #include "Phases.h"
 #include "functions.h"
@@ -19,7 +19,7 @@
 namespace Thermo4PFM
 {
 
-class CALPHADFreeEnergyFunctionsTernary : public CALPHADFreeEnergyFunctions
+class CALPHADFreeEnergyFunctionsTernary : public FreeEnergyFunctions
 {
 public:
     CALPHADFreeEnergyFunctionsTernary(boost::property_tree::ptree& input_db,
@@ -29,19 +29,19 @@ public:
 
     ~CALPHADFreeEnergyFunctionsTernary(){};
 
-    virtual double computeFreeEnergy(const double temperature,
-        const double* const conc, const PhaseIndex pi, const bool gp = false);
-    virtual void computeDerivFreeEnergy(const double temperature,
-        const double* const conc, const PhaseIndex pi, double* deriv);
-    virtual void computeSecondDerivativeFreeEnergy(const double temp,
+    double computeFreeEnergy(const double temperature, const double* const conc,
+        const PhaseIndex pi, const bool gp = false) override;
+    void computeDerivFreeEnergy(const double temperature,
+        const double* const conc, const PhaseIndex pi, double* deriv) override;
+    void computeSecondDerivativeFreeEnergy(const double temp,
         const double* const conc, const PhaseIndex pi, double* d2fdc2) override;
 
-    virtual bool computeCeqT(const double temperature, double* ceq,
+    bool computeCeqT(const double temperature, double* ceq,
         const int maxits = 20, const bool verbose = false) override;
 
     /// Compute compositions and phase fractions ate ends of tie line
     /// passing through nominal composition (c0,c1)
-    virtual bool computeTieLine(const double temperature, const double c0,
+    bool computeTieLine(const double temperature, const double c0,
         const double c1, double* ceq, const int maxits = 20,
         const bool verbose = false);
 
@@ -81,6 +81,7 @@ private:
     int newton_maxits_;
     bool newton_verbose_;
 
+    // Single species energies in each phase
     // size 3 for species A, B, C
     CALPHADSpeciesPhaseGibbsEnergy g_species_phaseL_[3];
     CALPHADSpeciesPhaseGibbsEnergy g_species_phaseA_[3];

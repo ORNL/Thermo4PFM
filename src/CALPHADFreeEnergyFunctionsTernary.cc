@@ -57,6 +57,7 @@ void readLmixTernaryParameters(pt::ptree& Lmix_db, double LmixABC[3][2])
         }
     }
 }
+
 CALPHADFreeEnergyFunctionsTernary::CALPHADFreeEnergyFunctionsTernary(
     pt::ptree& calphad_db, boost::optional<pt::ptree&> newton_db,
     const EnergyInterpolationType energy_interp_func_type,
