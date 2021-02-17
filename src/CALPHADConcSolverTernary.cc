@@ -2,8 +2,6 @@
 #include "CALPHADFunctions.h"
 
 #include <cassert>
-#include <cmath>
-#include <iostream>
 
 namespace Thermo4PFM
 {

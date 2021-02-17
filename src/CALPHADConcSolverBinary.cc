@@ -2,7 +2,6 @@
 #include "CALPHADFunctions.h"
 #include "xlogx.h"
 
-#include <cmath>
 #include <iostream>
 
 namespace Thermo4PFM
