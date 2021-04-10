@@ -14,7 +14,7 @@ namespace Thermo4PFM
 class CALPHADSpeciesPhaseGibbsEnergy
 {
 private:
-    std::string name_;
+    char* name_;
     int nintervals_;
     double* tc_;
     CALPHADSpeciesPhaseGibbsEnergyExpansion* expansion_;
@@ -30,11 +30,16 @@ public:
     {
         assert(expansion_ != nullptr);
         assert(tc_ != nullptr);
+        delete[] name_;
         delete[] expansion_;
         delete[] tc_;
     }
 
-    std::string name() const { return name_; }
+    std::string name() const
+    {
+        std::string name(name_);
+        return name;
+    }
 
     void initialize(const std::string& name, boost::property_tree::ptree& db);
 

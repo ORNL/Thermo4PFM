@@ -1,18 +1,14 @@
 #include "CALPHADEqConcSolverTernary.h"
 #include "CALPHADFunctions.h"
 
-#include <cassert>
-#include <cmath>
-#include <iostream>
-
 namespace Thermo4PFM
 {
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 void CALPHADEqConcSolverTernary::RHS(const double* const c, double* const fvec)
 {
-    assert(fA_[0] == fA_[0]);
-    assert(fC_[1] == fC_[1]);
-
     const double* const cL = &c[0]; // composition of Species A and B in phase L
     const double* const cS = &c[2]; // composition of Species A and B in phase S
     // tbox::pout<<"Compute RHS for CALPHAD..."<<endl;
@@ -205,4 +201,7 @@ void CALPHADEqConcSolverTernary::setup(const double RTinv,
         fC_[ii] = fC[ii];
     }
 }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 }

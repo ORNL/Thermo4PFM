@@ -4,9 +4,8 @@
 #include "well_functions.h"
 #include "xlogx.h"
 
-#include <cmath>
 #include <iostream>
-#include <string>
+#include <math.h>
 
 namespace pt = boost::property_tree;
 
@@ -22,28 +21,15 @@ KKSFreeEnergyFunctionDiluteBinary::KKSFreeEnergyFunctionDiluteBinary(
       maxiters_(20),
       alpha_(1.)
 {
-    fenergy_diag_filename_ = "energy.vtk";
-
-    ceq_l_ = -1;
-    ceq_a_ = -1;
+    std::string fenergy_diag_filename("energy.vtk");
+    fenergy_diag_filename_ = new char[fenergy_diag_filename.length() + 1];
+    strcpy(fenergy_diag_filename_, fenergy_diag_filename.c_str());
 
     readParameters(conc_db);
 
     fA_ = log(1. / ke_);
 
     boost::optional<pt::ptree&> newton_db;
-
-    setupSolver(newton_db);
-}
-
-//=======================================================================
-
-void KKSFreeEnergyFunctionDiluteBinary::setupSolver(
-    boost::optional<pt::ptree&> newton_db)
-{
-    std::cout << "KKSFreeEnergyFunctionDiluteBinary::setupSolver()..."
-              << std::endl;
-    solver_ = new KKSdiluteBinaryConcSolver();
 
     if (newton_db) readNewtonparameters(newton_db.get());
 }
@@ -53,11 +39,9 @@ void KKSFreeEnergyFunctionDiluteBinary::setupSolver(
 void KKSFreeEnergyFunctionDiluteBinary::readNewtonparameters(
     pt::ptree& newton_db)
 {
-    tol_               = newton_db.get<double>("tol", 1.e-8);
-    alpha_             = newton_db.get<double>("alpha", 1.);
-    maxiters_          = newton_db.get<int>("max_its", 20);
-    const bool verbose = newton_db.get<bool>("verbose", false);
-
+    tol_      = newton_db.get<double>("tol", tol_);
+    alpha_    = newton_db.get<double>("alpha", alpha_);
+    maxiters_ = newton_db.get<int>("max_its", maxiters_);
     assert(maxiters_ > 1);
 }
 
@@ -76,24 +60,30 @@ void KKSFreeEnergyFunctionDiluteBinary::readParameters(pt::ptree& conc_db)
 
 //-----------------------------------------------------------------------
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
+
 double KKSFreeEnergyFunctionDiluteBinary::computeFreeEnergy(
     const double temperature, const double* const conc, const PhaseIndex pi,
     const bool gp)
 {
     double fe = xlogx(conc[0]) + xlogx(1. - conc[0]);
-    setupFB(temperature);
+    double fB = computeFB(temperature);
 
     switch (pi)
     {
         case PhaseIndex::phaseL:
             break;
         case PhaseIndex::phaseA:
-            fe += conc[0] * fA_ + (1. - conc[0]) * fB_;
+            fe += conc[0] * fA_ + (1. - conc[0]) * fB;
             break;
         default:
+#ifndef HAVE_OPENMP_OFFLOAD
             std::cout << "KKSFreeEnergyFunctionDiluteBinary::"
                          "computeFreeEnergy(), undefined phase!!!"
                       << std::endl;
+#endif
             abort();
             return 0.;
     }
@@ -124,13 +114,14 @@ void KKSFreeEnergyFunctionDiluteBinary::computeDerivFreeEnergy(
         case PhaseIndex::phaseL:
             break;
         case PhaseIndex::phaseA:
-            setupFB(temperature);
-            mu += (fA_ - fB_);
+            mu += (fA_ - computeFB(temperature));
             break;
         default:
+#ifndef HAVE_OPENMP_OFFLOAD
             std::cout << "KKSFreeEnergyFunctionDiluteBinary::"
                          "computeFreeEnergy(), undefined phase!!!"
                       << std::endl;
+#endif
             abort();
             return;
     }
@@ -144,8 +135,10 @@ void KKSFreeEnergyFunctionDiluteBinary::computeSecondDerivativeFreeEnergy(
     const double temp, const double* const conc, const PhaseIndex pi,
     double* d2fdc2)
 {
+#ifndef HAVE_OPENMP_OFFLOAD
     assert(conc[0] >= 0.);
     assert(conc[0] <= 1.);
+#endif
 
     const double rt = gas_constant_R_JpKpmol * temp;
 
@@ -154,19 +147,24 @@ void KKSFreeEnergyFunctionDiluteBinary::computeSecondDerivativeFreeEnergy(
 
 //=======================================================================
 
-void KKSFreeEnergyFunctionDiluteBinary::setupFB(const double temperature)
+double KKSFreeEnergyFunctionDiluteBinary::computeFB(
+    const double temperature) const
 {
+#ifndef HAVE_OPENMP_OFFLOAD
     assert(ke_ > 0.);
     assert(temperature < Tm_);
     assert(me_ < 0.);
+#endif
 
     const double cLe = (temperature - Tm_) / me_;
     const double cSe = cLe * ke_;
 
+#ifndef HAVE_OPENMP_OFFLOAD
     assert(cLe < 1.);
     assert(cSe < 1.);
+#endif
 
-    fB_ = std::log(1. - cLe) - std::log(1. - cSe);
+    return log(1. - cLe) - log(1. - cSe);
 }
 
 //=======================================================================
@@ -175,16 +173,15 @@ void KKSFreeEnergyFunctionDiluteBinary::setupFB(const double temperature)
 bool KKSFreeEnergyFunctionDiluteBinary::computeCeqT(
     const double temperature, double* ceq, const int maxits, const bool verbose)
 {
+#ifndef HAVE_OPENMP_OFFLOAD
     if (verbose)
         std::cout << "KKSFreeEnergyFunctionDiluteBinary::computeCeqT()"
                   << std::endl;
     assert(temperature > 0.);
+#endif
 
-    ceq_l_ = (temperature - Tm_) / me_;
-    ceq_a_ = ceq_l_ * ke_;
-
-    ceq[0] = ceq_l_;
-    ceq[1] = ceq_a_;
+    ceq[0] = (temperature - Tm_) / me_;
+    ceq[1] = ceq[0] * ke_;
 
     return true;
 }
@@ -198,14 +195,14 @@ void KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies(
     // std::cout<<"KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies()"<<endl;
 
     double c[2] = { conc, conc };
-    if (ceq_l_ >= 0.) c[0] = ceq_l_;
-    if (ceq_a_ >= 0.) c[1] = ceq_a_;
 
-    setupFB(temperature);
+    double fB = computeFB(temperature);
 
-    solver_->setup(conc, hphi, fA_, fB_);
-    int ret = solver_->ComputeConcentration(c, tol_, maxiters_, alpha_);
+    KKSdiluteBinaryConcSolver solver;
+    solver.setup(conc, hphi, fA_, fB);
+    int ret = solver.ComputeConcentration(c, tol_, maxiters_, alpha_);
 
+#ifndef HAVE_OPENMP_OFFLOAD
     if (ret < 0)
     {
         std::cerr << "ERROR in "
@@ -215,11 +212,11 @@ void KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies(
                   << "conc=" << conc << ", hphi=" << hphi << std::endl;
         abort();
     }
-
     assert(c[0] >= 0.);
-    fl = computeFreeEnergy(temperature, &c[0], PhaseIndex::phaseL, false);
-
     assert(c[1] >= 0.);
+#endif
+
+    fl = computeFreeEnergy(temperature, &c[0], PhaseIndex::phaseL, false);
     fa = computeFreeEnergy(temperature, &c[1], PhaseIndex::phaseA, false);
 }
 
@@ -230,35 +227,33 @@ int KKSFreeEnergyFunctionDiluteBinary::computePhaseConcentrations(
     double* x)
 
 {
+#ifndef HAVE_OPENMP_OFFLOAD
     assert(x[0] >= 0.);
     assert(x[1] >= 0.);
     assert(x[0] <= 1.);
     assert(x[1] <= 1.);
     assert(maxiters_ > 1);
+#endif
 
     const double conc0 = conc[0];
 
     const double hphi = interp_func(conc_interp_func_type_, phi);
 
-    setupFB(temperature);
+    const double fB = computeFB(temperature);
 
     // conc could be outside of [0.,1.] in a trial step
     double c0 = conc[0] >= 0. ? conc[0] : 0.;
     c0        = c0 <= 1. ? c0 : 1.;
-    solver_->setup(c0, hphi, fA_, fB_);
-    int ret = solver_->ComputeConcentration(x, tol_, maxiters_);
-    if (ret == -1)
-    {
-        std::cerr << "ERROR, "
-                     "KKSFreeEnergyFunctionDiluteBinary::"
-                     "computePhaseConcentrations() "
-                     "failed for conc="
-                  << conc0 << ", hphi=" << hphi << std::endl;
-        abort();
-    }
+    KKSdiluteBinaryConcSolver solver;
+    solver.setup(c0, hphi, fA_, fB);
+    int ret = solver.ComputeConcentration(x, tol_, maxiters_);
 
     return ret;
 }
+
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -296,7 +291,7 @@ void KKSFreeEnergyFunctionDiluteBinary::energyVsPhiAndC(
         cmax          = std::max(cmax, cmin + dc);
         double deltac = (cmax - cmin) / (npts_c - 1);
 
-        std::ofstream tfile(fenergy_diag_filename_.data(), std::ios::out);
+        std::ofstream tfile(fenergy_diag_filename_, std::ios::out);
 
         printEnergyVsPhiHeader(
             temperature, npts_phi, npts_c, cmin, cmax, slopec, tfile);

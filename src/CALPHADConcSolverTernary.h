@@ -10,6 +10,9 @@ class CALPHADConcSolverTernary
     : public NewtonSolver<4, CALPHADConcSolverTernary>
 {
 public:
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
     /// compute "internal" concentrations cL, cS by solving KKK
     /// equations
     /// conc: initial guess and final solution (concentration in each phase)
@@ -37,6 +40,9 @@ public:
     /// evaluate Jacobian of system of equations
     /// specific to this solver
     void Jacobian(const double* const c, double** const fjac);
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 
 private:
     ///

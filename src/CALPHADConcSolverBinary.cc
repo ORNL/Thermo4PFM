@@ -2,12 +2,13 @@
 #include "CALPHADFunctions.h"
 #include "xlogx.h"
 
-#include <iostream>
-
 namespace Thermo4PFM
 {
 //=======================================================================
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 void CALPHADConcSolverBinary::computeXi(
     const double* const c, double xi[2]) const
 {
@@ -100,4 +101,8 @@ void CALPHADConcSolverBinary::setup(const double c0, const double hphi,
     for (int ii = 0; ii < 2; ii++)
         fB_[ii] = fB[ii];
 }
+
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 }

@@ -1,11 +1,14 @@
 #include "CALPHADSpeciesPhaseGibbsEnergyExpansion.h"
 
-#include <iostream>
+//#include <iostream>
 #include <math.h>
 
 namespace Thermo4PFM
 {
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 void CALPHADSpeciesPhaseGibbsEnergyExpansion::init(const double a,
     const double b, const double c, const double d2, const double d3,
     const double d4, const double d7, const double dm1, const double dm9)
@@ -34,10 +37,12 @@ double CALPHADSpeciesPhaseGibbsEnergyExpansion::value(
     // std::cout<<"d4="<<d4_<<std::endl;
     // std::cout<<"d7="<<d7_<<std::endl;
     // std::cout<<"dm1="<<dm1_<<std::endl;
-
     return a_ + b_ * temperature + c_ * temperature * log(temperature)
            + d2_ * t2 + d3_ * t2 * temperature + d4_ * t4
            + d7_ * t4 * t2 * temperature + dm1_ / temperature
            + dm9_ / (t4 * t4 * temperature);
 }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 }

@@ -11,6 +11,9 @@ class CALPHADTieLineConcSolverTernary
     : public NewtonSolver<5, CALPHADTieLineConcSolverTernary>
 {
 public:
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
     /// input x: initial values for cL_0, cL_1, cS_0, cS_1
     /// and phase fraction
     /// output x: ceqL_0, ceqL_1, ceqS_0, ceqS_1, and phi
@@ -37,6 +40,9 @@ public:
     /// evaluate Jacobian of system of equations
     /// specific to this solver
     void Jacobian(const double* const x, double** const fjac);
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 
 private:
     ///

@@ -8,10 +8,12 @@
 #include "Determinant.h"
 #include "NewtonSolver.h"
 
+#ifndef HAVE_OPENMP_OFFLOAD
 #include <cassert>
+#endif
 #include <cmath>
 
-#define DEBUG_CONVERGENCE
+//#define DEBUG_CONVERGENCE
 #ifdef DEBUG_CONVERGENCE
 #include <iomanip>
 #include <iostream>
@@ -21,15 +23,19 @@
 namespace Thermo4PFM
 {
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 template <unsigned int Dimension, typename SolverType>
 bool NewtonSolver<Dimension, SolverType>::CheckTolerance(
     const double* const fvec, const double tol)
 {
+    bool ret = true;
     for (int ii = 0; ii < Dimension; ii++)
     {
-        if (fabs(fvec[ii]) >= tol) return false;
+        ret = (ret && (fabs(fvec[ii]) < tol));
     }
-    return true;
+    return ret;
 }
 
 //=======================================================================
@@ -38,8 +44,10 @@ template <unsigned int Dimension, typename SolverType>
 void NewtonSolver<Dimension, SolverType>::CopyMatrix(
     double** const dst, double** const src)
 {
+#ifndef HAVE_OPENMP_OFFLOAD
     assert(src != nullptr);
     assert(dst != nullptr);
+#endif
 
     for (int jj = 0; jj < Dimension; jj++)
     {
@@ -100,13 +108,12 @@ void NewtonSolver<Dimension, SolverType>::UpdateSolution(double* const c,
 //
 // Returns number of iterations used, or -1 if not converged
 template <unsigned int Dimension, typename SolverType>
-int NewtonSolver<Dimension, SolverType>::ComputeSolution(
+int NewtonSolver<Dimension, SolverType>::ComputeSolutionInternal(
     double* conc, const double tol, const int max_iters, const double alpha)
 {
-    assert(max_iters > 1);
-
-    for (int ii = 0; ii < Dimension; ii++)
-        assert(conc[ii] == conc[ii]);
+    // assert(max_iters > 1);
+    // for (int ii = 0; ii < Dimension; ii++)
+    //    assert(conc[ii] == conc[ii]);
 
 #ifdef DEBUG_CONVERGENCE
     std::vector<double> ctmp;
@@ -189,7 +196,6 @@ int NewtonSolver<Dimension, SolverType>::ComputeSolution(
 #endif
 
     if (!converged) return -1;
-
     return iterations;
 }
 
@@ -199,4 +205,7 @@ template class NewtonSolver<4, CALPHADConcSolverTernary>;
 template class NewtonSolver<4, CALPHADEqConcSolverTernary>;
 template class NewtonSolver<5, CALPHADTieLineConcSolverTernary>;
 template class NewtonSolver<2, KKSdiluteBinaryConcSolver>;
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 }

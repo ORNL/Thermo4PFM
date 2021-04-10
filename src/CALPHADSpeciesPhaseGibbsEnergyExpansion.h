@@ -1,10 +1,12 @@
 #ifndef included_CALPHADSpeciesPhaseGibbsEnergyExpansion
 #define included_CALPHADSpeciesPhaseGibbsEnergyExpansion
 
-#include <string>
-
 namespace Thermo4PFM
 {
+
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 
 class CALPHADSpeciesPhaseGibbsEnergyExpansion
 {
@@ -30,5 +32,9 @@ private:
     double dm1_;
     double dm9_;
 };
+
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 }
 #endif

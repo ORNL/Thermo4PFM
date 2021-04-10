@@ -54,8 +54,9 @@ TEST_CASE("CALPHAD ternary kks in a loop", "[ternary kks loop]")
     std::vector<double> cl(2 * (nTintervals + 1));
     std::vector<double> cs(2 * (nTintervals + 1));
 
-    Thermo4PFM::CALPHADFreeEnergyFunctionsTernary cafe(
-        calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
+    Thermo4PFM::CALPHADFreeEnergyFunctionsTernary* cafe
+        = new Thermo4PFM::CALPHADFreeEnergyFunctionsTernary(calphad_db,
+            newton_db, energy_interp_func_type, conc_interp_func_type);
 
     {
         // serial loop
@@ -69,7 +70,7 @@ TEST_CASE("CALPHAD ternary kks in a loop", "[ternary kks loop]")
                 init_guess[2], init_guess[3] }; // solid
 
             // compute equilibrium concentrations in each phase
-            cafe.computePhaseConcentrations(temperature, nominalc, phi, conc);
+            cafe->computePhaseConcentrations(temperature, nominalc, phi, conc);
 
             std::cout << "Temperature = " << temperature << std::endl;
             std::cout << "Concentrations: cl = (" << conc[0] << "." << conc[1]
@@ -95,11 +96,50 @@ TEST_CASE("CALPHAD ternary kks in a loop", "[ternary kks loop]")
             init_guess[2], init_guess[3] }; // solid
 
         // compute equilibrium concentrations in each phase
-        cafe.computePhaseConcentrations(temperature, nominalc, phi, &conc[0]);
+        cafe->computePhaseConcentrations(temperature, nominalc, phi, &conc[0]);
 
         CHECK(conc[0] == Approx(cl[2 * i]).margin(1.e-6));
         CHECK(conc[1] == Approx(cl[2 * i + 1]).margin(1.e-6));
         CHECK(conc[2] == Approx(cs[2 * i]).margin(1.e-6));
         CHECK(conc[3] == Approx(cs[2 * i + 1]).margin(1.e-6));
     }
+
+#ifdef HAVE_OPENMP_OFFLOAD
+    double* xdev = new double[4 * (nTintervals + 1)];
+// clang-format off
+#pragma omp target map(to : cafe [0:1],     \
+                            init_guess[:4]) \
+                   map(from : xdev[:4 * (nTintervals + 1)])
+// clang-format on
+#pragma omp parallel for
+    for (int i = 0; i < nTintervals + 1; i++)
+    {
+        const double temperature = Tmin + i * deltaT;
+
+        double phi = 0.5;
+
+        xdev[4 * i + 0] = init_guess[0];
+        xdev[4 * i + 1] = init_guess[1]; // liquid
+        xdev[4 * i + 2] = init_guess[2];
+        xdev[4 * i + 3] = init_guess[3]; // solid
+        // compute equilibrium concentrations in each phase
+        cafe->computePhaseConcentrations(
+            temperature, nominalc, phi, &xdev[4 * i]);
+    }
+
+    for (int i = 0; i < nTintervals + 1; i++)
+    {
+        std::cout << "Device: x=" << xdev[4 * i] << "," << xdev[4 * i + 1]
+                  << "," << xdev[4 * i + 2] << "," << xdev[4 * i + 3]
+                  << std::endl;
+        CHECK(xdev[4 * i + 0] == Approx(cl[2 * i]).margin(1.e-6));
+        CHECK(xdev[4 * i + 1] == Approx(cl[2 * i + 1]).margin(1.e-6));
+        CHECK(xdev[4 * i + 2] == Approx(cs[2 * i]).margin(1.e-6));
+        CHECK(xdev[4 * i + 3] == Approx(cs[2 * i + 1]).margin(1.e-6));
+    }
+
+    delete[] xdev;
+#endif
+
+    delete cafe;
 }

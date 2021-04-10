@@ -22,12 +22,15 @@ CALPHADFreeEnergyFunctionsBinary::CALPHADFreeEnergyFunctionsBinary(
     const ConcInterpolationType conc_interp_func_type)
     : energy_interp_func_type_(energy_interp_func_type),
       conc_interp_func_type_(conc_interp_func_type),
-      fenergy_diag_filename_("energy.vtk"),
       newton_tol_(1.e-8),
       newton_alpha_(1.),
       newton_maxits_(20),
       newton_verbose_(false)
 {
+    std::string fenergy_diag_filename("energy.vtk");
+    fenergy_diag_filename_ = new char[fenergy_diag_filename.length() + 1];
+    strcpy(fenergy_diag_filename_, fenergy_diag_filename.c_str());
+
     readParameters(calphad_db);
 
     if (newton_db) readNewtonparameters(newton_db.get());
@@ -73,6 +76,9 @@ void CALPHADFreeEnergyFunctionsBinary::readParameters(pt::ptree& calphad_db)
 }
 
 //-----------------------------------------------------------------------
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 
 double CALPHADFreeEnergyFunctionsBinary::computeFreeEnergy(
     const double temperature, const double* const conc, const PhaseIndex pi,
@@ -94,9 +100,9 @@ double CALPHADFreeEnergyFunctionsBinary::computeFreeEnergy(
             g_species = &g_species_phaseA_[0];
             break;
         default:
-            std::cerr << "CALPHADFreeEnergyFunctionsBinary::"
-                         "computeFreeEnergy(), undefined phase"
-                      << "!!!" << std::endl;
+            //            std::cerr << "CALPHADFreeEnergyFunctionsBinary::"
+            //                         "computeFreeEnergy(), undefined phase"
+            //                      << "!!!" << std::endl;
             abort();
             return 0.;
     }
@@ -140,9 +146,9 @@ void CALPHADFreeEnergyFunctionsBinary::computeDerivFreeEnergy(
             g_species = &g_species_phaseA_[0];
             break;
         default:
-            std::cerr << "CALPHADFreeEnergyFunctionsBinary::"
-                         "computeFreeEnergy(), undefined phase!!!"
-                      << std::endl;
+            //            std::cerr << "CALPHADFreeEnergyFunctionsBinary::"
+            //                         "computeFreeEnergy(), undefined phase!!!"
+            //                      << std::endl;
             abort();
             return;
     }
@@ -162,8 +168,8 @@ void CALPHADFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
     const double temp, const double* const conc, const PhaseIndex pi,
     double* d2fdc2)
 {
-    assert(conc[0] >= 0.);
-    assert(conc[0] <= 1.);
+    // assert(conc[0] >= 0.);
+    // assert(conc[0] <= 1.);
 
     const double l0 = lmixPhase(0, pi, temp);
     const double l1 = lmixPhase(1, pi, temp);
@@ -202,10 +208,12 @@ void CALPHADFreeEnergyFunctionsBinary::computeTdependentParameters(
 bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(
     const double temperature, double* ceq, const int maxits, const bool verbose)
 {
+#ifndef HAVE_OPENMP_OFFLOAD
     if (verbose)
         std::cout << "CALPHADFreeEnergyFunctionsBinary::computeCeqT()"
                   << std::endl;
-    assert(temperature > 0.);
+#endif
+    // assert(temperature > 0.);
 
     // evaluate temperature dependent parameters
     double fA[3];
@@ -223,6 +231,7 @@ bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(
     eq_solver.setup(RTinv, Lmix_L, Lmix_A, fA, fB);
     int ret = eq_solver.ComputeConcentration(ceq, newton_tol_, maxits);
 
+#ifndef HAVE_OPENMP_OFFLOAD
     if (ret >= 0)
     {
         if (verbose)
@@ -237,6 +246,7 @@ bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(
                      "computation did not converge"
                   << std::endl;
     }
+#endif
 
     return (ret >= 0);
 }
@@ -267,18 +277,20 @@ void CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
         c, newton_tol_, newton_maxits_, newton_alpha_);
     if (ret < 0)
     {
+#if 0
         std::cerr << "ERROR in "
                      "CALPHADFreeEnergyFunctionsBinary::"
                      "computePhasesFreeEnergies()"
                      " ---"
                   << "conc=" << conc << ", hphi=" << hphi << std::endl;
+#endif
         abort();
     }
 
-    assert(c[0] >= 0.);
+    // assert(c[0] >= 0.);
     fl = computeFreeEnergy(temperature, &c[0], PhaseIndex::phaseL, false);
 
-    assert(c[1] >= 0.);
+    // assert(c[1] >= 0.);
     fa = computeFreeEnergy(temperature, &c[1], PhaseIndex::phaseA, false);
 }
 
@@ -288,12 +300,10 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
     const double temperature, const double* const conc, const double phi,
     double* x)
 {
-    assert(x[0] >= 0.);
-    assert(x[1] >= 0.);
-    assert(x[0] <= 1.);
-    assert(x[1] <= 1.);
-
-    const double conc0 = conc[0];
+    // assert(x[0] >= 0.);
+    // assert(x[1] >= 0.);
+    // assert(x[0] <= 1.);
+    // assert(x[1] <= 1.);
 
     const double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
 
@@ -315,18 +325,23 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
     solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
     int ret = solver.ComputeConcentration(
         x, newton_tol_, newton_maxits_, newton_alpha_);
+#if 0
     if (ret == -1)
     {
         std::cerr << "ERROR, "
                      "CALPHADFreeEnergyFunctionsBinary::"
                      "computePhaseConcentrations() "
                      "failed for conc="
-                  << conc0 << ", hphi=" << hphi << std::endl;
+                  << conc[0] << ", hphi=" << hphi << std::endl;
         abort();
     }
+#endif
 
     return ret;
 }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 
 //-----------------------------------------------------------------------
 
@@ -363,7 +378,7 @@ void CALPHADFreeEnergyFunctionsBinary::energyVsPhiAndC(const double temperature,
     cmax          = std::max(cmax, cmin + dc);
     double deltac = (cmax - cmin) / (npts_c - 1);
 
-    std::ofstream tfile(fenergy_diag_filename_.data(), std::ios::out);
+    std::ofstream tfile(fenergy_diag_filename_, std::ios::out);
 
     printEnergyVsPhiHeader(
         temperature, npts_phi, npts_c, cmin, cmax, slopec, tfile);

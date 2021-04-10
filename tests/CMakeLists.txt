@@ -36,6 +36,8 @@ add_executable(testLoopCALPHADternaryKKS
                ${TEST_DIR}/testLoopCALPHADternaryKKS.cc )
 add_executable(testLoopCALPHADternaryTieLine
                ${TEST_DIR}/testLoopCALPHADternaryTieLine.cc )
+add_executable(testLoopKKSdiluteBinaryKKS
+               ${TEST_DIR}/testLoopKKSdiluteBinaryKKS.cc )
 
 target_link_libraries(testInterpolationFunctions thermo4pfm)
 target_link_libraries(testCALPHADFunctions thermo4pfm)
@@ -52,12 +54,14 @@ target_link_libraries(testLoopCALPHADbinaryEquilibrium thermo4pfm)
 target_link_libraries(testLoopCALPHADternaryKKS thermo4pfm)
 target_link_libraries(testLoopCALPHADternaryTieLine thermo4pfm)
 target_link_libraries(testCALPHADJacobianTernary thermo4pfm)
+target_link_libraries(testLoopKKSdiluteBinaryKKS thermo4pfm)
 
 if (${OPENMP_CXX_FOUND})
   target_link_libraries(testLoopCALPHADbinaryEquilibrium OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADbinaryKKS OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADternaryTieLine OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADternaryKKS OpenMP::OpenMP_CXX)
+  target_link_libraries(testLoopKKSdiluteBinaryKKS OpenMP::OpenMP_CXX)
 endif()
 
 add_test(NAME testPropertyTree
@@ -103,4 +107,7 @@ add_test(NAME testLoopCALPHADternaryKKS
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testLoopCALPHADternaryTieLine
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testLoopCALPHADternaryTieLine
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testLoopKKSdiluteBinaryKKS
+         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testLoopKKSdiluteBinaryKKS
          WORKING_DIRECTORY ${TEST_DIR})

@@ -12,6 +12,9 @@ class CALPHADEqConcSolverBinary
     : public NewtonSolver<2, CALPHADEqConcSolverBinary>
 {
 public:
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
     /// compute equilibrium concentrations cL, cS
     /// conc: initial guess and final solution
     int ComputeConcentration(double* const conc, const double tol,
@@ -33,6 +36,9 @@ public:
     /// evaluate Jacobian of system of equations
     /// specific to this solver
     void Jacobian(const double* const x, double** const fjac);
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 
 private:
     double RTinv_;

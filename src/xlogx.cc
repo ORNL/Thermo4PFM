@@ -1,15 +1,24 @@
 // C2 extension of x(log(x)) function for x<=smallx
 //
-#include <cmath>
+#include <math.h>
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 static const double smallx            = 1.0e-8;
 static const double inv_smallx        = 1. / smallx;
 static const double log_smallx        = log(smallx);
 static const double smallx_log_smallx = smallx * log_smallx;
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 
 namespace Thermo4PFM
 {
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
 double xlogx(const double x)
 {
     if (x > smallx)
@@ -46,4 +55,7 @@ double xlogx_deriv2(const double x)
         return inv_smallx;
     }
 }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 }

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.9)
 project (CALPHAD4PFM CXX)
 
 set(CMAKE_CXX_STANDARD 11)
@@ -12,7 +12,16 @@ if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})
 endif()
 
-find_package(OpenMP)
+#OpenMP
+find_package(OpenMP REQUIRED)
+if(OpenMP_CXX_VERSION LESS "4.5")
+  message(SEND_ERROR "OpenMP 4.5 or later required")
+endif()
+set(WITH_OPENMP_OFFLOAD FALSE CACHE BOOL "Build with OpenMP offload")
+if(${WITH_OPENMP_OFFLOAD})
+  message(STATUS "Build with OpenMP offload")
+  add_definitions(-DHAVE_OPENMP_OFFLOAD)
+endif()
 
 # clang-format (optional)
 set(WITH_CLANG_FORMAT FALSE CACHE BOOL "Indent code with clang-format")
