@@ -1,19 +1,18 @@
 
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 
-
 #include <boost/optional/optional.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#include <string>
 #include <iostream>
+#include <string>
 
 #include <omp.h>
 
 namespace pt = boost::property_tree;
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     std::cout << "Run test with " << omp_get_max_threads() << " threads"
               << std::endl;
@@ -71,26 +70,25 @@ int main(int argc, char *argv[])
             double energy = energyNiLiquid.fenergy(temperature);
 
             std::cout << "Temperature = " << temperature << std::endl;
-            std::cout << "Energy liquid = " << energy
-                      << "..." << std::endl;
+            std::cout << "Energy liquid = " << energy << "..." << std::endl;
             el[i] = energy;
         }
     }
 
     double* vel = new double[nTintervals];
-#pragma omp target map(to:Tmin,deltaT) map(tofrom:vel)
-{
-#pragma omp parallel for
-    for (int i = 0; i < nTintervals + 1; i++)
+#pragma omp target map(to : Tmin, deltaT) map(tofrom : vel)
     {
-        double temperature = Tmin + i * deltaT;
+#pragma omp parallel for
+        for (int i = 0; i < nTintervals + 1; i++)
+        {
+            double temperature = Tmin + i * deltaT;
 
-        vel[i] = energyNiLiquid.fenergy(temperature);
+            vel[i] = energyNiLiquid.fenergy(temperature);
+        }
     }
-}
 
     for (int i = 0; i < nTintervals + 1; i++)
-        std::cout << "Energy liquid = " << vel[i]<< std::endl;
+        std::cout << "Energy liquid = " << vel[i] << std::endl;
 
     delete[] vel;
 }
