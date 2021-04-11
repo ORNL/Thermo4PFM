@@ -1,7 +1,7 @@
-#include "CALPHADFunctions.h"
 #include "CALPHADConcSolverBinary.h"
-#include "PhysicalConstants.h"
+#include "CALPHADFunctions.h"
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
+#include "PhysicalConstants.h"
 
 #include <chrono>
 
@@ -9,8 +9,9 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#include <string>
+#include <iomanip>
 #include <iostream>
+#include <string>
 
 #include <omp.h>
 
@@ -18,13 +19,13 @@ namespace pt = boost::property_tree;
 
 typedef std::chrono::high_resolution_clock Clock;
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     const int N = 10000000;
 
 #ifdef _OPENMP
     printf("Compiled by an OpenMP-compliant implementation.\n");
-# endif
+#endif
 
     std::cout << "Run test with " << omp_get_max_threads() << " threads"
               << std::endl;
@@ -45,146 +46,159 @@ int main(int argc, char *argv[])
     double LmixPhaseL[4][MAX_POL_T_INDEX];
     double LmixPhaseA[4][MAX_POL_T_INDEX];
 
-{
-    std::string dbnamemixL("LmixPhaseL");
-    pt::ptree Lmix0_db = calphad_db.get_child(dbnamemixL);
-    Thermo4PFM::readLmixBinary(Lmix0_db, LmixPhaseL);
-}
-{
-    std::string dbnamemixA("LmixPhaseA");
-    pt::ptree Lmix1_db = calphad_db.get_child(dbnamemixA);
-    Thermo4PFM::readLmixBinary(Lmix1_db, LmixPhaseA);
-}
+    {
+        std::string dbnamemixL("LmixPhaseL");
+        pt::ptree Lmix0_db = calphad_db.get_child(dbnamemixL);
+        Thermo4PFM::readLmixBinary(Lmix0_db, LmixPhaseL);
+    }
+    {
+        std::string dbnamemixA("LmixPhaseA");
+        pt::ptree Lmix1_db = calphad_db.get_child(dbnamemixA);
+        Thermo4PFM::readLmixBinary(Lmix1_db, LmixPhaseA);
+    }
 
     Thermo4PFM::CALPHADSpeciesPhaseGibbsEnergy g_species_phaseL[2];
     Thermo4PFM::CALPHADSpeciesPhaseGibbsEnergy g_species_phaseA[2];
 
     {
-    pt::ptree& species0_db = calphad_db.get_child("SpeciesA");
-    std::string dbnameL("PhaseL");
-    std::string dbnameA("PhaseA");
+        pt::ptree& species0_db = calphad_db.get_child("SpeciesA");
+        std::string dbnameL("PhaseL");
+        std::string dbnameA("PhaseA");
 
-    g_species_phaseL[0].initialize("L0", species0_db.get_child(dbnameL));
-    g_species_phaseA[0].initialize("A0", species0_db.get_child(dbnameA));
+        g_species_phaseL[0].initialize("L0", species0_db.get_child(dbnameL));
+        g_species_phaseA[0].initialize("A0", species0_db.get_child(dbnameA));
 
-    pt::ptree& speciesB_db = calphad_db.get_child("SpeciesB");
-    g_species_phaseL[1].initialize("L1", speciesB_db.get_child(dbnameL));
-    g_species_phaseA[1].initialize("A1", speciesB_db.get_child(dbnameA));
+        pt::ptree& speciesB_db = calphad_db.get_child("SpeciesB");
+        g_species_phaseL[1].initialize("L1", speciesB_db.get_child(dbnameL));
+        g_species_phaseA[1].initialize("A1", speciesB_db.get_child(dbnameA));
     }
 
     double fA[2];
-    fA[0]     = g_species_phaseL[0].fenergy(temperature);
-    fA[1]     = g_species_phaseA[0].fenergy(temperature);
-    //std::cout<<"fA[0]="<<fA[0]<<", fA[1]="<<fA[1]<<std::endl;
+    fA[0] = g_species_phaseL[0].fenergy(temperature);
+    fA[1] = g_species_phaseA[0].fenergy(temperature);
+    // std::cout<<"fA[0]="<<fA[0]<<", fA[1]="<<fA[1]<<std::endl;
 
     double fB[2];
-    fB[0]     = g_species_phaseL[1].fenergy(temperature);
-    fB[1]     = g_species_phaseA[1].fenergy(temperature);
-    //std::cout<<"fB[0]="<<fB[0]<<", fB[1]="<<fB[1]<<std::endl;
+    fB[0] = g_species_phaseL[1].fenergy(temperature);
+    fB[1] = g_species_phaseA[1].fenergy(temperature);
+    // std::cout<<"fB[0]="<<fB[0]<<", fB[1]="<<fB[1]<<std::endl;
 
     double Lmix_L[4];
-    for(int i=0;i<4;i++)Lmix_L[i]=LmixPhaseL[i][0]+temperature*LmixPhaseL[i][1];
-    //for(int i=0;i<4;i++)std::cout<<"Lmix_L["<<i<<"]="<<Lmix_L[i]<<std::endl;
+    for (int i = 0; i < 4; i++)
+        Lmix_L[i] = LmixPhaseL[i][0] + temperature * LmixPhaseL[i][1];
+    // for(int i=0;i<4;i++)std::cout<<"Lmix_L["<<i<<"]="<<Lmix_L[i]<<std::endl;
 
     double Lmix_A[4];
-    for(int i=0;i<4;i++)Lmix_A[i]=LmixPhaseA[i][0]+temperature*LmixPhaseA[i][1];
-    //for(int i=0;i<4;i++)std::cout<<"Lmix_A["<<i<<"]="<<Lmix_A[i]<<std::endl;
+    for (int i = 0; i < 4; i++)
+        Lmix_A[i] = LmixPhaseA[i][0] + temperature * LmixPhaseA[i][1];
+    // for(int i=0;i<4;i++)std::cout<<"Lmix_A["<<i<<"]="<<Lmix_A[i]<<std::endl;
 
-    const double RTinv = 1.0 / (Thermo4PFM::gas_constant_R_JpKpmol * temperature);
+    const double RTinv
+        = 1.0 / (Thermo4PFM::gas_constant_R_JpKpmol * temperature);
 
-    double sol[2]={0.5,0.5};
+    double sol[2] = { 0.5, 0.5 };
 
-    double deviation = 0.1/(double)N;
+    double deviation = 1.e-4;
 
-    double xhost[2*N];
-    for(int i=0;i<2*N;i++)
+    double xhost[2 * N];
+    for (int i = 0; i < 2 * N; i++)
     {
-        xhost[i]=-1.;
+        xhost[i] = -1.;
     }
 
-
-// Host solve
-{
-    short nits[N];
-    auto t1 = Clock::now();
+    // Host solve
+    {
+        short nits[N];
+        auto t1 = Clock::now();
 
 #pragma omp parallel for
-for(int i=0;i<N;i++)
-{
-    if(! omp_is_initial_device() ) abort();
-
-    xhost[2*i]=sol[0];
-    xhost[2*i+1]=sol[1];
-    double hphi = 0.5+i*deviation;
-    double c0 = 0.3;
-    Thermo4PFM::CALPHADConcSolverBinary solver;
-    solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
-    nits[i] = solver.ComputeConcentration(&xhost[2*i], 1.e-8, 50);
-}
-    auto t2 = Clock::now();
-    long int usec=
-      std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-    std::cout<<"Host time/us/solve:   "<<(double)usec/(double)N<<std::endl;
-
-
-if(N<20)
-for(int i=0;i<N;i++)
-{
-    std::cout<<"Host: x="<<xhost[2*i]<<","<<xhost[2*i+1]<<std::endl;
-    std::cout<<"nits="<<nits[i]<<std::endl;
-}
-
-}
-
-// Device solve
-{
-    double xdev[2*N];
-    for(int i=0;i<2*N;i++)
-    {
-        xdev[i]=-1;
-    }
-
-    short nits[N];
-
-    auto t1 = Clock::now();
-
-# pragma omp target \
-    map (to: sol ) map ( tofrom: xdev ) \
-    map (to: fA, fB, Lmix_L, Lmix_A) \
-    map (to: RTinv), map ( from: nits)
-{
-#pragma omp teams distribute parallel for
-for(int i=0;i<N;i++)
-{
-    //if( omp_is_initial_device() ) abort();
-    xdev[2*i]=sol[0];
-    xdev[2*i+1]=sol[1];
-
-    double hphi = 0.5+i*deviation;
-    double c0 = 0.3;
-    class Thermo4PFM::CALPHADConcSolverBinary solver;
-    solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
-    nits[i] = solver.ComputeConcentration(&xdev[2*i], 1.e-8, 50);
-}
-}
-
-    auto t2 = Clock::now();
-    long int usec=
-      std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
-    std::cout<<"Device time/us/solve: "<<(double)usec/(double)N<<std::endl;
-
-    double tol = 1.e-8;
-    for(int i=0;i<N;i++)
-    {
-        if( std::abs(xdev[2*i]-xhost[2*i])>tol ||
-          std::abs(xdev[2*i+1]-xhost[2*i+1])>tol ||
-          N<20)
+        for (int i = 0; i < N; i++)
         {
-        std::cout<<"Device: x="<<xdev[2*i]<<","<<xdev[2*i+1]<<std::endl;
-        std::cout<<"Difference: "<<xdev[2*i]-xhost[2*i]<<", "<<xdev[2*i+1]-xhost[2*i+1]<<std::endl;
-        std::cout<<"nits["<<i<<"]="<<nits[i]<<std::endl;
+            if (!omp_is_initial_device()) abort();
+
+            xhost[2 * i]     = sol[0];
+            xhost[2 * i + 1] = sol[1];
+            double hphi      = 0.5 + (i % 100) * deviation;
+            double c0        = 0.3;
+            Thermo4PFM::CALPHADConcSolverBinary solver;
+            solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
+            nits[i] = solver.ComputeConcentration(&xhost[2 * i], 1.e-8, 50);
+        }
+        auto t2 = Clock::now();
+        long int usec
+            = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                  .count();
+        std::cout << "Host time/us/solve:   " << (double)usec / (double)N
+                  << std::endl;
+
+        std::cout << std::setprecision(12);
+
+        int n = N > 20 ? 20 : N;
+
+        for (int i = 0; i < n; i++)
+        {
+            std::cout << "Host: x=" << xhost[2 * i] << "," << xhost[2 * i + 1]
+                      << std::endl;
+            std::cout << "nits=" << nits[i] << std::endl;
         }
     }
-}
 
+    // Device solve
+    {
+        double xdev[2 * N];
+        for (int i = 0; i < 2 * N; i++)
+        {
+            xdev[i] = -1;
+        }
+
+        short nits[N];
+
+        auto t1 = Clock::now();
+
+#pragma omp target map(to                                                      \
+                       : sol) map(tofrom                                       \
+                                  : xdev) map(to                               \
+                                              : fA, fB, Lmix_L, Lmix_A)        \
+    map(to                                                                     \
+        : RTinv),                                                              \
+    map(from                                                                   \
+        : nits)
+        {
+#pragma omp teams distribute parallel for
+            for (int i = 0; i < N; i++)
+            {
+                // if( omp_is_initial_device() ) abort();
+                xdev[2 * i]     = sol[0];
+                xdev[2 * i + 1] = sol[1];
+
+                double hphi = 0.5 + (i % 100) * deviation;
+                double c0   = 0.3;
+                class Thermo4PFM::CALPHADConcSolverBinary solver;
+                solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
+                nits[i] = solver.ComputeConcentration(&xdev[2 * i], 1.e-8, 50);
+            }
+        }
+
+        auto t2 = Clock::now();
+        long int usec
+            = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                  .count();
+        std::cout << "Device time/us/solve: " << (double)usec / (double)N
+                  << std::endl;
+
+        double tol = 1.e-8;
+        for (int i = 0; i < N; i++)
+        {
+            if (std::abs(xdev[2 * i] - xhost[2 * i]) > tol
+                || std::abs(xdev[2 * i + 1] - xhost[2 * i + 1]) > tol || N < 20)
+            {
+                std::cout << "Device: x=" << xdev[2 * i] << ","
+                          << xdev[2 * i + 1] << std::endl;
+                std::cout << "Difference: " << xdev[2 * i] - xhost[2 * i]
+                          << ", " << xdev[2 * i + 1] - xhost[2 * i + 1]
+                          << std::endl;
+                std::cout << "nits[" << i << "]=" << nits[i] << std::endl;
+            }
+        }
+    }
 }

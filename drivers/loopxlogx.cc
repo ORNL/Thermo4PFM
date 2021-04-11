@@ -1,15 +1,15 @@
 
 #include "CALPHADFunctions.h"
 #include "InterpolationType.h"
-#include "xlogx.h"
 #include "functions.h"
+#include "xlogx.h"
 
 #include <boost/optional/optional.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#include <string>
 #include <iostream>
+#include <string>
 
 #include <omp.h>
 
@@ -17,7 +17,7 @@ namespace pt = boost::property_tree;
 
 using namespace Thermo4PFM;
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     std::cout << "Run test with " << omp_get_max_threads() << " threads"
               << std::endl;
@@ -39,8 +39,8 @@ int main(int argc, char *argv[])
             // compute concentrations in each phase
             double val = xlogx(c);
 
-            std::cout << "Concentration = " << c
-                      << ", xlogx = " << val << std::endl;
+            std::cout << "Concentration = " << c << ", xlogx = " << val
+                      << std::endl;
         }
     }
 
@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
 
         double val3 = CALPHADcomputeFMixBinary(1.2, 1.5, 1.6, 1.7, 0.5);
 
-//        REQUIRE(conc[0] == Approx(cl[i]).margin(1.e-1));
-//        REQUIRE(conc[1] == Approx(cs[i]).margin(1.e-1));
+        //        REQUIRE(conc[0] == Approx(cl[i]).margin(1.e-1));
+        //        REQUIRE(conc[1] == Approx(cs[i]).margin(1.e-1));
     }
 }

@@ -2,7 +2,6 @@
 #include "CALPHADFreeEnergyFunctionsBinary.h"
 #include "InterpolationType.h"
 
-
 #include <boost/optional/optional.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
@@ -13,7 +12,7 @@
 
 namespace pt = boost::property_tree;
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     std::cout << "Run test with " << omp_get_max_threads() << " threads"
               << std::endl;
@@ -24,7 +23,7 @@ int main(int argc, char *argv[])
         = Thermo4PFM::ConcInterpolationType::PBG;
 
     const int nintervals = 10;
-    double deviation = 0.1/(double)nintervals;
+    double deviation     = 0.1 / (double)nintervals;
 
     std::cout << " Read CALPHAD database..." << std::endl;
     pt::ptree calphad_db;
@@ -49,25 +48,27 @@ int main(int argc, char *argv[])
     std::vector<double> cs(nintervals);
 
     Thermo4PFM::CALPHADFreeEnergyFunctionsBinary* cafe
-        = new Thermo4PFM::CALPHADFreeEnergyFunctionsBinary(
-        calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
+        = new Thermo4PFM::CALPHADFreeEnergyFunctionsBinary(calphad_db,
+            newton_db, energy_interp_func_type, conc_interp_func_type);
 
-    short* nits=new short[nintervals];
+    short* nits = new short[nintervals];
 
     {
         // serial loop
         for (int i = 0; i < nintervals; i++)
         {
-            double phi = 0.5+i*deviation;
-            double c0 = 0.3;
+            double phi = 0.5 + i * deviation;
+            double c0  = 0.3;
 
             // solution
-            double conc[2]={init_guess[0],init_guess[1]};
+            double conc[2] = { init_guess[0], init_guess[1] };
 
             // compute concentrations in each phase
-            nits[i] = cafe->computePhaseConcentrations(temperature, &c0, phi, conc);
+            nits[i]
+                = cafe->computePhaseConcentrations(temperature, &c0, phi, conc);
 
-            std::cout << "Number of Newton iterations: "<<nits[i]<<std::endl;
+            std::cout << "Number of Newton iterations: " << nits[i]
+                      << std::endl;
             std::cout << "Concentrations: cl = " << conc[0]
                       << " and cs = " << conc[1] << "..." << std::endl;
 
@@ -76,33 +77,37 @@ int main(int argc, char *argv[])
         }
     }
 
-    double xdev[2*nintervals];
-    for(int i=0;i<2*nintervals;i++)
+    double xdev[2 * nintervals];
+    for (int i = 0; i < 2 * nintervals; i++)
     {
-        xdev[i]=-1;
+        xdev[i] = -1;
     }
 
 // parallel loop
-#pragma omp target map(to:cafe[0:1]) \
-                   map(to: init_guess[:2]) \
-                   map(from: xdev) \
-                   map(from: nits[:nintervals])
+#pragma omp target map(to                                                      \
+                       : cafe [0:1]) map(to                                    \
+                                         : init_guess[:2]) map(from            \
+                                                               : xdev)         \
+    map(from                                                                   \
+        : nits[:nintervals])
 #pragma omp parallel for
     for (int i = 0; i < nintervals + 1; i++)
     {
-        double phi = 0.5+i*deviation;
-        double c0 = 0.3;
+        double phi = 0.5 + i * deviation;
+        double c0  = 0.3;
 
-        xdev[2*i]=init_guess[0];
-        xdev[2*i+1]=init_guess[1];
+        xdev[2 * i]     = init_guess[0];
+        xdev[2 * i + 1] = init_guess[1];
 
         // compute concentrations in each phase
-        nits[i] = cafe->computePhaseConcentrations(temperature, &c0, phi, &xdev[2*i]);
+        nits[i] = cafe->computePhaseConcentrations(
+            temperature, &c0, phi, &xdev[2 * i]);
     }
 
-    for(int i=0;i<nintervals;i++)
+    for (int i = 0; i < nintervals; i++)
     {
-        std::cout << "Number of Newton iterations: "<<nits[i]<<std::endl;
-        std::cout<<"Device: x="<<xdev[2*i]<<","<<xdev[2*i+1]<<std::endl;
+        std::cout << "Number of Newton iterations: " << nits[i] << std::endl;
+        std::cout << "Device: x=" << xdev[2 * i] << "," << xdev[2 * i + 1]
+                  << std::endl;
     }
 }

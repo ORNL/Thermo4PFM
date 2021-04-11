@@ -6,7 +6,7 @@
 
 namespace pt = boost::property_tree;
 
-int main( int argc, char *argv[] )
+int main(int argc, char* argv[])
 {
     Thermo4PFM::EnergyInterpolationType energy_interp_func_type
         = Thermo4PFM::EnergyInterpolationType::PBG;
@@ -37,4 +37,3 @@ int main( int argc, char *argv[] )
     std::cout << " Compute energies..." << std::endl;
     cafe.printEnergyVsComposition(temperature, os, npts);
 }
-
