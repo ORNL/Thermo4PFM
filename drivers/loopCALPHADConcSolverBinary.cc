@@ -11,6 +11,7 @@
 
 #include <string>
 #include <iostream>
+#include <iomanip>
 
 #include <omp.h>
 
@@ -94,7 +95,7 @@ int main(int argc, char *argv[])
 
     double sol[2]={0.5,0.5};
 
-    double deviation = 0.1/(double)N;
+    double deviation = 1.e-4;
 
     double xhost[2*N];
     for(int i=0;i<2*N;i++)
@@ -115,7 +116,7 @@ for(int i=0;i<N;i++)
 
     xhost[2*i]=sol[0];
     xhost[2*i+1]=sol[1];
-    double hphi = 0.5+i*deviation;
+    double hphi = 0.5+(i%100)*deviation;
     double c0 = 0.3;
     Thermo4PFM::CALPHADConcSolverBinary solver;
     solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
@@ -127,8 +128,11 @@ for(int i=0;i<N;i++)
     std::cout<<"Host time/us/solve:   "<<(double)usec/(double)N<<std::endl;
 
 
-if(N<20)
-for(int i=0;i<N;i++)
+std::cout <<std::setprecision(12);
+
+int n = N > 20 ? 20 : N;
+
+for(int i=0;i<n;i++)
 {
     std::cout<<"Host: x="<<xhost[2*i]<<","<<xhost[2*i+1]<<std::endl;
     std::cout<<"nits="<<nits[i]<<std::endl;
@@ -160,7 +164,7 @@ for(int i=0;i<N;i++)
     xdev[2*i]=sol[0];
     xdev[2*i+1]=sol[1];
 
-    double hphi = 0.5+i*deviation;
+    double hphi = 0.5+(i%100)*deviation;
     double c0 = 0.3;
     class Thermo4PFM::CALPHADConcSolverBinary solver;
     solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);

@@ -12,6 +12,7 @@
 
 #include <string>
 #include <iostream>
+#include <iomanip>
 
 #include <omp.h>
 
@@ -160,7 +161,7 @@ int main(int argc, char *argv[])
 
     double sol[4]={ 0.33, 0.38, 0.32, 0.33 };
 
-    double deviation = 0.01/(double)N;
+    const double deviation = 1.e-4;
 
     double xhost[4*N];
     for(int i=0;i<4*N;i++)
@@ -183,7 +184,7 @@ for(int i=0;i<N;i++)
     xhost[4*i+1]=sol[1];
     xhost[4*i+2]=sol[2];
     xhost[4*i+3]=sol[3];
-    double hphi = 0.5+i*deviation;
+    double hphi = 0.5+(i%100)*deviation;
     double c0 = 0.33;
     double c1 = 0.33;
     Thermo4PFM::CALPHADConcSolverTernary solver;
@@ -197,8 +198,9 @@ for(int i=0;i<N;i++)
     std::cout<<"Host time/us/solve:   "<<(double)usec/(double)N<<std::endl;
 
 
-if(N<20)
-for(int i=0;i<N;i++)
+std::cout <<std::setprecision(12);
+int n = N > 20 ? 20 : N;
+for(int i=0;i<n;i++)
 {
     std::cout<<"Host: x="<<xhost[4*i]<<","<<xhost[4*i+1]<<","
                          <<xhost[4*i+2]<<","<<xhost[4*i+3]<<std::endl;
@@ -234,7 +236,7 @@ for(int i=0;i<N;i++)
     xdev[4*i+2]=sol[2];
     xdev[4*i+3]=sol[3];
 
-    double hphi = 0.5+i*deviation;
+    double hphi = 0.5+(i%100)*deviation;
     double c0 = 0.33;
     double c1 = 0.33;
     class Thermo4PFM::CALPHADConcSolverTernary solver;
