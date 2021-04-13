@@ -215,6 +215,7 @@ int main(int argc, char* argv[])
         }
     }
 
+#ifdef HAVE_OPENMP_OFFLOAD
     // Device solve
     {
         double xdev[4 * N];
@@ -227,16 +228,14 @@ int main(int argc, char* argv[])
 
         auto t1 = Clock::now();
 
-#pragma omp target map(to                                                      \
-                       : sol) map(tofrom                                       \
-                                  : xdev) map(to                               \
-                                              : fA, fB, fC)                    \
-    map(to                                                                     \
-        : L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S, L_BC_S, L_ABC_L, L_ABC_S)    \
-        map(to                                                                 \
-            : RTinv),                                                          \
-    map(from                                                                   \
-        : nits)
+// clang-format off
+#pragma omp target map(to : sol) \
+                   map(tofrom : xdev) \
+                   map(to : fA, fB, fC) \
+                   map(to : L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S, L_BC_S, L_ABC_L, L_ABC_S) \
+                   map(to : RTinv) \
+                   map(from : nits)
+        // clang-format on
         {
 #pragma omp teams distribute parallel for
             for (int i = 0; i < N; i++)
@@ -283,4 +282,5 @@ int main(int argc, char* argv[])
             }
         }
     }
+#endif
 }

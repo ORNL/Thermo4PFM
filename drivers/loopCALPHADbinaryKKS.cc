@@ -77,6 +77,7 @@ int main(int argc, char* argv[])
         }
     }
 
+#ifdef HAVE_OPENMP_OFFLOAD
     double xdev[2 * nintervals];
     for (int i = 0; i < 2 * nintervals; i++)
     {
@@ -84,12 +85,12 @@ int main(int argc, char* argv[])
     }
 
 // parallel loop
-#pragma omp target map(to                                                      \
-                       : cafe [0:1]) map(to                                    \
-                                         : init_guess[:2]) map(from            \
-                                                               : xdev)         \
-    map(from                                                                   \
-        : nits[:nintervals])
+// clang-format off
+#pragma omp target map(to : cafe [0:1]) \
+                   map(to : init_guess[:2]) \
+                   map(from : xdev) \
+                   map(from : nits[:nintervals])
+// clang-format on
 #pragma omp parallel for
     for (int i = 0; i < nintervals + 1; i++)
     {
@@ -110,4 +111,5 @@ int main(int argc, char* argv[])
         std::cout << "Device: x=" << xdev[2 * i] << "," << xdev[2 * i + 1]
                   << std::endl;
     }
+#endif
 }

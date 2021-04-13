@@ -155,14 +155,13 @@ int main(int argc, char* argv[])
 
         auto t1 = Clock::now();
 
-#pragma omp target map(to                                                      \
-                       : sol) map(tofrom                                       \
-                                  : xdev) map(to                               \
-                                              : fA, fB, Lmix_L, Lmix_A)        \
-    map(to                                                                     \
-        : RTinv),                                                              \
-    map(from                                                                   \
-        : nits)
+// clang-format off
+#pragma omp target map(to : sol) \
+                   map(tofrom : xdev) \
+                   map(to : fA, fB, Lmix_L, Lmix_A) \
+                   map(to : RTinv) \
+                   map(from : nits)                                                     \
+// clang-format on
         {
 #pragma omp teams distribute parallel for
             for (int i = 0; i < N; i++)
