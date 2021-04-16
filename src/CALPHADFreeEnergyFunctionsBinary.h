@@ -2,7 +2,6 @@
 #define included_CALPHADFreeEnergyFunctionsBinary
 
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
-#include "FreeEnergyFunctions.h"
 #include "InterpolationType.h"
 #include "Phases.h"
 #include "functions.h"
