@@ -83,8 +83,8 @@ double KKSFreeEnergyFunctionDiluteBinary::computeFreeEnergy(
             std::cout << "KKSFreeEnergyFunctionDiluteBinary::"
                          "computeFreeEnergy(), undefined phase!!!"
                       << std::endl;
-#endif
             abort();
+#endif
             return 0.;
     }
 
@@ -121,8 +121,8 @@ void KKSFreeEnergyFunctionDiluteBinary::computeDerivFreeEnergy(
             std::cout << "KKSFreeEnergyFunctionDiluteBinary::"
                          "computeFreeEnergy(), undefined phase!!!"
                       << std::endl;
-#endif
             abort();
+#endif
             return;
     }
 

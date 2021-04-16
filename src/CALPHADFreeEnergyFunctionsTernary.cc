@@ -234,7 +234,7 @@ double CALPHADFreeEnergyFunctionsTernary::computeFreeEnergy(
             //            std::cout << "CALPHADFreeEnergyFunctionsTernary::"
             //                         "computeFreeEnergy(), undefined phase!!!"
             //                      << std::endl;
-            abort();
+            //abort();
             return 0.;
     }
 
@@ -291,7 +291,7 @@ void CALPHADFreeEnergyFunctionsTernary::computeDerivFreeEnergy(
             //            std::cout << "CALPHADFreeEnergyFunctionsTernary::"
             //                         "computeFreeEnergy(), undefined phase!!!"
             //                      << std::endl;
-            abort();
+            //abort();
             return;
     }
 
