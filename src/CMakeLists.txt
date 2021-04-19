@@ -20,7 +20,11 @@ set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
             ${CMAKE_SOURCE_DIR}/src/KKSFreeEnergyFunctionDiluteBinary.cc
             ${CMAKE_SOURCE_DIR}/src/xlogx.cc)
 
-add_library(thermo4pfm ${SOURCES})
+if(${SHARED_LIB})
+  add_library(thermo4pfm SHARED ${SOURCES})
+else()
+  add_library(thermo4pfm ${SOURCES})
+endif()
 
 set(INSTALL_DIR ${CMAKE_SOURCE_DIR})
 

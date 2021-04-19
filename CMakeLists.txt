@@ -44,6 +44,8 @@ else()
   add_definitions(-DMAX_POL_T_INDEX=2)
 endif(${WITH_TLOGT4L})
 
+set(SHARED_LIB FALSE CACHE BOOL "Whether or not build static lib")
+
 enable_testing()
 
 add_subdirectory(src)
