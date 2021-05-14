@@ -33,7 +33,6 @@ set(PUBLIC_HEADERS
     KKSFreeEnergyFunctionDiluteBinary.h
     InterpolationType.h
     Determinant.h
-    FreeEnergyFunctions.h
     Phases.h
     NewtonSolver.h
     xlogx.h
@@ -42,7 +41,6 @@ set(PUBLIC_HEADERS
     CALPHADFunctions.h
     CALPHADSpeciesPhaseGibbsEnergy.h
     CALPHADSpeciesPhaseGibbsEnergyExpansion.h
-    CALPHADFreeEnergyFunctions.h
     CALPHADFreeEnergyFunctionsBinary.h
     CALPHADFreeEnergyFunctionsTernary.h
     CALPHADConcSolverBinary.h
