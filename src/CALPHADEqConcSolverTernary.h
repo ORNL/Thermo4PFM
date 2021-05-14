@@ -7,7 +7,7 @@ namespace Thermo4PFM
 {
 
 class CALPHADEqConcSolverTernary
-    : public NewtonSolver<4, CALPHADEqConcSolverTernary>
+    : public NewtonSolver<4, CALPHADEqConcSolverTernary, float>
 {
 public:
 #pragma omp declare target
@@ -36,7 +36,7 @@ public:
 
     /// evaluate Jacobian of system of equations
     /// specific to this solver
-    void Jacobian(const double* const x, double** const fjac);
+    void Jacobian(const double* const x, float** const fjac);
 #pragma omp end declare target
 private:
     double RTinv_;

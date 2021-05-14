@@ -68,7 +68,7 @@ void CALPHADConcSolverBinary::computeDxiDc(
 //=======================================================================
 
 void CALPHADConcSolverBinary::Jacobian(
-    const double* const c, double** const fjac)
+    const double* const c, float** const fjac)
 {
     // compute dxidc for 2 phases
     double dxidc[2];

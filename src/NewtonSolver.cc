@@ -26,8 +26,9 @@ namespace Thermo4PFM
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
 #endif
-template <unsigned int Dimension, typename SolverType>
-bool NewtonSolver<Dimension, SolverType>::CheckTolerance(
+template <unsigned int Dimension, typename SolverType,
+    typename JacobianDataType>
+bool NewtonSolver<Dimension, SolverType, JacobianDataType>::CheckTolerance(
     const double* const fvec, const double tol)
 {
     bool ret = true;
@@ -40,9 +41,11 @@ bool NewtonSolver<Dimension, SolverType>::CheckTolerance(
 
 //=======================================================================
 
-template <unsigned int Dimension, typename SolverType>
-void NewtonSolver<Dimension, SolverType>::CopyMatrix(
-    double** const dst, double** const src)
+template <unsigned int Dimension, typename SolverType,
+    typename JacobianDataType>
+template <typename ScalarType>
+void NewtonSolver<Dimension, SolverType, JacobianDataType>::CopyMatrix(
+    ScalarType** const dst, ScalarType** const src)
 {
 #ifndef HAVE_OPENMP_OFFLOAD
     assert(src != nullptr);
@@ -60,21 +63,22 @@ void NewtonSolver<Dimension, SolverType>::CopyMatrix(
 
 //=======================================================================
 
-template <unsigned int Dimension, typename SolverType>
-void NewtonSolver<Dimension, SolverType>::UpdateSolution(double* const c,
-    const double* const fvec, double** const fjac, const double alpha)
+template <unsigned int Dimension, typename SolverType,
+    typename JacobianDataType>
+void NewtonSolver<Dimension, SolverType, JacobianDataType>::UpdateSolution(
+    double* const c, const double* const fvec, JacobianDataType** const fjac,
+    const double alpha)
 {
-    double mem[Dimension * (1 + Dimension)];
-    double* mtmp  = mem;
-    double* del_c = mem + Dimension * Dimension;
+    double del_c[Dimension];
 
-    double* mwork[Dimension];
+    JacobianDataType memf[Dimension * Dimension];
+    JacobianDataType* mwork[Dimension];
     for (int ii = 0; ii < Dimension; ii++)
     {
-        mwork[ii] = &mtmp[ii * Dimension];
+        mwork[ii] = &memf[ii * Dimension];
     }
 
-    const double D     = evalDeterminant<Dimension>(fjac);
+    const double D     = evalDeterminant<Dimension, JacobianDataType>(fjac);
     const double D_inv = 1.0 / D;
 
     // std::cout << "D = " << D << std::endl;
@@ -88,7 +92,7 @@ void NewtonSolver<Dimension, SolverType>::UpdateSolution(double* const c,
             mwork[ii][jj] = fvec[ii];
         }
 
-        del_c[jj] = D_inv * evalDeterminant<Dimension>(mwork);
+        del_c[jj] = D_inv * evalDeterminant<Dimension, JacobianDataType>(mwork);
 
         const double maxdel = 0.25;
         if (fabs(del_c[jj]) > maxdel)
@@ -107,9 +111,11 @@ void NewtonSolver<Dimension, SolverType>::UpdateSolution(double* const c,
 // conc: initial guess and output solution
 //
 // Returns number of iterations used, or -1 if not converged
-template <unsigned int Dimension, typename SolverType>
-int NewtonSolver<Dimension, SolverType>::ComputeSolutionInternal(
-    double* conc, const double tol, const int max_iters, const double alpha)
+template <unsigned int Dimension, typename SolverType,
+    typename JacobianDataType>
+int NewtonSolver<Dimension, SolverType,
+    JacobianDataType>::ComputeSolutionInternal(double* conc, const double tol,
+    const int max_iters, const double alpha)
 {
     // assert(max_iters > 1);
     // for (int ii = 0; ii < Dimension; ii++)
@@ -123,11 +129,10 @@ int NewtonSolver<Dimension, SolverType>::ComputeSolutionInternal(
     // std::cout<<endl;
 #endif
 
-    double mem[Dimension * (1 + Dimension)];
-    double* fvec = mem;
-    double* ftmp = mem + Dimension;
+    double fvec[Dimension];
 
-    double* fjac[Dimension];
+    JacobianDataType ftmp[Dimension * Dimension];
+    JacobianDataType* fjac[Dimension];
     for (int ii = 0; ii < Dimension; ii++)
     {
         fjac[ii] = &ftmp[ii * Dimension];
@@ -199,12 +204,12 @@ int NewtonSolver<Dimension, SolverType>::ComputeSolutionInternal(
     return iterations;
 }
 
-template class NewtonSolver<2, CALPHADConcSolverBinary>;
-template class NewtonSolver<2, CALPHADEqConcSolverBinary>;
-template class NewtonSolver<4, CALPHADConcSolverTernary>;
-template class NewtonSolver<4, CALPHADEqConcSolverTernary>;
-template class NewtonSolver<5, CALPHADTieLineConcSolverTernary>;
-template class NewtonSolver<2, KKSdiluteBinaryConcSolver>;
+template class NewtonSolver<2, CALPHADConcSolverBinary, float>;
+template class NewtonSolver<2, CALPHADEqConcSolverBinary, float>;
+template class NewtonSolver<4, CALPHADConcSolverTernary, float>;
+template class NewtonSolver<4, CALPHADEqConcSolverTernary, float>;
+template class NewtonSolver<5, CALPHADTieLineConcSolverTernary, float>;
+template class NewtonSolver<2, KKSdiluteBinaryConcSolver, float>;
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif

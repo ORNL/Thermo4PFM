@@ -3,7 +3,16 @@
 
 namespace Thermo4PFM
 {
-template <int N>
-double evalDeterminant(double** const matrix);
+template <int N, typename ScalarType>
+ScalarType evalDeterminant(ScalarType** const matrix);
+
+template <typename ScalarType>
+ScalarType evalDeterminant2(ScalarType** const matrix);
+
+template <typename ScalarType>
+ScalarType evalDeterminant3(ScalarType** const matrix);
+
+template <typename ScalarType>
+ScalarType evalDeterminant4(ScalarType** const matrix);
 }
 #endif

@@ -40,9 +40,9 @@ TEST_CASE("CALPHAD Jacobian ternary", "[CALPHAD Jacobian ternary]")
 
     double fvec1[5];
     double fvec2[5];
-    double* fjac[5];
+    float* fjac[5];
     for (int i = 0; i < 5; i++)
-        fjac[i] = new double[5];
+        fjac[i] = new float[5];
 
     double x[5] = { 0.1, 0.2, 0.3, 0.4, 0.5 };
 
