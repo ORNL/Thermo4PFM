@@ -103,7 +103,7 @@ double CALPHADFreeEnergyFunctionsBinary::computeFreeEnergy(
             //            std::cerr << "CALPHADFreeEnergyFunctionsBinary::"
             //                         "computeFreeEnergy(), undefined phase"
             //                      << "!!!" << std::endl;
-            //abort();
+            // abort();
             return 0.;
     }
 
@@ -149,7 +149,7 @@ void CALPHADFreeEnergyFunctionsBinary::computeDerivFreeEnergy(
             //            std::cerr << "CALPHADFreeEnergyFunctionsBinary::"
             //                         "computeFreeEnergy(), undefined phase!!!"
             //                      << std::endl;
-            //abort();
+            // abort();
             return;
     }
 

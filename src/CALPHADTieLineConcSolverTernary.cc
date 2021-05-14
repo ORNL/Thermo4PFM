@@ -86,7 +86,7 @@ void CALPHADTieLineConcSolverTernary::RHS(
 //=======================================================================
 
 void CALPHADTieLineConcSolverTernary::Jacobian(
-    const double* const x, double** const fjac)
+    const double* const x, float** const fjac)
 {
     // tbox::pout<<"Compute Jacobian for CALPHAD..."<<endl;
     const double* const cL = &x[0];

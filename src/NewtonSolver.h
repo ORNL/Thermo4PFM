@@ -3,7 +3,7 @@
 
 namespace Thermo4PFM
 {
-template <unsigned int Dimension, class SolverType>
+template <unsigned int Dimension, class SolverType, typename JacobianDataType>
 class NewtonSolver
 {
 public:
@@ -27,7 +27,7 @@ private:
 #pragma omp declare target
 #endif
     void UpdateSolution(double* const x, const double* const fvec,
-        double** const fjac, const double alpha);
+        JacobianDataType** const fjac, const double alpha);
 
     int ComputeSolutionInternal(double* const conc, const double tol,
         const int max_iters, const double alpha = 1.);
@@ -37,9 +37,10 @@ private:
         static_cast<SolverType*>(this)->RHS(x, fvec);
     }
 
-    void CopyMatrix(double** const dst, double** const src);
+    template <typename ScalarType>
+    void CopyMatrix(ScalarType** const dst, ScalarType** const src);
 
-    void internalJacobian(const double* const x, double** const fjac)
+    void internalJacobian(const double* const x, JacobianDataType** const fjac)
     {
         static_cast<SolverType*>(this)->Jacobian(x, fjac);
     }

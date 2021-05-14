@@ -7,7 +7,7 @@ namespace Thermo4PFM
 {
 
 class CALPHADConcSolverTernary
-    : public NewtonSolver<4, CALPHADConcSolverTernary>
+    : public NewtonSolver<4, CALPHADConcSolverTernary, float>
 {
 public:
 #ifdef HAVE_OPENMP_OFFLOAD
@@ -39,7 +39,7 @@ public:
 
     /// evaluate Jacobian of system of equations
     /// specific to this solver
-    void Jacobian(const double* const c, double** const fjac);
+    void Jacobian(const double* const c, float** const fjac);
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif

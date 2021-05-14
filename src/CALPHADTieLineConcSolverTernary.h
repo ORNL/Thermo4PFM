@@ -8,7 +8,7 @@ namespace Thermo4PFM
 /// solve for equilibrium compositions along a tie line
 /// passing through nominal composition
 class CALPHADTieLineConcSolverTernary
-    : public NewtonSolver<5, CALPHADTieLineConcSolverTernary>
+    : public NewtonSolver<5, CALPHADTieLineConcSolverTernary, float>
 {
 public:
 #ifdef HAVE_OPENMP_OFFLOAD
@@ -39,7 +39,7 @@ public:
 
     /// evaluate Jacobian of system of equations
     /// specific to this solver
-    void Jacobian(const double* const x, double** const fjac);
+    void Jacobian(const double* const x, float** const fjac);
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif

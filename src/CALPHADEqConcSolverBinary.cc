@@ -40,7 +40,7 @@ void CALPHADEqConcSolverBinary::RHS(
 //=======================================================================
 
 void CALPHADEqConcSolverBinary::Jacobian(
-    const double* const c, double** const fjac)
+    const double* const c, float** const fjac)
 {
     double dfdci[2];
 

@@ -67,7 +67,7 @@ void CALPHADConcSolverTernary::RHS(const double* const c, double* const fvec)
 //=======================================================================
 
 void CALPHADConcSolverTernary::Jacobian(
-    const double* const c, double** const fjac)
+    const double* const c, float** const fjac)
 {
     const double* const cL = &c[0];
     const double* const cS = &c[2];

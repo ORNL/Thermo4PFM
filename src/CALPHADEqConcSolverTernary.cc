@@ -69,7 +69,7 @@ void CALPHADEqConcSolverTernary::RHS(const double* const c, double* const fvec)
 //=======================================================================
 
 void CALPHADEqConcSolverTernary::Jacobian(
-    const double* const c, double** const fjac)
+    const double* const c, float** const fjac)
 {
     // tbox::pout<<"Compute Jacobian for CALPHAD..."<<endl;
     const double* const cL = &c[0];
