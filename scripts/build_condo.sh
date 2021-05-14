@@ -2,6 +2,7 @@
 module load PE-gnu
 module load boost
 module load cmake
+module load python
 
 ROOT=`pwd`
 
