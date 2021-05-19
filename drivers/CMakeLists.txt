@@ -23,8 +23,11 @@ add_executable(loopCALPHADbinaryKKS
 
 add_executable(plotEnergyVsComposition
                ${CMAKE_SOURCE_DIR}/drivers/plotEnergyVsComposition.cc )
+add_executable(computeKKSTernary
+               ${CMAKE_SOURCE_DIR}/drivers/computeKKSTernary.cc)
 
 target_link_libraries(plotEnergyVsComposition thermo4pfm)
+target_link_libraries(computeKKSTernary thermo4pfm)
 target_link_libraries(loopxlogx thermo4pfm)
 target_link_libraries(loopCALPHADSpeciesPhaseGibbsEnergy thermo4pfm)
 target_link_libraries(loopCALPHADConcSolverBinary thermo4pfm)
