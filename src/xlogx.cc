@@ -5,7 +5,7 @@
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
 #endif
-static const double smallx            = 1.0e-8;
+static const double smallx            = 1.0e-5;
 static const double inv_smallx        = 1. / smallx;
 static const double log_smallx        = log(smallx);
 static const double smallx_log_smallx = smallx * log_smallx;
