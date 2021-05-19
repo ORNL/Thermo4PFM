@@ -124,6 +124,7 @@ int NewtonSolver<Dimension, SolverType,
 #ifdef DEBUG_CONVERGENCE
     std::vector<double> ctmp;
     ctmp.reserve(40);
+    std::vector<double> residual;
     // std::cout<<"NewtonSolver::ComputeSolution(), Initial conc=";
     // for(short i=0;i<N;i++)cout<<conc[i]<<",";
     // std::cout<<endl;
@@ -156,6 +157,8 @@ int NewtonSolver<Dimension, SolverType,
         internalRHS(conc, fvec);
 #ifdef DEBUG_CONVERGENCE
         for (int ii = 0; ii < Dimension; ii++)
+            residual.push_back(fvec[ii]);
+        for (int ii = 0; ii < Dimension; ii++)
             assert(fvec[ii] == fvec[ii]);
 #endif
 
@@ -184,6 +187,10 @@ int NewtonSolver<Dimension, SolverType,
             for (int ii = 0; ii < Dimension; ii++)
             {
                 std::cout << ctmp[j + ii] << "   ";
+            }
+            for (int ii = 0; ii < Dimension; ii++)
+            {
+                std::cout << residual[j + ii] << "   ";
             }
             std::cout << std::endl;
         }
