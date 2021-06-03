@@ -68,7 +68,7 @@ void CALPHADConcSolverBinary::computeDxiDc(
 //=======================================================================
 
 void CALPHADConcSolverBinary::Jacobian(
-    const double* const c, float** const fjac)
+    const double* const c, JacobianDataType** const fjac)
 {
     // compute dxidc for 2 phases
     double dxidc[2];
@@ -85,8 +85,9 @@ void CALPHADConcSolverBinary::Jacobian(
 // set values of internal variables used to evaluate
 // terms in Newton iterations
 void CALPHADConcSolverBinary::setup(const double c0, const double hphi,
-    const double RTinv, const double* const Lmix_L, const double* const Lmix_A,
-    const double* const fA, const double* const fB)
+    const double RTinv, const CalphadDataType* const Lmix_L,
+    const CalphadDataType* const Lmix_A, const CalphadDataType* const fA,
+    const CalphadDataType* const fB)
 {
     c0_    = c0;
     hphi_  = hphi;

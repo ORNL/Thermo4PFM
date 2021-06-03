@@ -40,7 +40,7 @@ void CALPHADEqConcSolverBinary::RHS(
 //=======================================================================
 
 void CALPHADEqConcSolverBinary::Jacobian(
-    const double* const c, float** const fjac)
+    const double* const c, JacobianDataType** const fjac)
 {
     double dfdci[2];
 
@@ -73,8 +73,8 @@ void CALPHADEqConcSolverBinary::Jacobian(
 //=======================================================================
 
 void CALPHADEqConcSolverBinary::setup(const double RTinv,
-    const double* const Lmix_L, const double* const Lmix_A,
-    const double* const fA, const double* const fB)
+    const CalphadDataType* const Lmix_L, const CalphadDataType* const Lmix_A,
+    const CalphadDataType* const fA, const CalphadDataType* const fB)
 {
     RTinv_ = RTinv;
     RT_    = 1. / RTinv;

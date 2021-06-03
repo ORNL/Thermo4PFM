@@ -8,13 +8,14 @@ namespace Thermo4PFM
 #pragma omp declare target
 #endif
 
+template <typename ScalarType>
 class CALPHADSpeciesPhaseGibbsEnergyExpansion
 {
 public:
     CALPHADSpeciesPhaseGibbsEnergyExpansion(){};
-    void init(const double a, const double b, const double c, const double d2,
-        const double d3, const double d4, const double d7, const double dm1,
-        const double dm9);
+    void init(const ScalarType a, const ScalarType b, const ScalarType c,
+        const ScalarType d2, const ScalarType d3, const ScalarType d4,
+        const ScalarType d7, const ScalarType dm1, const ScalarType dm9);
 
     double value(const double temperature) const;
 
@@ -22,15 +23,15 @@ private:
     /*
      * Expansion coefficient for energy of species as a function of temperature
      */
-    double a_;
-    double b_;
-    double c_;
-    double d2_;
-    double d3_;
-    double d4_;
-    double d7_;
-    double dm1_;
-    double dm9_;
+    ScalarType a_;
+    ScalarType b_;
+    ScalarType c_;
+    ScalarType d2_;
+    ScalarType d3_;
+    ScalarType d4_;
+    ScalarType d7_;
+    ScalarType dm1_;
+    ScalarType dm9_;
 };
 
 #ifdef HAVE_OPENMP_OFFLOAD

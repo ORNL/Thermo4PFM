@@ -2,11 +2,12 @@
 #define included_CALPHADConcSolverBinary
 
 #include "NewtonSolver.h"
+#include "datatypes.h"
 
 namespace Thermo4PFM
 {
 class CALPHADConcSolverBinary
-    : public NewtonSolver<2, CALPHADConcSolverBinary, float>
+    : public NewtonSolver<2, CALPHADConcSolverBinary, JacobianDataType>
 {
 public:
 #ifdef HAVE_OPENMP_OFFLOAD
@@ -25,8 +26,9 @@ public:
     /// including composition "c0" and phase fraction "hphi"
     /// to solve for
     void setup(const double c0, const double hphi, const double RTinv,
-        const double* const Lmix_L_, const double* const Lmix_A_,
-        const double* const fA, const double* const fB);
+        const CalphadDataType* const Lmix_L_,
+        const CalphadDataType* const Lmix_A_, const CalphadDataType* const fA,
+        const CalphadDataType* const fB);
 
     /// evaluate RHS of the system of eqautions to solve for
     /// specific to this solver
@@ -34,7 +36,7 @@ public:
 
     /// evaluate Jacobian of system of equations
     /// specific to this solver
-    void Jacobian(const double* const x, float** const fjac);
+    void Jacobian(const double* const x, JacobianDataType** const fjac);
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif
@@ -55,14 +57,14 @@ private:
     ///
     /// 4 L coefficients for 2 possible phases (L, A)
     ///
-    double Lmix_L_[4];
-    double Lmix_A_[4];
+    CalphadDataType Lmix_L_[4];
+    CalphadDataType Lmix_A_[4];
 
     ///
     /// energies of 2 species, in two phase each
     ///
-    double fA_[2];
-    double fB_[2];
+    CalphadDataType fA_[2];
+    CalphadDataType fB_[2];
 
     // internal functions to help evaluate RHS and Jacobian
     void computeXi(const double* const c, double xi[2]) const;

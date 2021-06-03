@@ -1,21 +1,28 @@
 #ifndef included_CALPHADFunctions
 #define included_CALPHADFunctions
 
+#include "datatypes.h"
+
 #include <boost/property_tree/ptree.hpp>
 
 namespace Thermo4PFM
 {
-double CALPHADcomputeFMixBinary(const double l0, const double l1,
-    const double l2, const double l3, const double conc);
-double CALPHADcomputeFMix_derivBinary(const double l0, const double l1,
-    const double l2, const double l3, const double conc);
-double CALPHADcomputeFMix_deriv2Binary(const double l0, const double l1,
-    const double l2, const double l3, const double conc);
+double CALPHADcomputeFMixBinary(const CalphadDataType l0,
+    const CalphadDataType l1, const CalphadDataType l2,
+    const CalphadDataType l3, const double conc);
+double CALPHADcomputeFMix_derivBinary(const CalphadDataType l0,
+    const CalphadDataType l1, const CalphadDataType l2,
+    const CalphadDataType l3, const double conc);
+double CALPHADcomputeFMix_deriv2Binary(const CalphadDataType l0,
+    const CalphadDataType l1, const CalphadDataType l2,
+    const CalphadDataType l3, const double conc);
 double CALPHADcomputeFIdealMixBinary(const double rt, const double conc);
 double CALPHADcomputeFIdealMix_derivBinary(const double rt, const double conc);
 double CALPHADcomputeFIdealMix_deriv2Binary(const double rt, const double conc);
-double CALPHADcomputeFMixTernary(const double* lAB, const double* lAC,
-    const double* lBC, const double* lABC, const double cA, const double cB);
+
+double CALPHADcomputeFMixTernary(const CalphadDataType* lAB,
+    const CalphadDataType* lAC, const CalphadDataType* lBC,
+    const CalphadDataType* lABC, const double cA, const double cB);
 double CALPHADcomputeFIdealMixTernary(
     const double rt, const double conc0, const double conc1);
 void CALPHADcomputeFIdealMix_derivTernary(
@@ -23,14 +30,16 @@ void CALPHADcomputeFIdealMix_derivTernary(
 void CALPHADcomputeFIdealMix_deriv2Ternary(
     const double rt, const double cA, const double cB, double* deriv);
 
-void CALPHADcomputeFMix_derivTernary(const double* lAB, const double* lAC,
-    const double* lBC, const double* lABC, const double cA, const double cB,
+void CALPHADcomputeFMix_derivTernary(const CalphadDataType* lAB,
+    const CalphadDataType* lAC, const CalphadDataType* lBC,
+    const CalphadDataType* lABC, const double cA, const double cB,
     double* deriv);
-void CALPHADcomputeFMix_deriv2Ternary(const double* lAB, const double* lAC,
-    const double* lBC, const double* lABC, const double cA, const double cB,
+void CALPHADcomputeFMix_deriv2Ternary(const CalphadDataType* lAB,
+    const CalphadDataType* lAC, const CalphadDataType* lBC,
+    const CalphadDataType* lABC, const double cA, const double cB,
     double* deriv);
-void readLmixBinary(
-    boost::property_tree::ptree& db, double LmixPhase[4][MAX_POL_T_INDEX]);
+void readLmixBinary(boost::property_tree::ptree& db,
+    CalphadDataType LmixPhase[4][MAX_POL_T_INDEX]);
 }
 
 #endif

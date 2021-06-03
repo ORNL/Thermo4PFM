@@ -69,10 +69,10 @@ TEST_CASE("CALPHAD functions", "[calphad functions]")
     std::cout << "=================" << std::endl;
     std::cout << "FMix Ternaries..." << std::endl;
     {
-        double lAB[4]  = { 1.2, 3.5, 6.1, -1.2 };
-        double lAC[4]  = { 3.2, 4.5, -3.1, 7.1 };
-        double lBC[4]  = { 0.2, 0.7, 4.1, -8.2 };
-        double lABC[3] = { 3.7, 6.3, -1.1 };
+        CalphadDataType lAB[4]  = { 1.2, 3.5, 6.1, -1.2 };
+        CalphadDataType lAC[4]  = { 3.2, 4.5, -3.1, 7.1 };
+        CalphadDataType lBC[4]  = { 0.2, 0.7, 4.1, -8.2 };
+        CalphadDataType lABC[3] = { 3.7, 6.3, -1.1 };
 
         double cA = 0.33;
         double cB = 0.21;

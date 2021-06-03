@@ -3,11 +3,13 @@
 
 #include "NewtonSolver.h"
 
+#include "datatypes.h"
+
 namespace Thermo4PFM
 {
 
 class CALPHADConcSolverTernary
-    : public NewtonSolver<4, CALPHADConcSolverTernary, float>
+    : public NewtonSolver<4, CALPHADConcSolverTernary, JacobianDataType>
 {
 public:
 #ifdef HAVE_OPENMP_OFFLOAD
@@ -26,12 +28,15 @@ public:
     /// including composition "c0" and phase fraction "hphi"
     /// to solve for
     void setup(const double c0, const double c1, const double hphi,
-        const double RTinv, const double* const L_AB_L,
-        const double* const L_AC_L, const double* const L_BC_L,
-        const double* const L_AB_S, const double* const L_AC_S,
-        const double* const L_BC_S, const double* const L_ABC_L,
-        const double* const L_ABC_S, const double* const fA,
-        const double* const fB, const double* const fC);
+        const double RTinv, const CalphadDataType* const L_AB_L,
+        const CalphadDataType* const L_AC_L,
+        const CalphadDataType* const L_BC_L,
+        const CalphadDataType* const L_AB_S,
+        const CalphadDataType* const L_AC_S,
+        const CalphadDataType* const L_BC_S,
+        const CalphadDataType* const L_ABC_L,
+        const CalphadDataType* const L_ABC_S, const CalphadDataType* const fA,
+        const CalphadDataType* const fB, const CalphadDataType* const fC);
 
     /// evaluate RHS of the system of eqautions to solve for
     /// specific to this solver
@@ -39,7 +44,7 @@ public:
 
     /// evaluate Jacobian of system of equations
     /// specific to this solver
-    void Jacobian(const double* const c, float** const fjac);
+    void Jacobian(const double* const c, JacobianDataType** const fjac);
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif
@@ -58,25 +63,25 @@ private:
     ///
     /// energies of 3 species, in two phase each
     ///
-    double fA_[2];
-    double fB_[2];
-    double fC_[2];
+    CalphadDataType fA_[2];
+    CalphadDataType fB_[2];
+    CalphadDataType fC_[2];
 
     ///
     /// L coefficients for phase L
     ///
-    double L_AB_L_[4];
-    double L_AC_L_[4];
-    double L_BC_L_[4];
-    double L_ABC_L_[3];
+    CalphadDataType L_AB_L_[4];
+    CalphadDataType L_AC_L_[4];
+    CalphadDataType L_BC_L_[4];
+    CalphadDataType L_ABC_L_[3];
 
     ///
     /// L coefficients for phase S
     ///
-    double L_AB_S_[4];
-    double L_AC_S_[4];
-    double L_BC_S_[4];
-    double L_ABC_S_[3];
+    CalphadDataType L_AB_S_[4];
+    CalphadDataType L_AC_S_[4];
+    CalphadDataType L_BC_S_[4];
+    CalphadDataType L_ABC_S_[3];
 
     double RT_;
 };

@@ -86,7 +86,7 @@ void CALPHADTieLineConcSolverTernary::RHS(
 //=======================================================================
 
 void CALPHADTieLineConcSolverTernary::Jacobian(
-    const double* const x, float** const fjac)
+    const double* const x, JacobianDataType** const fjac)
 {
     // tbox::pout<<"Compute Jacobian for CALPHAD..."<<endl;
     const double* const cL = &x[0];
@@ -198,11 +198,12 @@ void CALPHADTieLineConcSolverTernary::Jacobian(
 //=======================================================================
 // A,B,C refers to 3 species
 void CALPHADTieLineConcSolverTernary::setup(const double c0, const double c1,
-    const double RTinv, const double* const L_AB_L, const double* const L_AC_L,
-    const double* const L_BC_L, const double* const L_AB_S,
-    const double* const L_AC_S, const double* const L_BC_S,
-    const double* const L_ABC_L, const double* const L_ABC_S,
-    const double* const fA, const double* const fB, const double* const fC)
+    const double RTinv, const CalphadDataType* const L_AB_L,
+    const CalphadDataType* const L_AC_L, const CalphadDataType* const L_BC_L,
+    const CalphadDataType* const L_AB_S, const CalphadDataType* const L_AC_S,
+    const CalphadDataType* const L_BC_S, const CalphadDataType* const L_ABC_L,
+    const CalphadDataType* const L_ABC_S, const CalphadDataType* const fA,
+    const CalphadDataType* const fB, const CalphadDataType* const fC)
 {
     conc_[0] = c0;
     conc_[1] = c1;

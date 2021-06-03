@@ -11,8 +11,9 @@ namespace Thermo4PFM
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
 #endif
-double CALPHADcomputeFMixBinary(const double l0, const double l1,
-    const double l2, const double l3, const double conc)
+double CALPHADcomputeFMixBinary(const CalphadDataType l0,
+    const CalphadDataType l1, const CalphadDataType l2,
+    const CalphadDataType l3, const double conc)
 {
     double two_c_minus_one = 2.0 * conc - 1.0;
 
@@ -24,8 +25,9 @@ double CALPHADcomputeFMixBinary(const double l0, const double l1,
     return fmix;
 }
 
-double CALPHADcomputeFMix_derivBinary(const double l0, const double l1,
-    const double l2, const double l3, const double conc)
+double CALPHADcomputeFMix_derivBinary(const CalphadDataType l0,
+    const CalphadDataType l1, const CalphadDataType l2,
+    const CalphadDataType l3, const double conc)
 {
     double two_c_minus_one = 2.0 * conc - 1.0;
 
@@ -42,8 +44,9 @@ double CALPHADcomputeFMix_derivBinary(const double l0, const double l1,
     return fmix_deriv;
 }
 
-double CALPHADcomputeFMix_deriv2Binary(const double l0, const double l1,
-    const double l2, const double l3, const double conc)
+double CALPHADcomputeFMix_deriv2Binary(const CalphadDataType l0,
+    const CalphadDataType l1, const CalphadDataType l2,
+    const CalphadDataType l3, const double conc)
 {
     const double conc2 = conc * conc;
     double fmix_deriv2
@@ -87,8 +90,9 @@ void CALPHADcomputeFIdealMix_deriv2Ternary(
     deriv[3] = rt * (xlogx_deriv2(cB) + xlogx_deriv2(1.0 - cA - cB));
 }
 
-double CALPHADcomputeGMix_mixDeriv2(const double l0, const double l1,
-    const double l2, const double l3, const double c0, const double c1)
+double CALPHADcomputeGMix_mixDeriv2(const CalphadDataType l0,
+    const CalphadDataType l1, const CalphadDataType l2,
+    const CalphadDataType l3, const double c0, const double c1)
 {
     const double dc  = (c0 - c1);
     const double dc2 = dc * dc;
@@ -97,8 +101,9 @@ double CALPHADcomputeGMix_mixDeriv2(const double l0, const double l1,
            + l3 * (4. * dc2 * dc - 6. * c0 * c1 * dc);
 }
 
-double CALPHADcomputeFMixTernary(const double* lAB, const double* lAC,
-    const double* lBC, const double* lABC, const double cA, const double cB)
+double CALPHADcomputeFMixTernary(const CalphadDataType* lAB,
+    const CalphadDataType* lAC, const CalphadDataType* lBC,
+    const CalphadDataType* lABC, const double cA, const double cB)
 {
     double cC = 1. - cA - cB;
 
@@ -129,8 +134,9 @@ double CALPHADcomputeFIdealMixTernary(
     return fmix;
 }
 
-void CALPHADcomputeFMix_derivTernary(const double* lAB, const double* lAC,
-    const double* lBC, const double* lABC, const double cA, const double cB,
+void CALPHADcomputeFMix_derivTernary(const CalphadDataType* lAB,
+    const CalphadDataType* lAC, const CalphadDataType* lBC,
+    const CalphadDataType* lABC, const double cA, const double cB,
     double* deriv)
 {
     double cC = 1. - cA - cB;
@@ -208,8 +214,9 @@ void CALPHADcomputeFMix_derivTernary(const double* lAB, const double* lAC,
 
 // compute the 4 components of the second order derivative
 // with respect to cA and CB
-void CALPHADcomputeFMix_deriv2Ternary(const double* lAB, const double* lAC,
-    const double* lBC, const double* lABC, const double cA, const double cB,
+void CALPHADcomputeFMix_deriv2Ternary(const CalphadDataType* lAB,
+    const CalphadDataType* lAC, const CalphadDataType* lBC,
+    const CalphadDataType* lABC, const double cA, const double cB,
     double* deriv)
 {
     // assert(deriv != 0);
@@ -415,13 +422,14 @@ void CALPHADcomputeFIdealMix_derivTernary(
 #pragma omp end declare target
 #endif
 
-void readLmixBinary(pt::ptree& db, double LmixPhase[4][MAX_POL_T_INDEX])
+void readLmixBinary(
+    pt::ptree& db, CalphadDataType LmixPhase[4][MAX_POL_T_INDEX])
 {
     {
         int i = 0;
         for (pt::ptree::value_type& v : db.get_child("L0"))
         {
-            LmixPhase[0][i] = v.second.get_value<double>();
+            LmixPhase[0][i] = v.second.get_value<CalphadDataType>();
             i++;
         }
         if (i < MAX_POL_T_INDEX) LmixPhase[0][i] = 0.;
@@ -431,7 +439,7 @@ void readLmixBinary(pt::ptree& db, double LmixPhase[4][MAX_POL_T_INDEX])
         int i = 0;
         for (pt::ptree::value_type& v : db.get_child("L1"))
         {
-            LmixPhase[1][i] = v.second.get_value<double>();
+            LmixPhase[1][i] = v.second.get_value<CalphadDataType>();
             i++;
         }
         if (i < MAX_POL_T_INDEX) LmixPhase[1][i] = 0.;
@@ -445,7 +453,7 @@ void readLmixBinary(pt::ptree& db, double LmixPhase[4][MAX_POL_T_INDEX])
             int i = 0;
             for (pt::ptree::value_type& v : db.get_child("L2"))
             {
-                LmixPhase[2][i] = v.second.get_value<double>();
+                LmixPhase[2][i] = v.second.get_value<CalphadDataType>();
                 i++;
             }
             if (i < MAX_POL_T_INDEX) LmixPhase[2][i] = 0.;
@@ -465,7 +473,7 @@ void readLmixBinary(pt::ptree& db, double LmixPhase[4][MAX_POL_T_INDEX])
             int i = 0;
             for (pt::ptree::value_type& v : db.get_child("L3"))
             {
-                LmixPhase[3][i] = v.second.get_value<double>();
+                LmixPhase[3][i] = v.second.get_value<CalphadDataType>();
                 i++;
             }
             if (i < MAX_POL_T_INDEX) LmixPhase[3][i] = 0.;

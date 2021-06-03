@@ -20,29 +20,29 @@ TEST_CASE("CALPHAD Jacobian ternary", "[CALPHAD Jacobian ternary]")
     double cB = 0.2;
 
     // energies of 3 species, in two phase each
-    double fA[2] = { 2.3, 4.5 };
-    double fB[2] = { 0.5, 2.6 };
-    double fC[2] = { 0.9, 3.1 };
+    CalphadDataType fA[2] = { 2.3, 4.5 };
+    CalphadDataType fB[2] = { 0.5, 2.6 };
+    CalphadDataType fC[2] = { 0.9, 3.1 };
 
     // L coefficients for 2 possible phases (L and S)
-    double L_AB_L[4] = { 2., 3., 4., 5. };
-    double L_AC_L[4] = { 8., 5., 1., 3. };
-    double L_BC_L[4] = { 6., 4., 9., 2. };
+    CalphadDataType L_AB_L[4] = { 2., 3., 4., 5. };
+    CalphadDataType L_AC_L[4] = { 8., 5., 1., 3. };
+    CalphadDataType L_BC_L[4] = { 6., 4., 9., 2. };
 
-    double L_AB_S[4] = { 2., 2., 3., 4. };
-    double L_AC_S[4] = { 6., 8., 5., 1. };
-    double L_BC_S[4] = { 2., 6., 4., 9. };
+    CalphadDataType L_AB_S[4] = { 2., 2., 3., 4. };
+    CalphadDataType L_AC_S[4] = { 6., 8., 5., 1. };
+    CalphadDataType L_BC_S[4] = { 2., 6., 4., 9. };
 
-    double L_ABC_L[3] = { 3.1, 4.1, 5.1 };
-    double L_ABC_S[3] = { 2.1, 3.1, 4.1 };
+    CalphadDataType L_ABC_L[3] = { 3.1, 4.1, 5.1 };
+    CalphadDataType L_ABC_S[3] = { 2.1, 3.1, 4.1 };
 
     double RTinv = 10.;
 
     double fvec1[5];
     double fvec2[5];
-    float* fjac[5];
+    JacobianDataType* fjac[5];
     for (int i = 0; i < 5; i++)
-        fjac[i] = new float[5];
+        fjac[i] = new JacobianDataType[5];
 
     double x[5] = { 0.1, 0.2, 0.3, 0.4, 0.5 };
 

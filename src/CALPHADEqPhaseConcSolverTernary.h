@@ -2,6 +2,7 @@
 #define included_CALPHADEqPhaseConcSolverTernary
 
 #include "NewtonSolver.h"
+#include "datatypes.h"
 
 namespace Thermo4PFM
 {
@@ -38,20 +39,20 @@ private:
     double RT_;
 
     // energies of 3 species, in two phase each
-    double fA_[2];
-    double fB_[2];
-    double fC_[2];
+    CalphadDataType fA_[2];
+    CalphadDataType fB_[2];
+    CalphadDataType fC_[2];
 
     // L coefficients for 2 possible phases (L and S)
-    double L_AB_L_[4];
-    double L_AC_L_[4];
-    double L_BC_L_[4];
-    double L_ABC_L_[3];
+    CalphadDataType L_AB_L_[4];
+    CalphadDataType L_AC_L_[4];
+    CalphadDataType L_BC_L_[4];
+    CalphadDataType L_ABC_L_[3];
 
-    double L_AB_S_[4];
-    double L_AC_S_[4];
-    double L_BC_S_[4];
-    double L_ABC_S_[3];
+    CalphadDataType L_AB_S_[4];
+    CalphadDataType L_AC_S_[4];
+    CalphadDataType L_BC_S_[4];
+    CalphadDataType L_ABC_S_[3];
 
     // nominal concentration
     double conc_[2];

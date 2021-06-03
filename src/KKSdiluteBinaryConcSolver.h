@@ -2,12 +2,13 @@
 #define included_KKSdiluteBinaryConcSolver
 
 #include "NewtonSolver.h"
+#include "datatypes.h"
 
 namespace Thermo4PFM
 {
 
 class KKSdiluteBinaryConcSolver
-    : public NewtonSolver<2, KKSdiluteBinaryConcSolver, float>
+    : public NewtonSolver<2, KKSdiluteBinaryConcSolver, JacobianDataType>
 {
 public:
 #ifdef HAVE_OPENMP_OFFLOAD
@@ -33,7 +34,7 @@ public:
 
     /// evaluate Jacobian of system of equations
     /// specific to this solver
-    void Jacobian(const double* const x, float** const fjac);
+    void Jacobian(const double* const x, JacobianDataType** const fjac);
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif

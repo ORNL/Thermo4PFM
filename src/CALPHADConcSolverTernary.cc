@@ -67,7 +67,7 @@ void CALPHADConcSolverTernary::RHS(const double* const c, double* const fvec)
 //=======================================================================
 
 void CALPHADConcSolverTernary::Jacobian(
-    const double* const c, float** const fjac)
+    const double* const c, JacobianDataType** const fjac)
 {
     const double* const cL = &c[0];
     const double* const cS = &c[2];
@@ -125,12 +125,12 @@ void CALPHADConcSolverTernary::Jacobian(
 //=======================================================================
 
 void CALPHADConcSolverTernary::setup(const double c0, const double c1,
-    const double hphi, const double RTinv, const double* const L_AB_L,
-    const double* const L_AC_L, const double* const L_BC_L,
-    const double* const L_AB_S, const double* const L_AC_S,
-    const double* const L_BC_S, const double* const L_ABC_L,
-    const double* const L_ABC_S, const double* const fA, const double* const fB,
-    const double* const fC)
+    const double hphi, const double RTinv, const CalphadDataType* const L_AB_L,
+    const CalphadDataType* const L_AC_L, const CalphadDataType* const L_BC_L,
+    const CalphadDataType* const L_AB_S, const CalphadDataType* const L_AC_S,
+    const CalphadDataType* const L_BC_S, const CalphadDataType* const L_ABC_L,
+    const CalphadDataType* const L_ABC_S, const CalphadDataType* const fA,
+    const CalphadDataType* const fB, const CalphadDataType* const fC)
 {
     c0_[0] = c0;
     c0_[1] = c1;
