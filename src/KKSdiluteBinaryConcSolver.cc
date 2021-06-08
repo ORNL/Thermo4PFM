@@ -17,7 +17,7 @@ void KKSdiluteBinaryConcSolver::RHS(const double* const c, double* const fvec)
 //=======================================================================
 
 void KKSdiluteBinaryConcSolver::Jacobian(
-    const double* const c, float** const fjac)
+    const double* const c, JacobianDataType** const fjac)
 {
     fjac[0][0] = (1.0 - hphi_);
     fjac[0][1] = hphi_;

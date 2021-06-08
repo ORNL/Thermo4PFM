@@ -9,9 +9,11 @@ namespace Thermo4PFM
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
 #endif
-void CALPHADSpeciesPhaseGibbsEnergyExpansion::init(const double a,
-    const double b, const double c, const double d2, const double d3,
-    const double d4, const double d7, const double dm1, const double dm9)
+template <typename ScalarType>
+void CALPHADSpeciesPhaseGibbsEnergyExpansion<ScalarType>::init(
+    const ScalarType a, const ScalarType b, const ScalarType c,
+    const ScalarType d2, const ScalarType d3, const ScalarType d4,
+    const ScalarType d7, const ScalarType dm1, const ScalarType dm9)
 {
     a_   = a;
     b_   = b;
@@ -24,7 +26,8 @@ void CALPHADSpeciesPhaseGibbsEnergyExpansion::init(const double a,
     dm9_ = dm9;
 }
 
-double CALPHADSpeciesPhaseGibbsEnergyExpansion::value(
+template <typename ScalarType>
+double CALPHADSpeciesPhaseGibbsEnergyExpansion<ScalarType>::value(
     const double temperature) const
 {
     const double t2 = temperature * temperature;
@@ -45,4 +48,7 @@ double CALPHADSpeciesPhaseGibbsEnergyExpansion::value(
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif
+
+template class CALPHADSpeciesPhaseGibbsEnergyExpansion<float>;
+template class CALPHADSpeciesPhaseGibbsEnergyExpansion<double>;
 }

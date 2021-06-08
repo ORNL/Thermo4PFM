@@ -211,12 +211,13 @@ int NewtonSolver<Dimension, SolverType,
     return iterations;
 }
 
-template class NewtonSolver<2, CALPHADConcSolverBinary, float>;
-template class NewtonSolver<2, CALPHADEqConcSolverBinary, float>;
-template class NewtonSolver<4, CALPHADConcSolverTernary, float>;
-template class NewtonSolver<4, CALPHADEqConcSolverTernary, float>;
-template class NewtonSolver<5, CALPHADTieLineConcSolverTernary, float>;
-template class NewtonSolver<2, KKSdiluteBinaryConcSolver, float>;
+template class NewtonSolver<2, CALPHADConcSolverBinary, JacobianDataType>;
+template class NewtonSolver<2, CALPHADEqConcSolverBinary, JacobianDataType>;
+template class NewtonSolver<4, CALPHADConcSolverTernary, JacobianDataType>;
+template class NewtonSolver<4, CALPHADEqConcSolverTernary, JacobianDataType>;
+template class NewtonSolver<5, CALPHADTieLineConcSolverTernary,
+    JacobianDataType>;
+template class NewtonSolver<2, KKSdiluteBinaryConcSolver, JacobianDataType>;
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif

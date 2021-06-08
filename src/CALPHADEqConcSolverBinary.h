@@ -2,14 +2,13 @@
 #define included_CALPHADEqConcSolverBinary
 
 #include "NewtonSolver.h"
-
-#include <cmath>
+#include "datatypes.h"
 
 namespace Thermo4PFM
 {
 
 class CALPHADEqConcSolverBinary
-    : public NewtonSolver<2, CALPHADEqConcSolverBinary, float>
+    : public NewtonSolver<2, CALPHADEqConcSolverBinary, JacobianDataType>
 {
 public:
 #ifdef HAVE_OPENMP_OFFLOAD
@@ -25,9 +24,9 @@ public:
 
     /// setup model paramater values to be used by solver,
     /// at a given temperature
-    void setup(const double RTinv, const double* const Lmix_L,
-        const double* const Lmix_A, const double* const fA,
-        const double* const fB);
+    void setup(const double RTinv, const CalphadDataType* const Lmix_L,
+        const CalphadDataType* const Lmix_A, const CalphadDataType* const fA,
+        const CalphadDataType* const fB);
 
     /// evaluate RHS of the system of eqautions to solve for
     /// specific to this solver
@@ -35,7 +34,7 @@ public:
 
     /// evaluate Jacobian of system of equations
     /// specific to this solver
-    void Jacobian(const double* const x, float** const fjac);
+    void Jacobian(const double* const x, JacobianDataType** const fjac);
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif
@@ -47,14 +46,14 @@ private:
     ///
     /// energies of 2 species (A and B), in two phase each
     ///
-    double fA_[2];
-    double fB_[2];
+    CalphadDataType fA_[2];
+    CalphadDataType fB_[2];
 
     ///
     /// 4 L coefficients for 2 possible phases (L, A)
     ///
-    double Lmix_L_[4];
-    double Lmix_A_[4];
+    CalphadDataType Lmix_L_[4];
+    CalphadDataType Lmix_A_[4];
 };
 }
 #endif

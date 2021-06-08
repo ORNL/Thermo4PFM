@@ -84,10 +84,10 @@ double CALPHADFreeEnergyFunctionsBinary::computeFreeEnergy(
     const double temperature, const double* const conc, const PhaseIndex pi,
     const bool gp)
 {
-    const double l0 = lmixPhase(0, pi, temperature);
-    const double l1 = lmixPhase(1, pi, temperature);
-    const double l2 = lmixPhase(2, pi, temperature);
-    const double l3 = lmixPhase(3, pi, temperature);
+    const CalphadDataType l0 = lmixPhase(0, pi, temperature);
+    const CalphadDataType l1 = lmixPhase(1, pi, temperature);
+    const CalphadDataType l2 = lmixPhase(2, pi, temperature);
+    const CalphadDataType l3 = lmixPhase(3, pi, temperature);
 
     CALPHADSpeciesPhaseGibbsEnergy* g_species;
 
@@ -130,10 +130,10 @@ void CALPHADFreeEnergyFunctionsBinary::computeDerivFreeEnergy(
     const double temperature, const double* const conc, const PhaseIndex pi,
     double* deriv)
 {
-    const double l0 = lmixPhase(0, pi, temperature);
-    const double l1 = lmixPhase(1, pi, temperature);
-    const double l2 = lmixPhase(2, pi, temperature);
-    const double l3 = lmixPhase(3, pi, temperature);
+    const CalphadDataType l0 = lmixPhase(0, pi, temperature);
+    const CalphadDataType l1 = lmixPhase(1, pi, temperature);
+    const CalphadDataType l2 = lmixPhase(2, pi, temperature);
+    const CalphadDataType l3 = lmixPhase(3, pi, temperature);
 
     CALPHADSpeciesPhaseGibbsEnergy* g_species;
 
@@ -171,11 +171,11 @@ void CALPHADFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
     // assert(conc[0] >= 0.);
     // assert(conc[0] <= 1.);
 
-    const double l0 = lmixPhase(0, pi, temp);
-    const double l1 = lmixPhase(1, pi, temp);
-    const double l2 = lmixPhase(2, pi, temp);
-    const double l3 = lmixPhase(3, pi, temp);
-    const double rt = gas_constant_R_JpKpmol * temp;
+    const CalphadDataType l0 = lmixPhase(0, pi, temp);
+    const CalphadDataType l1 = lmixPhase(1, pi, temp);
+    const CalphadDataType l2 = lmixPhase(2, pi, temp);
+    const CalphadDataType l3 = lmixPhase(3, pi, temp);
+    const double rt          = gas_constant_R_JpKpmol * temp;
 
     d2fdc2[0] = (CALPHADcomputeFMix_deriv2Binary(l0, l1, l2, l3, conc[0])
                  + CALPHADcomputeFIdealMix_deriv2Binary(rt, conc[0]));
@@ -184,8 +184,8 @@ void CALPHADFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
 //=======================================================================
 
 void CALPHADFreeEnergyFunctionsBinary::computeTdependentParameters(
-    const double temperature, double* Lmix_L, double* Lmix_A, double* fA,
-    double* fB)
+    const double temperature, CalphadDataType* Lmix_L, CalphadDataType* Lmix_A,
+    CalphadDataType* fA, CalphadDataType* fB)
 {
     fA[0]     = g_species_phaseL_[0].fenergy(temperature);
     fB[0]     = g_species_phaseL_[1].fenergy(temperature);
@@ -216,11 +216,11 @@ bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(
     // assert(temperature > 0.);
 
     // evaluate temperature dependent parameters
-    double fA[3];
-    double fB[3];
+    CalphadDataType fA[3];
+    CalphadDataType fB[3];
 
-    double Lmix_L[4];
-    double Lmix_A[4];
+    CalphadDataType Lmix_L[4];
+    CalphadDataType Lmix_A[4];
 
     computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
 
@@ -262,11 +262,11 @@ void CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
     double c[2] = { conc, conc };
 
     // evaluate temperature dependent parameters
-    double fA[2];
-    double fB[2];
+    CalphadDataType fA[2];
+    CalphadDataType fB[2];
 
-    double Lmix_L[4];
-    double Lmix_A[4];
+    CalphadDataType Lmix_L[4];
+    CalphadDataType Lmix_A[4];
     computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
@@ -307,10 +307,10 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
 
     const double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
 
-    double fA[2];
-    double fB[2];
-    double Lmix_L[4];
-    double Lmix_A[4];
+    CalphadDataType fA[2];
+    CalphadDataType fB[2];
+    CalphadDataType Lmix_L[4];
+    CalphadDataType Lmix_A[4];
 
     computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
 

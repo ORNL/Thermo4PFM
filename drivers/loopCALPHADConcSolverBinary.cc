@@ -43,8 +43,8 @@ int main(int argc, char* argv[])
 
     double temperature = 1450.;
 
-    double LmixPhaseL[4][MAX_POL_T_INDEX];
-    double LmixPhaseA[4][MAX_POL_T_INDEX];
+    CalphadDataType LmixPhaseL[4][MAX_POL_T_INDEX];
+    CalphadDataType LmixPhaseA[4][MAX_POL_T_INDEX];
 
     {
         std::string dbnamemixL("LmixPhaseL");
@@ -73,22 +73,22 @@ int main(int argc, char* argv[])
         g_species_phaseA[1].initialize("A1", speciesB_db.get_child(dbnameA));
     }
 
-    double fA[2];
+    CalphadDataType fA[2];
     fA[0] = g_species_phaseL[0].fenergy(temperature);
     fA[1] = g_species_phaseA[0].fenergy(temperature);
     // std::cout<<"fA[0]="<<fA[0]<<", fA[1]="<<fA[1]<<std::endl;
 
-    double fB[2];
+    CalphadDataType fB[2];
     fB[0] = g_species_phaseL[1].fenergy(temperature);
     fB[1] = g_species_phaseA[1].fenergy(temperature);
     // std::cout<<"fB[0]="<<fB[0]<<", fB[1]="<<fB[1]<<std::endl;
 
-    double Lmix_L[4];
+    CalphadDataType Lmix_L[4];
     for (int i = 0; i < 4; i++)
         Lmix_L[i] = LmixPhaseL[i][0] + temperature * LmixPhaseL[i][1];
     // for(int i=0;i<4;i++)std::cout<<"Lmix_L["<<i<<"]="<<Lmix_L[i]<<std::endl;
 
-    double Lmix_A[4];
+    CalphadDataType Lmix_A[4];
     for (int i = 0; i < 4; i++)
         Lmix_A[i] = LmixPhaseA[i][0] + temperature * LmixPhaseA[i][1];
     // for(int i=0;i<4;i++)std::cout<<"Lmix_A["<<i<<"]="<<Lmix_A[i]<<std::endl;

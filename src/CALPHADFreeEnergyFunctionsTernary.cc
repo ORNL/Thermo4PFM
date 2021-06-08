@@ -4,6 +4,7 @@
 #include "CALPHADFunctions.h"
 #include "CALPHADTieLineConcSolverTernary.h"
 #include "PhysicalConstants.h"
+#include "datatypes.h"
 #include "functions.h"
 #include "well_functions.h"
 
@@ -18,7 +19,8 @@ namespace pt = boost::property_tree;
 namespace Thermo4PFM
 {
 
-void readLmixTernaryParameters(pt::ptree& Lmix_db, double LmixABC[3][2])
+void readLmixTernaryParameters(
+    pt::ptree& Lmix_db, CalphadDataType LmixABC[3][2])
 {
     // L0
     {
@@ -28,7 +30,7 @@ void readLmixTernaryParameters(pt::ptree& Lmix_db, double LmixABC[3][2])
             int i = 0;
             for (pt::ptree::value_type& v : Lmix_db.get_child("L0"))
             {
-                LmixABC[0][i] = v.second.get_value<double>();
+                LmixABC[0][i] = v.second.get_value<CalphadDataType>();
                 i++;
             }
         }
@@ -41,7 +43,7 @@ void readLmixTernaryParameters(pt::ptree& Lmix_db, double LmixABC[3][2])
             int i = 0;
             for (pt::ptree::value_type& v : Lmix_db.get_child("L1"))
             {
-                LmixABC[1][i] = v.second.get_value<double>();
+                LmixABC[1][i] = v.second.get_value<CalphadDataType>();
                 i++;
             }
         }
@@ -54,7 +56,7 @@ void readLmixTernaryParameters(pt::ptree& Lmix_db, double LmixABC[3][2])
             int i = 0;
             for (pt::ptree::value_type& v : Lmix_db.get_child("L2"))
             {
-                LmixABC[2][i] = v.second.get_value<double>();
+                LmixABC[2][i] = v.second.get_value<CalphadDataType>();
                 i++;
             }
         }
@@ -207,17 +209,17 @@ double CALPHADFreeEnergyFunctionsTernary::computeFreeEnergy(
     const double conc0 = conc[0];
     const double conc1 = conc[1];
 
-    double lAB[4]
+    CalphadDataType lAB[4]
         = { lmix0ABPhase(pi, temperature), lmix1ABPhase(pi, temperature),
               lmix2ABPhase(pi, temperature), lmix3ABPhase(pi, temperature) };
-    double lAC[4]
+    CalphadDataType lAC[4]
         = { lmix0ACPhase(pi, temperature), lmix1ACPhase(pi, temperature),
               lmix2ACPhase(pi, temperature), lmix3ACPhase(pi, temperature) };
-    double lBC[4]
+    CalphadDataType lBC[4]
         = { lmix0BCPhase(pi, temperature), lmix1BCPhase(pi, temperature),
               lmix2BCPhase(pi, temperature), lmix3BCPhase(pi, temperature) };
 
-    double lABC[3] = { lmix0ABCPhase(pi, temperature),
+    CalphadDataType lABC[3] = { lmix0ABCPhase(pi, temperature),
         lmix1ABCPhase(pi, temperature), lmix2ABCPhase(pi, temperature) };
 
     CALPHADSpeciesPhaseGibbsEnergy* g_species;
@@ -264,17 +266,17 @@ void CALPHADFreeEnergyFunctionsTernary::computeDerivFreeEnergy(
     const double temperature, const double* const conc, const PhaseIndex pi,
     double* deriv)
 {
-    double lAB[4]
+    CalphadDataType lAB[4]
         = { lmix0ABPhase(pi, temperature), lmix1ABPhase(pi, temperature),
               lmix2ABPhase(pi, temperature), lmix3ABPhase(pi, temperature) };
-    double lAC[4]
+    CalphadDataType lAC[4]
         = { lmix0ACPhase(pi, temperature), lmix1ACPhase(pi, temperature),
               lmix2ACPhase(pi, temperature), lmix3ACPhase(pi, temperature) };
-    double lBC[4]
+    CalphadDataType lBC[4]
         = { lmix0BCPhase(pi, temperature), lmix1BCPhase(pi, temperature),
               lmix2BCPhase(pi, temperature), lmix3BCPhase(pi, temperature) };
 
-    double lABC[3] = { lmix0ABCPhase(pi, temperature),
+    CalphadDataType lABC[3] = { lmix0ABCPhase(pi, temperature),
         lmix1ABCPhase(pi, temperature), lmix2ABCPhase(pi, temperature) };
 
     CALPHADSpeciesPhaseGibbsEnergy* g_species;
@@ -322,15 +324,15 @@ void CALPHADFreeEnergyFunctionsTernary::computeSecondDerivativeFreeEnergy(
     // assert(conc[1] >= 0.);
     // assert(conc[1] <= 1.);
 
-    double lAB[4]   = { lmix0ABPhase(pi, temp), lmix1ABPhase(pi, temp),
+    CalphadDataType lAB[4]  = { lmix0ABPhase(pi, temp), lmix1ABPhase(pi, temp),
         lmix2ABPhase(pi, temp), lmix3ABPhase(pi, temp) };
-    double lAC[4]   = { lmix0ACPhase(pi, temp), lmix1ACPhase(pi, temp),
+    CalphadDataType lAC[4]  = { lmix0ACPhase(pi, temp), lmix1ACPhase(pi, temp),
         lmix2ACPhase(pi, temp), lmix3ACPhase(pi, temp) };
-    double lBC[4]   = { lmix0BCPhase(pi, temp), lmix1BCPhase(pi, temp),
+    CalphadDataType lBC[4]  = { lmix0BCPhase(pi, temp), lmix1BCPhase(pi, temp),
         lmix2BCPhase(pi, temp), lmix3BCPhase(pi, temp) };
-    double lABC[3]  = { lmix0ABCPhase(pi, temp), lmix1ABCPhase(pi, temp),
-        lmix2ABCPhase(pi, temp) };
-    const double rt = gas_constant_R_JpKpmol * temp;
+    CalphadDataType lABC[3] = { lmix0ABCPhase(pi, temp),
+        lmix1ABCPhase(pi, temp), lmix2ABCPhase(pi, temp) };
+    const double rt         = gas_constant_R_JpKpmol * temp;
 
     double deriv1[4];
     CALPHADcomputeFIdealMix_deriv2Ternary(rt, conc[0], conc[1], &deriv1[0]);
@@ -348,9 +350,10 @@ void CALPHADFreeEnergyFunctionsTernary::computeSecondDerivativeFreeEnergy(
 //=======================================================================
 
 void CALPHADFreeEnergyFunctionsTernary::computeTdependentParameters(
-    const double temperature, double* L_AB_L, double* L_AC_L, double* L_BC_L,
-    double* L_ABC_L, double* L_AB_S, double* L_AC_S, double* L_BC_S,
-    double* L_ABC_S, double* fA, double* fB, double* fC)
+    const double temperature, CalphadDataType* L_AB_L, CalphadDataType* L_AC_L,
+    CalphadDataType* L_BC_L, CalphadDataType* L_ABC_L, CalphadDataType* L_AB_S,
+    CalphadDataType* L_AC_S, CalphadDataType* L_BC_S, CalphadDataType* L_ABC_S,
+    CalphadDataType* fA, CalphadDataType* fB, CalphadDataType* fC)
 {
     fA[0] = g_species_phaseL_[0].fenergy(temperature);
     fB[0] = g_species_phaseL_[1].fenergy(temperature);
@@ -407,21 +410,21 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(
     //              << std::endl;
     // assert(temperature > 0.);
 
-    double L_AB_L[4];
-    double L_AC_L[4];
-    double L_BC_L[4];
+    CalphadDataType L_AB_L[4];
+    CalphadDataType L_AC_L[4];
+    CalphadDataType L_BC_L[4];
 
-    double L_ABC_L[3];
+    CalphadDataType L_ABC_L[3];
 
-    double L_AB_S[4];
-    double L_AC_S[4];
-    double L_BC_S[4];
+    CalphadDataType L_AB_S[4];
+    CalphadDataType L_AC_S[4];
+    CalphadDataType L_BC_S[4];
 
-    double L_ABC_S[3];
+    CalphadDataType L_ABC_S[3];
 
-    double fA[2];
-    double fB[2];
-    double fC[2];
+    CalphadDataType fA[2];
+    CalphadDataType fB[2];
+    CalphadDataType fC[2];
 
     computeTdependentParameters(temperature, L_AB_L, L_AC_L, L_BC_L, L_ABC_L,
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
@@ -459,21 +462,21 @@ bool CALPHADFreeEnergyFunctionsTernary::computeTieLine(const double temperature,
     const double c0, const double c1, double* ceq, const int maxits,
     const bool verbose)
 {
-    double L_AB_L[4];
-    double L_AC_L[4];
-    double L_BC_L[4];
+    CalphadDataType L_AB_L[4];
+    CalphadDataType L_AC_L[4];
+    CalphadDataType L_BC_L[4];
 
-    double L_ABC_L[3];
+    CalphadDataType L_ABC_L[3];
 
-    double L_AB_S[4];
-    double L_AC_S[4];
-    double L_BC_S[4];
+    CalphadDataType L_AB_S[4];
+    CalphadDataType L_AC_S[4];
+    CalphadDataType L_BC_S[4];
 
-    double L_ABC_S[3];
+    CalphadDataType L_ABC_S[3];
 
-    double fA[2];
-    double fB[2];
-    double fC[2];
+    CalphadDataType fA[2];
+    CalphadDataType fB[2];
+    CalphadDataType fC[2];
 
     computeTdependentParameters(temperature, L_AB_L, L_AC_L, L_BC_L, L_ABC_L,
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
@@ -515,21 +518,21 @@ void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
 
     double cauxilliary[4] = { conc0, conc1, conc0, conc1 };
 
-    double L_AB_L[4];
-    double L_AC_L[4];
-    double L_BC_L[4];
+    CalphadDataType L_AB_L[4];
+    CalphadDataType L_AC_L[4];
+    CalphadDataType L_BC_L[4];
 
-    double L_ABC_L[3];
+    CalphadDataType L_ABC_L[3];
 
-    double L_AB_S[4];
-    double L_AC_S[4];
-    double L_BC_S[4];
+    CalphadDataType L_AB_S[4];
+    CalphadDataType L_AC_S[4];
+    CalphadDataType L_BC_S[4];
 
-    double L_ABC_S[3];
+    CalphadDataType L_ABC_S[3];
 
-    double fA[2];
-    double fB[2];
-    double fC[2];
+    CalphadDataType fA[2];
+    CalphadDataType fB[2];
+    CalphadDataType fC[2];
 
     computeTdependentParameters(temperature, L_AB_L, L_AC_L, L_BC_L, L_ABC_L,
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
@@ -579,21 +582,21 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
 
     const double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
 
-    double L_AB_L[4];
-    double L_AC_L[4];
-    double L_BC_L[4];
+    CalphadDataType L_AB_L[4];
+    CalphadDataType L_AC_L[4];
+    CalphadDataType L_BC_L[4];
 
-    double L_ABC_L[3];
+    CalphadDataType L_ABC_L[3];
 
-    double L_AB_S[4];
-    double L_AC_S[4];
-    double L_BC_S[4];
+    CalphadDataType L_AB_S[4];
+    CalphadDataType L_AC_S[4];
+    CalphadDataType L_BC_S[4];
 
-    double L_ABC_S[3];
+    CalphadDataType L_ABC_S[3];
 
-    double fA[2];
-    double fB[2];
-    double fC[2];
+    CalphadDataType fA[2];
+    CalphadDataType fB[2];
+    CalphadDataType fC[2];
 
     computeTdependentParameters(temperature, L_AB_L, L_AC_L, L_BC_L, L_ABC_L,
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);

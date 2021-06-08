@@ -4,6 +4,7 @@
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 #include "InterpolationType.h"
 #include "Phases.h"
+#include "datatypes.h"
 #include "functions.h"
 
 #include <boost/property_tree/ptree.hpp>
@@ -65,10 +66,12 @@ private:
 
     void readNewtonparameters(boost::property_tree::ptree& newton_db);
 
-    void computeTdependentParameters(const double temperature, double* L_AB_L,
-        double* L_AC_L, double* L_BC_L, double* L_ABC_L, double* L_AB_S,
-        double* L_AC_S, double* L_BC_S, double* L_ABC_S, double* fA, double* fB,
-        double* fC);
+    void computeTdependentParameters(const double temperature,
+        CalphadDataType* L_AB_L, CalphadDataType* L_AC_L,
+        CalphadDataType* L_BC_L, CalphadDataType* L_ABC_L,
+        CalphadDataType* L_AB_S, CalphadDataType* L_AC_S,
+        CalphadDataType* L_BC_S, CalphadDataType* L_ABC_S, CalphadDataType* fA,
+        CalphadDataType* fB, CalphadDataType* fC);
 
     char* fenergy_diag_filename_;
 
@@ -84,17 +87,17 @@ private:
 
     // size 4 for L0, L1, L2, L3, with 2 coefficient for linear expansion in T
     // a+b*T
-    double LmixABPhaseL_[4][2];
-    double LmixABPhaseA_[4][2];
+    CalphadDataType LmixABPhaseL_[4][2];
+    CalphadDataType LmixABPhaseA_[4][2];
 
-    double LmixACPhaseL_[4][2];
-    double LmixACPhaseA_[4][2];
+    CalphadDataType LmixACPhaseL_[4][2];
+    CalphadDataType LmixACPhaseA_[4][2];
 
-    double LmixBCPhaseL_[4][2];
-    double LmixBCPhaseA_[4][2];
+    CalphadDataType LmixBCPhaseL_[4][2];
+    CalphadDataType LmixBCPhaseA_[4][2];
 
-    double LmixABCPhaseL_[3][2];
-    double LmixABCPhaseA_[3][2];
+    CalphadDataType LmixABCPhaseL_[3][2];
+    CalphadDataType LmixABCPhaseA_[3][2];
 
     double (*fun_ptr_arr_[3])(const double){ linear_interp_func,
         pbg_interp_func, harmonic_interp_func };
@@ -114,7 +117,7 @@ private:
         return g_species_phaseA_[is].fenergy(temperature);
     }
 
-    double lmix0ABPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix0ABPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -127,7 +130,7 @@ private:
         }
     }
 
-    double lmix1ABPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix1ABPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -140,7 +143,7 @@ private:
         }
     }
 
-    double lmix2ABPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix2ABPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -153,7 +156,7 @@ private:
         }
     }
 
-    double lmix3ABPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix3ABPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -166,47 +169,47 @@ private:
         }
     }
 
-    double lmix0ABPhaseL(const double temperature)
+    CalphadDataType lmix0ABPhaseL(const double temperature)
     {
         return LmixABPhaseL_[0][0] + LmixABPhaseL_[0][1] * temperature;
     }
 
-    double lmix1ABPhaseL(const double temperature)
+    CalphadDataType lmix1ABPhaseL(const double temperature)
     {
         return LmixABPhaseL_[1][0] + LmixABPhaseL_[1][1] * temperature;
     }
 
-    double lmix2ABPhaseL(const double temperature)
+    CalphadDataType lmix2ABPhaseL(const double temperature)
     {
         return LmixABPhaseL_[2][0] + LmixABPhaseL_[2][1] * temperature;
     }
 
-    double lmix3ABPhaseL(const double temperature)
+    CalphadDataType lmix3ABPhaseL(const double temperature)
     {
         return LmixABPhaseL_[3][0] + LmixABPhaseL_[3][1] * temperature;
     }
 
-    double lmix0ABPhaseA(const double temperature)
+    CalphadDataType lmix0ABPhaseA(const double temperature)
     {
         return LmixABPhaseA_[0][0] + LmixABPhaseA_[0][1] * temperature;
     }
 
-    double lmix1ABPhaseA(const double temperature)
+    CalphadDataType lmix1ABPhaseA(const double temperature)
     {
         return LmixABPhaseA_[1][0] + LmixABPhaseA_[1][1] * temperature;
     }
 
-    double lmix2ABPhaseA(const double temperature)
+    CalphadDataType lmix2ABPhaseA(const double temperature)
     {
         return LmixABPhaseA_[2][0] + LmixABPhaseA_[2][1] * temperature;
     }
 
-    double lmix3ABPhaseA(const double temperature)
+    CalphadDataType lmix3ABPhaseA(const double temperature)
     {
         return LmixABPhaseA_[3][0] + LmixABPhaseA_[3][1] * temperature;
     }
 
-    double lmix0ACPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix0ACPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -219,7 +222,7 @@ private:
         }
     }
 
-    double lmix1ACPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix1ACPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -232,7 +235,7 @@ private:
         }
     }
 
-    double lmix2ACPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix2ACPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -245,7 +248,7 @@ private:
         }
     }
 
-    double lmix3ACPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix3ACPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -258,47 +261,47 @@ private:
         }
     }
 
-    double lmix0ACPhaseL(const double temperature)
+    CalphadDataType lmix0ACPhaseL(const double temperature)
     {
         return LmixACPhaseL_[0][0] + LmixACPhaseL_[0][1] * temperature;
     }
 
-    double lmix1ACPhaseL(const double temperature)
+    CalphadDataType lmix1ACPhaseL(const double temperature)
     {
         return LmixACPhaseL_[1][0] + LmixACPhaseL_[1][1] * temperature;
     }
 
-    double lmix2ACPhaseL(const double temperature)
+    CalphadDataType lmix2ACPhaseL(const double temperature)
     {
         return LmixACPhaseL_[2][0] + LmixACPhaseL_[2][1] * temperature;
     }
 
-    double lmix3ACPhaseL(const double temperature)
+    CalphadDataType lmix3ACPhaseL(const double temperature)
     {
         return LmixACPhaseL_[3][0] + LmixACPhaseL_[3][1] * temperature;
     }
 
-    double lmix0ACPhaseA(const double temperature)
+    CalphadDataType lmix0ACPhaseA(const double temperature)
     {
         return LmixACPhaseA_[0][0] + LmixACPhaseA_[0][1] * temperature;
     }
 
-    double lmix1ACPhaseA(const double temperature)
+    CalphadDataType lmix1ACPhaseA(const double temperature)
     {
         return LmixACPhaseA_[1][0] + LmixACPhaseA_[1][1] * temperature;
     }
 
-    double lmix2ACPhaseA(const double temperature)
+    CalphadDataType lmix2ACPhaseA(const double temperature)
     {
         return LmixACPhaseA_[2][0] + LmixACPhaseA_[2][1] * temperature;
     }
 
-    double lmix3ACPhaseA(const double temperature)
+    CalphadDataType lmix3ACPhaseA(const double temperature)
     {
         return LmixACPhaseA_[3][0] + LmixACPhaseA_[3][1] * temperature;
     }
 
-    double lmix0BCPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix0BCPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -311,7 +314,7 @@ private:
         }
     }
 
-    double lmix1BCPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix1BCPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -324,7 +327,7 @@ private:
         }
     }
 
-    double lmix2BCPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix2BCPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -337,7 +340,7 @@ private:
         }
     }
 
-    double lmix3BCPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix3BCPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -350,48 +353,48 @@ private:
         }
     }
 
-    double lmix0BCPhaseL(const double temperature)
+    CalphadDataType lmix0BCPhaseL(const double temperature)
     {
         return LmixBCPhaseL_[0][0] + LmixBCPhaseL_[0][1] * temperature;
     }
 
-    double lmix1BCPhaseL(const double temperature)
+    CalphadDataType lmix1BCPhaseL(const double temperature)
     {
         return LmixBCPhaseL_[1][0] + LmixBCPhaseL_[1][1] * temperature;
     }
 
-    double lmix2BCPhaseL(const double temperature)
+    CalphadDataType lmix2BCPhaseL(const double temperature)
     {
         return LmixBCPhaseL_[2][0] + LmixBCPhaseL_[2][1] * temperature;
     }
 
-    double lmix3BCPhaseL(const double temperature)
+    CalphadDataType lmix3BCPhaseL(const double temperature)
     {
         return LmixBCPhaseL_[3][0] + LmixBCPhaseL_[3][1] * temperature;
     }
 
-    double lmix0BCPhaseA(const double temperature)
+    CalphadDataType lmix0BCPhaseA(const double temperature)
     {
         return LmixBCPhaseA_[0][0] + LmixBCPhaseA_[0][1] * temperature;
     }
 
-    double lmix1BCPhaseA(const double temperature)
+    CalphadDataType lmix1BCPhaseA(const double temperature)
     {
         return LmixBCPhaseA_[1][0] + LmixBCPhaseA_[1][1] * temperature;
     }
 
-    double lmix2BCPhaseA(const double temperature)
+    CalphadDataType lmix2BCPhaseA(const double temperature)
     {
         return LmixBCPhaseA_[2][0] + LmixBCPhaseA_[2][1] * temperature;
     }
 
-    double lmix3BCPhaseA(const double temperature)
+    CalphadDataType lmix3BCPhaseA(const double temperature)
     {
         return LmixBCPhaseA_[3][0] + LmixBCPhaseA_[3][1] * temperature;
     }
 
     // ABC
-    double lmix0ABCPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix0ABCPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -404,7 +407,7 @@ private:
         }
     }
 
-    double lmix1ABCPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix1ABCPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -417,7 +420,7 @@ private:
         }
     }
 
-    double lmix2ABCPhase(const PhaseIndex pi, const double temperature)
+    CalphadDataType lmix2ABCPhase(const PhaseIndex pi, const double temperature)
     {
         switch (pi)
         {
@@ -431,33 +434,33 @@ private:
     }
 
     // ABC liquid
-    double lmix0ABCPhaseL(const double temperature)
+    CalphadDataType lmix0ABCPhaseL(const double temperature)
     {
         return LmixABCPhaseL_[0][0] + LmixABCPhaseL_[0][1] * temperature;
     }
 
-    double lmix1ABCPhaseL(const double temperature)
+    CalphadDataType lmix1ABCPhaseL(const double temperature)
     {
         return LmixABCPhaseL_[1][0] + LmixABCPhaseL_[1][1] * temperature;
     }
 
-    double lmix2ABCPhaseL(const double temperature)
+    CalphadDataType lmix2ABCPhaseL(const double temperature)
     {
         return LmixABCPhaseL_[2][0] + LmixABCPhaseL_[2][1] * temperature;
     }
 
     // ABC solid
-    double lmix0ABCPhaseA(const double temperature)
+    CalphadDataType lmix0ABCPhaseA(const double temperature)
     {
         return LmixABCPhaseA_[0][0] + LmixABCPhaseA_[0][1] * temperature;
     }
 
-    double lmix1ABCPhaseA(const double temperature)
+    CalphadDataType lmix1ABCPhaseA(const double temperature)
     {
         return LmixABCPhaseA_[1][0] + LmixABCPhaseA_[1][1] * temperature;
     }
 
-    double lmix2ABCPhaseA(const double temperature)
+    CalphadDataType lmix2ABCPhaseA(const double temperature)
     {
         return LmixABCPhaseA_[2][0] + LmixABCPhaseA_[2][1] * temperature;
     }
@@ -470,6 +473,6 @@ private:
 };
 
 void readLmixTernaryParameters(
-    boost::property_tree::ptree& Lmix_db, double LmixABC[3][2]);
+    boost::property_tree::ptree& Lmix_db, CalphadDataType LmixABC[3][2]);
 }
 #endif

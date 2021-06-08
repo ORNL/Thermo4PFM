@@ -44,17 +44,17 @@ int main(int argc, char* argv[])
 
     double temperature = 2923.;
 
-    double LmixABPhaseL[4][2];
-    double LmixABPhaseA[4][2];
+    CalphadDataType LmixABPhaseL[4][2];
+    CalphadDataType LmixABPhaseA[4][2];
 
-    double LmixACPhaseL[4][2];
-    double LmixACPhaseA[4][2];
+    CalphadDataType LmixACPhaseL[4][2];
+    CalphadDataType LmixACPhaseA[4][2];
 
-    double LmixBCPhaseL[4][2];
-    double LmixBCPhaseA[4][2];
+    CalphadDataType LmixBCPhaseL[4][2];
+    CalphadDataType LmixBCPhaseA[4][2];
 
-    double LmixABCPhaseL[3][2];
-    double LmixABCPhaseA[3][2];
+    CalphadDataType LmixABCPhaseL[3][2];
+    CalphadDataType LmixABCPhaseA[3][2];
 
     {
         std::string dbnamemixL("LmixABCPhaseL");
@@ -116,49 +116,49 @@ int main(int argc, char* argv[])
         g_species_phaseA[2].initialize("A2", speciesC_db.get_child(dbnameA));
     }
 
-    double fA[2];
+    CalphadDataType fA[2];
     fA[0] = g_species_phaseL[0].fenergy(temperature);
     fA[1] = g_species_phaseA[0].fenergy(temperature);
     // std::cout<<"fA[0]="<<fA[0]<<", fA[1]="<<fA[1]<<std::endl;
 
-    double fB[2];
+    CalphadDataType fB[2];
     fB[0] = g_species_phaseL[1].fenergy(temperature);
     fB[1] = g_species_phaseA[1].fenergy(temperature);
     // std::cout<<"fB[0]="<<fB[0]<<", fB[1]="<<fB[1]<<std::endl;
 
-    double fC[2];
+    CalphadDataType fC[2];
     fC[0] = g_species_phaseL[2].fenergy(temperature);
     fC[1] = g_species_phaseA[2].fenergy(temperature);
 
-    double L_AB_L[4];
+    CalphadDataType L_AB_L[4];
     for (int i = 0; i < 4; i++)
         L_AB_L[i] = LmixABPhaseL[i][0] + temperature * LmixABPhaseL[i][1];
 
-    double L_AB_S[4];
+    CalphadDataType L_AB_S[4];
     for (int i = 0; i < 4; i++)
         L_AB_S[i] = LmixABPhaseA[i][0] + temperature * LmixABPhaseA[i][1];
 
-    double L_AC_L[4];
+    CalphadDataType L_AC_L[4];
     for (int i = 0; i < 4; i++)
         L_AC_L[i] = LmixACPhaseL[i][0] + temperature * LmixACPhaseL[i][1];
 
-    double L_AC_S[4];
+    CalphadDataType L_AC_S[4];
     for (int i = 0; i < 4; i++)
         L_AC_S[i] = LmixACPhaseA[i][0] + temperature * LmixACPhaseA[i][1];
 
-    double L_BC_L[4];
+    CalphadDataType L_BC_L[4];
     for (int i = 0; i < 4; i++)
         L_BC_L[i] = LmixBCPhaseL[i][0] + temperature * LmixBCPhaseL[i][1];
 
-    double L_BC_S[4];
+    CalphadDataType L_BC_S[4];
     for (int i = 0; i < 4; i++)
         L_BC_S[i] = LmixBCPhaseA[i][0] + temperature * LmixBCPhaseA[i][1];
 
-    double L_ABC_L[3];
+    CalphadDataType L_ABC_L[3];
     for (int i = 0; i < 3; i++)
         L_ABC_L[i] = LmixABCPhaseL[i][0] + temperature * LmixABCPhaseL[i][1];
 
-    double L_ABC_S[3];
+    CalphadDataType L_ABC_S[3];
     for (int i = 0; i < 3; i++)
         L_ABC_S[i] = LmixABCPhaseA[i][0] + temperature * LmixABCPhaseA[i][1];
 

@@ -69,7 +69,7 @@ void CALPHADEqConcSolverTernary::RHS(const double* const c, double* const fvec)
 //=======================================================================
 
 void CALPHADEqConcSolverTernary::Jacobian(
-    const double* const c, float** const fjac)
+    const double* const c, JacobianDataType** const fjac)
 {
     // tbox::pout<<"Compute Jacobian for CALPHAD..."<<endl;
     const double* const cL = &c[0];
@@ -166,11 +166,12 @@ void CALPHADEqConcSolverTernary::Jacobian(
 //=======================================================================
 
 void CALPHADEqConcSolverTernary::setup(const double RTinv,
-    const double* const L_AB_L, const double* const L_AC_L,
-    const double* const L_BC_L, const double* const L_AB_S,
-    const double* const L_AC_S, const double* const L_BC_S,
-    const double* const L_ABC_L, const double* const L_ABC_S,
-    const double* const fA, const double* const fB, const double* const fC)
+    const CalphadDataType* const L_AB_L, const CalphadDataType* const L_AC_L,
+    const CalphadDataType* const L_BC_L, const CalphadDataType* const L_AB_S,
+    const CalphadDataType* const L_AC_S, const CalphadDataType* const L_BC_S,
+    const CalphadDataType* const L_ABC_L, const CalphadDataType* const L_ABC_S,
+    const CalphadDataType* const fA, const CalphadDataType* const fB,
+    const CalphadDataType* const fC)
 {
     RTinv_ = RTinv;
     RT_    = 1. / RTinv;

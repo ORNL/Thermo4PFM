@@ -78,11 +78,11 @@ TEST_CASE("CALPHADternaryTieLine", "[CALPHADternaryTieLine]")
         std::cout << "Solid fraction: " << lceq[4] << std::endl;
 
         // test values
-        const double tol = 1.e-6;
+        const double tol = 1.e-5;
         CHECK(lceq[0] == Approx(expected_cl[itest][0]).margin(tol));
         CHECK(lceq[1] == Approx(expected_cl[itest][1]).margin(tol));
         CHECK(lceq[2] == Approx(expected_cs[itest][0]).margin(tol));
         CHECK(lceq[3] == Approx(expected_cs[itest][1]).margin(tol));
-        CHECK(lceq[4] == Approx(expected_fs[itest]).margin(tol));
+        CHECK(lceq[4] == Approx(expected_fs[itest]).margin(1.e-4));
     }
 }

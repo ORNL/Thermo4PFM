@@ -4,6 +4,7 @@
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 #include "InterpolationType.h"
 #include "Phases.h"
+#include "datatypes.h"
 #include "functions.h"
 
 #include <boost/property_tree/ptree.hpp>
@@ -61,8 +62,9 @@ private:
 
     void readNewtonparameters(boost::property_tree::ptree& newton_db);
 
-    void computeTdependentParameters(const double temperature, double* Lmix_L,
-        double* Lmix_A, double* fA, double* fB);
+    void computeTdependentParameters(const double temperature,
+        CalphadDataType* Lmix_L, CalphadDataType* Lmix_A, CalphadDataType* fA,
+        CalphadDataType* fB);
 
     char* fenergy_diag_filename_;
 
@@ -79,8 +81,8 @@ private:
     // size 4 for L0, L1, L2, L3,
     // can contain up to 3 coefficients a,b,c for a+b*T,
     // possibly +c*T*ln(T) if compiled with -DLMIX_WTLOGT
-    double LmixPhaseL_[4][MAX_POL_T_INDEX];
-    double LmixPhaseA_[4][MAX_POL_T_INDEX];
+    CalphadDataType LmixPhaseL_[4][MAX_POL_T_INDEX];
+    CalphadDataType LmixPhaseA_[4][MAX_POL_T_INDEX];
 
     double (*fun_ptr_arr_[3])(const double){ linear_interp_func,
         pbg_interp_func, harmonic_interp_func };
@@ -100,7 +102,7 @@ private:
         return g_species_phaseA_[is].fenergy(temperature);
     }
 
-    double lmixPhase(
+    CalphadDataType lmixPhase(
         const unsigned index, const PhaseIndex pi, const double temperature)
     {
         // assert(index < 4);

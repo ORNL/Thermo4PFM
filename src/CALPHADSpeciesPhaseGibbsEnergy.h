@@ -10,6 +10,7 @@
 
 namespace Thermo4PFM
 {
+typedef double coeffsdatatype;
 
 class CALPHADSpeciesPhaseGibbsEnergy
 {
@@ -17,7 +18,7 @@ private:
     char* name_;
     int nintervals_;
     double* tc_;
-    CALPHADSpeciesPhaseGibbsEnergyExpansion* expansion_;
+    CALPHADSpeciesPhaseGibbsEnergyExpansion<coeffsdatatype>* expansion_;
 
 public:
     CALPHADSpeciesPhaseGibbsEnergy()

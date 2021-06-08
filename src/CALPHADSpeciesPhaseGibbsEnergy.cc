@@ -10,11 +10,9 @@
 #define CALPHAD4PFM_ERROR(X)                                                   \
     do                                                                         \
     {                                                                          \
-        /*        std::cerr << "ERROR in file " << __FILE__ << " at line " <<  \
-           __LINE__                                                            \
-                          << std::endl;                                        \
-                std::cerr << "Error Message: " << X << std::endl;              \
-          */                                                                   \
+        std::cerr << "ERROR in file " << __FILE__ << " at line " << __LINE__   \
+                  << std::endl;                                                \
+        std::cerr << "Error Message: " << X << std::endl;                      \
         abort();                                                               \
     } while (0)
 
@@ -137,8 +135,9 @@ void CALPHADSpeciesPhaseGibbsEnergy::initialize(
     double* pdm1 = dm1.data();
     double* pdm9 = dm9.data();
 
-    CALPHADSpeciesPhaseGibbsEnergyExpansion* expansion
-        = new CALPHADSpeciesPhaseGibbsEnergyExpansion[nintervals];
+    CALPHADSpeciesPhaseGibbsEnergyExpansion<coeffsdatatype>* expansion
+        = new CALPHADSpeciesPhaseGibbsEnergyExpansion<
+            coeffsdatatype>[nintervals];
     expansion_ = expansion;
 
 #ifdef HAVE_OPENMP_OFFLOAD
