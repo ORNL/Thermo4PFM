@@ -27,8 +27,9 @@ double CALPHADcomputeFIdealMixTernary(
     const double rt, const double conc0, const double conc1);
 void CALPHADcomputeFIdealMix_derivTernary(
     const double rt, const double cA, const double cB, double* deriv);
+template <typename DataType>
 void CALPHADcomputeFIdealMix_deriv2Ternary(
-    const double rt, const double cA, const double cB, double* deriv);
+    const DataType rt, const DataType cA, const DataType cB, DataType* deriv);
 
 void CALPHADcomputeFMix_derivTernary(const CalphadDataType* lAB,
     const CalphadDataType* lAC, const CalphadDataType* lBC,

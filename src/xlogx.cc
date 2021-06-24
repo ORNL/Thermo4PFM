@@ -44,7 +44,8 @@ double xlogx_deriv(const double x)
     }
 }
 
-double xlogx_deriv2(const double x)
+template <typename DataType>
+DataType xlogx_deriv2(const DataType x)
 {
     if (x > smallx)
     {
@@ -55,6 +56,9 @@ double xlogx_deriv2(const double x)
         return inv_smallx;
     }
 }
+
+template float xlogx_deriv2<float>(const float);
+template double xlogx_deriv2<double>(const double);
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif
