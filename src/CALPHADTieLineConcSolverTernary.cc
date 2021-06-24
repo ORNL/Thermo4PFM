@@ -105,8 +105,9 @@ void CALPHADTieLineConcSolverTernary::Jacobian(
     CALPHADcomputeFMix_derivTernary(
         L_AB_L_, L_AC_L_, L_BC_L_, L_ABC_L_, cL[0], cL[1], derivFMixL);
 
-    double deriv2IdealMixL[4];
-    CALPHADcomputeFIdealMix_deriv2Ternary(RT_, cL[0], cL[1], deriv2IdealMixL);
+    JacobianDataType deriv2IdealMixL[4];
+    CALPHADcomputeFIdealMix_deriv2Ternary<JacobianDataType>(
+        RT_, cL[0], cL[1], deriv2IdealMixL);
 
     double deriv2FMixL[4];
     CALPHADcomputeFMix_deriv2Ternary(
@@ -133,8 +134,9 @@ void CALPHADTieLineConcSolverTernary::Jacobian(
     CALPHADcomputeFMix_derivTernary(
         L_AB_S_, L_AC_S_, L_BC_S_, L_ABC_S_, cS[0], cS[1], derivFMixS);
 
-    double deriv2IdealMixS[4];
-    CALPHADcomputeFIdealMix_deriv2Ternary(RT_, cS[0], cS[1], deriv2IdealMixS);
+    JacobianDataType deriv2IdealMixS[4];
+    CALPHADcomputeFIdealMix_deriv2Ternary<JacobianDataType>(
+        RT_, cS[0], cS[1], deriv2IdealMixS);
 
     double deriv2FMixS[4];
     CALPHADcomputeFMix_deriv2Ternary(

@@ -78,16 +78,21 @@ double CALPHADcomputeFIdealMix_deriv2Binary(const double rt, const double conc)
     return fmix_deriv2;
 }
 
+template <typename DataType>
 void CALPHADcomputeFIdealMix_deriv2Ternary(
-    const double rt, const double cA, const double cB, double* deriv)
+    const DataType rt, const DataType cA, const DataType cB, DataType* deriv)
 {
-    deriv[0] = rt * (xlogx_deriv2(cA) + xlogx_deriv2(1.0 - cA - cB));
+    deriv[0] = rt
+               * (xlogx_deriv2<DataType>(cA)
+                     + xlogx_deriv2<DataType>(1.0 - cA - cB));
 
-    deriv[1] = rt * (xlogx_deriv2(1.0 - cA - cB));
+    deriv[1] = rt * (xlogx_deriv2<DataType>(1.0 - cA - cB));
 
     deriv[2] = deriv[1];
 
-    deriv[3] = rt * (xlogx_deriv2(cB) + xlogx_deriv2(1.0 - cA - cB));
+    deriv[3] = rt
+               * (xlogx_deriv2<DataType>(cB)
+                     + xlogx_deriv2<DataType>(1.0 - cA - cB));
 }
 
 double CALPHADcomputeGMix_mixDeriv2(const CalphadDataType l0,
@@ -485,4 +490,15 @@ void readLmixBinary(
         }
     }
 }
+
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
+template void CALPHADcomputeFIdealMix_deriv2Ternary<float>(
+    const float rt, const float cA, const float cB, float* deriv);
+template void CALPHADcomputeFIdealMix_deriv2Ternary<double>(
+    const double rt, const double cA, const double cB, double* deriv);
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
 }
