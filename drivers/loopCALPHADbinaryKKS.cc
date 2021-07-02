@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
     }
 
 #ifdef HAVE_OPENMP_OFFLOAD
-    double xdev[2 * nintervals];
+    double* xdev = new double[2 * nintervals];
     for (int i = 0; i < 2 * nintervals; i++)
     {
         xdev[i] = -1;
@@ -111,5 +111,7 @@ int main(int argc, char* argv[])
         std::cout << "Device: x=" << xdev[2 * i] << "," << xdev[2 * i + 1]
                   << std::endl;
     }
+    delete[] xdev;
 #endif
+    delete[] nits;
 }
