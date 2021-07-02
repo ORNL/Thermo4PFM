@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
 
     double deviation = 1.e-4;
 
-    double xhost[2 * N];
+    double* xhost = new double[2 * N];
     for (int i = 0; i < 2 * N; i++)
     {
         xhost[i] = -1.;
@@ -108,8 +108,8 @@ int main(int argc, char* argv[])
 
     // Host solve
     {
-        short nits[N];
-        auto t1 = Clock::now();
+        short* nits = new short[N];
+        auto t1     = Clock::now();
 
 #pragma omp parallel for
         for (int i = 0; i < N; i++)
@@ -141,17 +141,18 @@ int main(int argc, char* argv[])
                       << std::endl;
             std::cout << "nits=" << nits[i] << std::endl;
         }
+        delete[] nits;
     }
 
     // Device solve
     {
-        double xdev[2 * N];
+        double* xdev = new double[2 * N];
         for (int i = 0; i < 2 * N; i++)
         {
             xdev[i] = -1;
         }
 
-        short nits[N];
+        short* nits = new short[N];
 
         auto t1 = Clock::now();
 
@@ -199,5 +200,9 @@ int main(int argc, char* argv[])
                 std::cout << "nits[" << i << "]=" << nits[i] << std::endl;
             }
         }
+        delete[] nits;
+        delete[] xdev;
     }
+
+    delete[] xhost;
 }

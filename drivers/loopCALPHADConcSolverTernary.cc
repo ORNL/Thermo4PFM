@@ -169,7 +169,7 @@ int main(int argc, char* argv[])
 
     const double deviation = 1.e-4;
 
-    double xhost[4 * N];
+    double* xhost = new double[4 * N];
     for (int i = 0; i < 4 * N; i++)
     {
         xhost[i] = -1.;
@@ -177,8 +177,8 @@ int main(int argc, char* argv[])
 
     // Host solve
     {
-        short nits[N];
-        auto t1 = Clock::now();
+        short* nits = new short[N];
+        auto t1     = Clock::now();
 
 #pragma omp parallel for
         for (int i = 0; i < N; i++)
@@ -213,28 +213,29 @@ int main(int argc, char* argv[])
                       << std::endl;
             std::cout << "nits=" << nits[i] << std::endl;
         }
+        delete[] nits;
     }
 
 #ifdef HAVE_OPENMP_OFFLOAD
     // Device solve
     {
-        double xdev[4 * N];
+        double* xdev = new double[4 * N];
         for (int i = 0; i < 4 * N; i++)
         {
             xdev[i] = -1;
         }
 
-        short nits[N];
+        short* nits = new short[N];
 
         auto t1 = Clock::now();
 
 // clang-format off
 #pragma omp target map(to : sol) \
-                   map(tofrom : xdev) \
+                   map(tofrom : xdev[:4*N]) \
                    map(to : fA, fB, fC) \
                    map(to : L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S, L_BC_S, L_ABC_L, L_ABC_S) \
                    map(to : RTinv) \
-                   map(from : nits)
+                   map(from : nits[:N])
         // clang-format on
         {
 #pragma omp teams distribute parallel for
@@ -281,6 +282,9 @@ int main(int argc, char* argv[])
                 std::cout << "nits[" << i << "]=" << nits[i] << std::endl;
             }
         }
+        delete[] xdev;
+        delete[] nits;
     }
 #endif
+    delete[] xhost;
 }
