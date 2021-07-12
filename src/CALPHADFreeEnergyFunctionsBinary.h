@@ -25,7 +25,7 @@ public:
         const EnergyInterpolationType energy_interp_func_type,
         const ConcInterpolationType conc_interp_func_type);
 
-    ~CALPHADFreeEnergyFunctionsBinary(){};
+    ~CALPHADFreeEnergyFunctionsBinary() {};
 
     double computeFreeEnergy(const double temperature, const double* const conc,
         const PhaseIndex pi, const bool gp = false);
@@ -56,15 +56,15 @@ public:
         const double phi_well_scale, const int npts, const double slopec,
         std::ostream& os);
 
+    void computeTdependentParameters(const double temperature,
+        CalphadDataType* Lmix_L, CalphadDataType* Lmix_A, CalphadDataType* fA,
+        CalphadDataType* fB);
+
 private:
     EnergyInterpolationType energy_interp_func_type_;
     ConcInterpolationType conc_interp_func_type_;
 
     void readNewtonparameters(boost::property_tree::ptree& newton_db);
-
-    void computeTdependentParameters(const double temperature,
-        CalphadDataType* Lmix_L, CalphadDataType* Lmix_A, CalphadDataType* fA,
-        CalphadDataType* fB);
 
     char* fenergy_diag_filename_;
 
@@ -84,7 +84,7 @@ private:
     CalphadDataType LmixPhaseL_[4][MAX_POL_T_INDEX];
     CalphadDataType LmixPhaseA_[4][MAX_POL_T_INDEX];
 
-    double (*fun_ptr_arr_[3])(const double){ linear_interp_func,
+    double (*fun_ptr_arr_[3])(const double) { linear_interp_func,
         pbg_interp_func, harmonic_interp_func };
 
     void readParameters(boost::property_tree::ptree& calphad_db);
