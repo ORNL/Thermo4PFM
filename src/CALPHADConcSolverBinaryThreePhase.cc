@@ -85,15 +85,15 @@ void CALPHADConcSolverBinaryThreePhase::computeDxiDc(
     // loop over phases
     dxidc[0] = RTinv_
                * CALPHADcomputeFMix_deriv2Binary(
-                   Lmix_L_[0], Lmix_L_[1], Lmix_L_[2], Lmix_L_[3], c[0]);
+                     Lmix_L_[0], Lmix_L_[1], Lmix_L_[2], Lmix_L_[3], c[0]);
 
     dxidc[1] = RTinv_
                * CALPHADcomputeFMix_deriv2Binary(
-                   Lmix_S0_[0], Lmix_S0_[1], Lmix_S0_[2], Lmix_S0_[3], c[1]);
+                     Lmix_S0_[0], Lmix_S0_[1], Lmix_S0_[2], Lmix_S0_[3], c[1]);
 
     dxidc[2] = RTinv_
                * CALPHADcomputeFMix_deriv2Binary(
-                   Lmix_S1_[0], Lmix_S1_[1], Lmix_S1_[2], Lmix_S1_[3], c[2]);
+                     Lmix_S1_[0], Lmix_S1_[1], Lmix_S1_[2], Lmix_S1_[3], c[2]);
 }
 
 //=======================================================================

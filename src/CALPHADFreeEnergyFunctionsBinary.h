@@ -25,7 +25,7 @@ public:
         const EnergyInterpolationType energy_interp_func_type,
         const ConcInterpolationType conc_interp_func_type);
 
-    ~CALPHADFreeEnergyFunctionsBinary() {};
+    ~CALPHADFreeEnergyFunctionsBinary(){};
 
     double computeFreeEnergy(const double temperature, const double* const conc,
         const PhaseIndex pi, const bool gp = false);
@@ -84,7 +84,7 @@ private:
     CalphadDataType LmixPhaseL_[4][MAX_POL_T_INDEX];
     CalphadDataType LmixPhaseA_[4][MAX_POL_T_INDEX];
 
-    double (*fun_ptr_arr_[3])(const double) { linear_interp_func,
+    double (*fun_ptr_arr_[3])(const double){ linear_interp_func,
         pbg_interp_func, harmonic_interp_func };
 
     void readParameters(boost::property_tree::ptree& calphad_db);
