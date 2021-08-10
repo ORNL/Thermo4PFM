@@ -64,8 +64,8 @@ int main(int argc, char* argv[])
             double conc[2] = { init_guess[0], init_guess[1] };
 
             // compute concentrations in each phase
-            nits[i]
-                = cafe->computePhaseConcentrations(temperature, &c0, phi, conc);
+            nits[i] = cafe->computePhaseConcentrations(
+                temperature, &c0, &phi, conc);
 
             std::cout << "Number of Newton iterations: " << nits[i]
                       << std::endl;

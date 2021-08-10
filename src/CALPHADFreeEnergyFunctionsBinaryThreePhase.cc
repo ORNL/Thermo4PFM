@@ -1,6 +1,5 @@
-#include "CALPHADFreeEnergyFunctionsBinary.h"
-#include "CALPHADConcSolverBinary.h"
-#include "CALPHADEqConcSolverBinary.h"
+#include "CALPHADFreeEnergyFunctionsBinaryThreePhase.h"
+#include "CALPHADConcSolverBinaryThreePhase.h"
 #include "CALPHADFunctions.h"
 #include "PhysicalConstants.h"
 #include "functions.h"
@@ -16,10 +15,11 @@ namespace pt = boost::property_tree;
 namespace Thermo4PFM
 {
 
-CALPHADFreeEnergyFunctionsBinary::CALPHADFreeEnergyFunctionsBinary(
-    pt::ptree& calphad_db, boost::optional<pt::ptree&> newton_db,
-    const EnergyInterpolationType energy_interp_func_type,
-    const ConcInterpolationType conc_interp_func_type)
+CALPHADFreeEnergyFunctionsBinaryThreePhase::
+    CALPHADFreeEnergyFunctionsBinaryThreePhase(pt::ptree& calphad_db,
+        boost::optional<pt::ptree&> newton_db,
+        const EnergyInterpolationType energy_interp_func_type,
+        const ConcInterpolationType conc_interp_func_type)
     : energy_interp_func_type_(energy_interp_func_type),
       conc_interp_func_type_(conc_interp_func_type),
       newton_tol_(1.e-8),
@@ -37,8 +37,7 @@ CALPHADFreeEnergyFunctionsBinary::CALPHADFreeEnergyFunctionsBinary(
 }
 
 //=======================================================================
-
-void CALPHADFreeEnergyFunctionsBinary::readNewtonparameters(
+void CALPHADFreeEnergyFunctionsBinaryThreePhase::readNewtonparameters(
     pt::ptree& newton_db)
 {
     newton_tol_     = newton_db.get<double>("tol", newton_tol_);
@@ -48,18 +47,25 @@ void CALPHADFreeEnergyFunctionsBinary::readNewtonparameters(
 }
 
 //=======================================================================
-
-void CALPHADFreeEnergyFunctionsBinary::readParameters(pt::ptree& calphad_db)
+void CALPHADFreeEnergyFunctionsBinaryThreePhase::readParameters(
+    pt::ptree& calphad_db)
 {
-    pt::ptree& species0_db = calphad_db.get_child("SpeciesA");
+    // print database to be read
+    // std::clog << "CALPHAD database..." << std::endl;
+    // pt::write_json(std::clog, calphad_db);
+
+    pt::ptree& speciesA_db = calphad_db.get_child("SpeciesA");
     std::string dbnameL("PhaseL");
-    g_species_phaseL_[0].initialize("L0", species0_db.get_child(dbnameL));
+    g_species_phaseL_[0].initialize("L0", speciesA_db.get_child(dbnameL));
     std::string dbnameA("PhaseA");
-    g_species_phaseA_[0].initialize("A0", species0_db.get_child(dbnameA));
+    g_species_phaseA_[0].initialize("A0", speciesA_db.get_child(dbnameA));
+    std::string dbnameB("PhaseB");
+    g_species_phaseB_[0].initialize("B0", speciesA_db.get_child(dbnameB));
 
     pt::ptree& speciesB_db = calphad_db.get_child("SpeciesB");
     g_species_phaseL_[1].initialize("L1", speciesB_db.get_child(dbnameL));
     g_species_phaseA_[1].initialize("A1", speciesB_db.get_child(dbnameA));
+    g_species_phaseB_[1].initialize("B1", speciesB_db.get_child(dbnameB));
 
     // read Lmix coefficients
     std::string dbnamemixL("LmixPhaseL");
@@ -70,17 +76,16 @@ void CALPHADFreeEnergyFunctionsBinary::readParameters(pt::ptree& calphad_db)
     pt::ptree Lmix1_db = calphad_db.get_child(dbnamemixA);
     readLmixBinary(Lmix1_db, LmixPhaseA_);
 
-    // print database just read
-    // std::clog << "CALPHAD database..." << std::endl;
-    // pt::write_json(std::clog, calphad_db);
+    std::string dbnamemixB("LmixPhaseB");
+    pt::ptree Lmix2_db = calphad_db.get_child(dbnamemixB);
+    readLmixBinary(Lmix2_db, LmixPhaseB_);
 }
 
 //-----------------------------------------------------------------------
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
 #endif
-
-double CALPHADFreeEnergyFunctionsBinary::computeFreeEnergy(
+double CALPHADFreeEnergyFunctionsBinaryThreePhase::computeFreeEnergy(
     const double temperature, const double* const conc, const PhaseIndex pi,
     const bool gp)
 {
@@ -98,6 +103,9 @@ double CALPHADFreeEnergyFunctionsBinary::computeFreeEnergy(
             break;
         case PhaseIndex::phaseA:
             g_species = &g_species_phaseA_[0];
+            break;
+        case PhaseIndex::phaseB:
+            g_species = &g_species_phaseB_[0];
             break;
         default:
             //            std::cerr << "CALPHADFreeEnergyFunctionsBinary::"
@@ -126,7 +134,7 @@ double CALPHADFreeEnergyFunctionsBinary::computeFreeEnergy(
 
 //=======================================================================
 
-void CALPHADFreeEnergyFunctionsBinary::computeDerivFreeEnergy(
+void CALPHADFreeEnergyFunctionsBinaryThreePhase::computeDerivFreeEnergy(
     const double temperature, const double* const conc, const PhaseIndex pi,
     double* deriv)
 {
@@ -144,6 +152,9 @@ void CALPHADFreeEnergyFunctionsBinary::computeDerivFreeEnergy(
             break;
         case PhaseIndex::phaseA:
             g_species = &g_species_phaseA_[0];
+            break;
+        case PhaseIndex::phaseB:
+            g_species = &g_species_phaseB_[0];
             break;
         default:
             //            std::cerr << "CALPHADFreeEnergyFunctionsBinary::"
@@ -164,9 +175,9 @@ void CALPHADFreeEnergyFunctionsBinary::computeDerivFreeEnergy(
 
 //=======================================================================
 
-void CALPHADFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
-    const double temp, const double* const conc, const PhaseIndex pi,
-    double* d2fdc2)
+void CALPHADFreeEnergyFunctionsBinaryThreePhase::
+    computeSecondDerivativeFreeEnergy(const double temp,
+        const double* const conc, const PhaseIndex pi, double* d2fdc2)
 {
     // assert(conc[0] >= 0.);
     // assert(conc[0] <= 1.);
@@ -183,9 +194,9 @@ void CALPHADFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
 
 //=======================================================================
 
-void CALPHADFreeEnergyFunctionsBinary::computeTdependentParameters(
+void CALPHADFreeEnergyFunctionsBinaryThreePhase::computeTdependentParameters(
     const double temperature, CalphadDataType* Lmix_L, CalphadDataType* Lmix_A,
-    CalphadDataType* fA, CalphadDataType* fB)
+    CalphadDataType* Lmix_B, CalphadDataType* fA, CalphadDataType* fB)
 {
     fA[0]     = g_species_phaseL_[0].fenergy(temperature);
     fB[0]     = g_species_phaseL_[1].fenergy(temperature);
@@ -200,20 +211,36 @@ void CALPHADFreeEnergyFunctionsBinary::computeTdependentParameters(
     Lmix_A[1] = lmixPhase(1, PhaseIndex::phaseA, temperature);
     Lmix_A[2] = lmixPhase(2, PhaseIndex::phaseA, temperature);
     Lmix_A[3] = lmixPhase(3, PhaseIndex::phaseA, temperature);
+
+    fA[2]     = g_species_phaseB_[0].fenergy(temperature);
+    fB[2]     = g_species_phaseB_[1].fenergy(temperature);
+    Lmix_B[0] = lmixPhase(0, PhaseIndex::phaseB, temperature);
+    Lmix_B[1] = lmixPhase(1, PhaseIndex::phaseB, temperature);
+    Lmix_B[2] = lmixPhase(2, PhaseIndex::phaseB, temperature);
+    Lmix_B[3] = lmixPhase(3, PhaseIndex::phaseB, temperature);
 }
 
 //=======================================================================
 
 // compute equilibrium concentrations in various phases for given temperature
-bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(
+
+bool CALPHADFreeEnergyFunctionsBinaryThreePhase::computeCeqT(
     const double temperature, double* ceq, const int maxits, const bool verbose)
 {
-#ifndef HAVE_OPENMP_OFFLOAD
-    if (verbose)
-        std::cout << "CALPHADFreeEnergyFunctionsBinary::computeCeqT()"
-                  << std::endl;
-#endif
-    // assert(temperature > 0.);
+    // Not used since the three phases are only in equilibrium at the eutectic
+    // point
+    return false;
+}
+
+//=======================================================================
+
+void CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhasesFreeEnergies(
+    const double temperature, const double* const hphi, const double conc,
+    double& fl, double& fa, double& fb)
+{
+    // std::cout<<"CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies()"<<endl;
+
+    double c[3] = { conc, conc, conc };
 
     // evaluate temperature dependent parameters
     CalphadDataType fA[3];
@@ -221,68 +248,25 @@ bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(
 
     CalphadDataType Lmix_L[4];
     CalphadDataType Lmix_A[4];
+    CalphadDataType Lmix_B[4];
 
-    computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
-
-    double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
-
-    CALPHADEqConcSolverBinary eq_solver;
-
-    eq_solver.setup(RTinv, Lmix_L, Lmix_A, fA, fB);
-    int ret = eq_solver.ComputeConcentration(ceq, newton_tol_, maxits);
-
-#ifndef HAVE_OPENMP_OFFLOAD
-    if (ret >= 0)
-    {
-        if (verbose)
-        {
-            std::cout << "CALPHAD, c_eq phase0=" << ceq[0] << std::endl;
-            std::cout << "CALPHAD, c_eq phase1=" << ceq[1] << std::endl;
-        }
-    }
-    else
-    {
-        std::cout << "CALPHADFreeEnergyFunctionsBinary, WARNING: ceq "
-                     "computation did not converge"
-                  << std::endl;
-    }
-#endif
-
-    return (ret >= 0);
-}
-
-//=======================================================================
-
-void CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
-    const double temperature, const double* const hphi, const double conc,
-    double& fl, double& fa)
-{
-    // std::cout<<"CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies()"<<endl;
-
-    double c[2] = { conc, conc };
-
-    // evaluate temperature dependent parameters
-    CalphadDataType fA[2];
-    CalphadDataType fB[2];
-
-    CalphadDataType Lmix_L[4];
-    CalphadDataType Lmix_A[4];
-    computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
+    computeTdependentParameters(temperature, Lmix_L, Lmix_A, Lmix_B, fA, fB);
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
 
-    CALPHADConcSolverBinary solver;
-    solver.setup(conc, hphi[0], RTinv, Lmix_L, Lmix_A, fA, fB);
+    CALPHADConcSolverBinaryThreePhase solver;
+    solver.setup(
+        conc, hphi[0], hphi[1], hphi[2], RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB);
     int ret = solver.ComputeConcentration(
         c, newton_tol_, newton_maxits_, newton_alpha_);
     if (ret < 0)
     {
 #if 0
         std::cerr << "ERROR in "
-                     "CALPHADFreeEnergyFunctionsBinary::"
+                     "CALPHADFreeEnergyFunctionsBinaryThreePhase::"
                      "computePhasesFreeEnergies()"
                      " ---"
-                  << "conc=" << conc << ", hphi=" << hphi << std::endl;
+                  << "conc=" << conc << ", hphi=" << hphi[0] << std::endl;
         abort();
 #endif
     }
@@ -292,11 +276,14 @@ void CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
 
     // assert(c[1] >= 0.);
     fa = computeFreeEnergy(temperature, &c[1], PhaseIndex::phaseA, false);
+
+    // assert(c[1] >= 0.);
+    fb = computeFreeEnergy(temperature, &c[2], PhaseIndex::phaseB, false);
 }
 
 //-----------------------------------------------------------------------
 
-int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
+int CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhaseConcentrations(
     const double temperature, const double* const conc, const double* const phi,
     double* x)
 {
@@ -307,22 +294,26 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
 
     const double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
 
-    CalphadDataType fA[2];
-    CalphadDataType fB[2];
+    CalphadDataType fA[3];
+    CalphadDataType fB[3];
     CalphadDataType Lmix_L[4];
     CalphadDataType Lmix_A[4];
+    CalphadDataType Lmix_B[4];
 
-    computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
+    computeTdependentParameters(temperature, Lmix_L, Lmix_A, Lmix_B, fA, fB);
 
-    const double hphi = interp_func(conc_interp_func_type_, phi[0]);
+    const double hphi0 = interp_func(conc_interp_func_type_, phi[0]);
+    const double hphi1 = interp_func(conc_interp_func_type_, phi[1]);
+    const double hphi2 = interp_func(conc_interp_func_type_, phi[2]);
 
     // conc could be outside of [0.,1.] in a trial step
     double c0 = conc[0] >= 0. ? conc[0] : 0.;
     c0        = c0 <= 1. ? c0 : 1.;
     // solve system of equations to find (cl,cs) given c0 and hphi
     // x: initial guess and solution
-    CALPHADConcSolverBinary solver;
-    solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
+    CALPHADConcSolverBinaryThreePhase solver;
+    solver.setup(
+        c0, hphi0, hphi1, hphi2, RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB);
     int ret = solver.ComputeConcentration(
         x, newton_tol_, newton_maxits_, newton_alpha_);
 #if 0
@@ -332,7 +323,7 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
                      "CALPHADFreeEnergyFunctionsBinary::"
                      "computePhaseConcentrations() "
                      "failed for conc="
-                  << conc[0] << ", hphi=" << hphi[0] << std::endl;
+                  << conc[0] << ", hphi0=" << hphi0 << ", hphi1=" << hphi1 << ", hphi2=" << hphi2 << std::endl;
         abort();
     }
 #endif
@@ -344,169 +335,125 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
 #endif
 
 //-----------------------------------------------------------------------
-
-void CALPHADFreeEnergyFunctionsBinary::energyVsPhiAndC(const double temperature,
-    const double* const ceq, const bool found_ceq, const double phi_well_scale,
-    const int npts_phi, const int npts_c)
+void CALPHADFreeEnergyFunctionsBinaryThreePhase::energyVsPhiAndC(
+    const double temperature, const double* const ceq, const bool found_ceq,
+    const double phi_well_scale, const int npts_phi, const int npts_c)
 {
-    std::cout << "CALPHADFreeEnergyFunctionsBinary::energyVsPhiAndC()..."
-              << std::endl;
-
-    double slopec = 0.;
-    double fc0    = 0.;
-    double fc1    = 0.;
-    if (found_ceq)
-    {
-        // compute slope of f between equilibrium concentrations
-        // to add slopec*conc to energy later on
-
-        fc0    = computeFreeEnergy(temperature, &ceq[0], PhaseIndex::phaseL);
-        fc1    = computeFreeEnergy(temperature, &ceq[1], PhaseIndex::phaseA);
-        slopec = -(fc1 - fc0) / (ceq[1] - ceq[0]);
-    }
-    std::cout << std::setprecision(8) << "fc0: " << fc0 << "..."
-              << ", fc1: " << fc1 << "..." << std::endl;
-    std::cout << "CALPHADFreeEnergyFunctionsBinary: Use slope: " << slopec
-              << "..." << std::endl;
-
-    // reset cmin, cmax, deltac
-    double cmin   = std::min(ceq[0], ceq[1]);
-    double cmax   = std::max(ceq[0], ceq[1]);
-    double dc     = cmax - cmin;
-    cmin          = std::max(0.25 * cmin, cmin - 0.25 * dc);
-    cmax          = std::min(1. - 0.25 * (1. - cmax), cmax + 0.25 * dc);
-    cmax          = std::max(cmax, cmin + dc);
-    double deltac = (cmax - cmin) / (npts_c - 1);
-
-    std::ofstream tfile(fenergy_diag_filename_, std::ios::out);
-
-    printEnergyVsPhiHeader(
-        temperature, npts_phi, npts_c, cmin, cmax, slopec, tfile);
-
-    for (int i = 0; i < npts_c; i++)
-    {
-        double conc = cmin + deltac * i;
-        printEnergyVsPhi(
-            &conc, temperature, phi_well_scale, npts_phi, slopec, tfile);
-    }
+    // Not implemented because it is ill-defined for a three-phase system.
 }
 
 // Print out free energy as a function of phase
 // for given composition and temperature
 // File format: ASCII VTK, readble with Visit
-void CALPHADFreeEnergyFunctionsBinary::printEnergyVsPhiHeader(
+void CALPHADFreeEnergyFunctionsBinaryThreePhase::printEnergyVsPhiHeader(
     const double temperature, const int nphi, const int nc, const double cmin,
     const double cmax, const double slopec, std::ostream& os) const
 {
-    os << "# vtk DataFile Version 2.0" << std::endl;
-    os << "Free energy + " << slopec << "*c [J/mol] at T=" << temperature
-       << std::endl;
-    os << "ASCII" << std::endl;
-    os << "DATASET STRUCTURED_POINTS" << std::endl;
-
-    os << "DIMENSIONS   " << nphi << " " << nc << " 1" << std::endl;
-    double asp_ratio_c = (nc > 1) ? (cmax - cmin) / (nc - 1) : 1.;
-    os << "ASPECT_RATIO " << 1. / (nphi - 1) << " " << asp_ratio_c << " 1."
-       << std::endl;
-    os << "ORIGIN        0. " << cmin << " 0." << std::endl;
-    os << "POINT_DATA   " << nphi * nc << std::endl;
-    os << "SCALARS energy float 1" << std::endl;
-    os << "LOOKUP_TABLE default" << std::endl;
+    // Not implemented because it is ill-defined for a three-phase system
 }
 
 //=======================================================================
-
-void CALPHADFreeEnergyFunctionsBinary::printEnergyVsPhi(
+void CALPHADFreeEnergyFunctionsBinaryThreePhase::printEnergyVsPhi(
     const double* const conc, const double temperature,
     const double phi_well_scale, const int npts, const double slopec,
     std::ostream& os)
 {
-    // std::cout << "CALPHADFreeEnergyFunctionsBinary::printEnergyVsPhi()..." <<
-    // std::endl;
-    const double dphi = 1.0 / (double)(npts - 1);
-
-    // os << "# phi     f(phi)     for c=" << conc
-    //           << " and T=" << temperature << std::endl;
-    for (int i = 0; i < npts; i++)
-    {
-        const double phi = i * dphi;
-
-        double e       = fchem(&phi, conc, temperature);
-        const double w = phi_well_scale * well_func(phi);
-
-        os << e + w + slopec * conc[0] << std::endl;
-    }
-    // os << std::endl;
+    // Not implemented because it is ill-defined for a three-phase system
 }
 
 //=======================================================================
 // compute free energy in [J/mol]
-double CALPHADFreeEnergyFunctionsBinary::fchem(
+
+double CALPHADFreeEnergyFunctionsBinaryThreePhase::fchem(
     const double* const phi, const double* const conc, const double temperature)
 {
-    const double hcphi = interp_func(conc_interp_func_type_, phi[0]);
+    double hcphi[3];
+    hcphi[0] = interp_func(conc_interp_func_type_, phi[0]);
+    hcphi[1] = interp_func(conc_interp_func_type_, phi[1]);
+    hcphi[2] = interp_func(conc_interp_func_type_, phi[2]);
 
     const double tol = 1.e-8;
     double fl        = 0.;
     double fa        = 0.;
     double fb        = 0.;
-    if ((phi[0] > tol) & (phi[0] < (1. - tol)))
+
+    bool pure_phase_0 = phi[0] > tol;
+    bool pure_phase_1 = phi[1] > tol;
+    bool pure_phase_2 = phi[2] > tol;
+
+    if ((1.0 - phi[0] > tol) && (1.0 - phi[1] > tol) && (1.0 - phi[2] > tol))
     {
-        computePhasesFreeEnergies(temperature, &hcphi, conc[0], fl, fa);
+        computePhasesFreeEnergies(temperature, hcphi, conc[0], fl, fa, fb);
     }
     else
     {
-        if (phi[0] <= tol)
+        if (1.0 - phi[0] <= tol)
         {
             fl = computeFreeEnergy(temperature, conc, PhaseIndex::phaseL);
         }
-        else
+        else if (1.0 - phi[1] <= tol)
         {
             fa = computeFreeEnergy(temperature, conc, PhaseIndex::phaseA);
         }
+        else
+        {
+            fb = computeFreeEnergy(temperature, conc, PhaseIndex::phaseB);
+        }
     }
 
-    const double hfphi = interp_func(energy_interp_func_type_, phi[0]);
+    double hfphi[3];
+    hfphi[0] = interp_func(energy_interp_func_type_, phi[0]);
+    hfphi[1] = interp_func(energy_interp_func_type_, phi[1]);
+    hfphi[2] = interp_func(energy_interp_func_type_, phi[2]);
 
-    double e = (1.0 - hfphi) * fl + hfphi * fa;
+    double e = hfphi[0] * fl + hfphi[1] * fa + hfphi[2];
 
     return e;
 }
 
 //=======================================================================
 
-void CALPHADFreeEnergyFunctionsBinary::printEnergyVsComposition(
+void CALPHADFreeEnergyFunctionsBinaryThreePhase::printEnergyVsComposition(
     const double temperature, std::ostream& os, const int npts)
 {
     const double dc = 1.0 / (double)(npts - 1);
 
-    os << "#phi=0" << std::endl;
+    os << "#phi0=1" << std::endl;
     for (int i = 0; i < npts; i++)
     {
         const double conc = i * dc;
 
-        const double phi = 0.0;
+        const double phi[3] = { 1., 0., 0. };
 
-        double e = fchem(&phi, &conc, temperature);
+        double e = fchem(phi, &conc, temperature);
         os << conc << "\t" << e << std::endl;
     }
     os << std::endl << std::endl;
 
-    os << "#phi=1" << std::endl;
+    os << "#phi1=1" << std::endl;
     for (int i = 0; i < npts; i++)
     {
         const double conc = i * dc;
 
-        const double phi = 1.0;
+        const double phi[3] = { 0., 1., 0. };
+        double e            = fchem(phi, &conc, temperature);
+        os << conc << "\t" << e << std::endl;
+    }
 
-        double e = fchem(&phi, &conc, temperature);
+    os << "#phi2=1" << std::endl;
+    for (int i = 0; i < npts; i++)
+    {
+        const double conc = i * dc;
+
+        const double phi[3] = { 0., 0., 0. };
+        double e            = fchem(phi, &conc, temperature);
         os << conc << "\t" << e << std::endl;
     }
 }
 
 //=======================================================================
 
-void CALPHADFreeEnergyFunctionsBinary::preRunDiagnostics(
+void CALPHADFreeEnergyFunctionsBinaryThreePhase::preRunDiagnostics(
     const double T0, const double T1)
 {
     std::ofstream os1("FlC0vsT.dat", std::ios::out);

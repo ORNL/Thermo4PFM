@@ -7,7 +7,8 @@ namespace Thermo4PFM
 enum class PhaseIndex
 {
     phaseL,
-    phaseA
+    phaseA,
+    phaseB
 };
 }
 

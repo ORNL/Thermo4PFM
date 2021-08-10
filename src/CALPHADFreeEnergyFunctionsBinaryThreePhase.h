@@ -1,5 +1,5 @@
-#ifndef included_CALPHADFreeEnergyFunctionsBinary
-#define included_CALPHADFreeEnergyFunctionsBinary
+#ifndef included_CALPHADFreeEnergyFunctionsBinaryThreePhase
+#define included_CALPHADFreeEnergyFunctionsBinaryThreePhase
 
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 #include "InterpolationType.h"
@@ -17,15 +17,16 @@
 namespace Thermo4PFM
 {
 
-class CALPHADFreeEnergyFunctionsBinary
+class CALPHADFreeEnergyFunctionsBinaryThreePhase
 {
 public:
-    CALPHADFreeEnergyFunctionsBinary(boost::property_tree::ptree& input_db,
+    CALPHADFreeEnergyFunctionsBinaryThreePhase(
+        boost::property_tree::ptree& input_db,
         boost::optional<boost::property_tree::ptree&> newton_db,
         const EnergyInterpolationType energy_interp_func_type,
         const ConcInterpolationType conc_interp_func_type);
 
-    ~CALPHADFreeEnergyFunctionsBinary(){};
+    ~CALPHADFreeEnergyFunctionsBinaryThreePhase(){};
 
     double computeFreeEnergy(const double temperature, const double* const conc,
         const PhaseIndex pi, const bool gp = false);
@@ -57,8 +58,8 @@ public:
         std::ostream& os);
 
     void computeTdependentParameters(const double temperature,
-        CalphadDataType* Lmix_L, CalphadDataType* Lmix_A, CalphadDataType* fA,
-        CalphadDataType* fB);
+        CalphadDataType* Lmix_L, CalphadDataType* Lmix_A,
+        CalphadDataType* Lmix_B, CalphadDataType* fA, CalphadDataType* fB);
 
 private:
     EnergyInterpolationType energy_interp_func_type_;
@@ -77,12 +78,14 @@ private:
     // size 2 for species 0 and 1
     CALPHADSpeciesPhaseGibbsEnergy g_species_phaseL_[2];
     CALPHADSpeciesPhaseGibbsEnergy g_species_phaseA_[2];
+    CALPHADSpeciesPhaseGibbsEnergy g_species_phaseB_[2];
 
     // size 4 for L0, L1, L2, L3,
     // can contain up to 3 coefficients a,b,c for a+b*T,
     // possibly +c*T*ln(T) if compiled with -DLMIX_WTLOGT
     CalphadDataType LmixPhaseL_[4][MAX_POL_T_INDEX];
     CalphadDataType LmixPhaseA_[4][MAX_POL_T_INDEX];
+    CalphadDataType LmixPhaseB_[4][MAX_POL_T_INDEX];
 
     double (*fun_ptr_arr_[3])(const double){ linear_interp_func,
         pbg_interp_func, harmonic_interp_func };
@@ -100,6 +103,10 @@ private:
     double getFenergyPhaseA(const short is, const double temperature)
     {
         return g_species_phaseA_[is].fenergy(temperature);
+    }
+    double getFenergyPhaseB(const short is, const double temperature)
+    {
+        return g_species_phaseB_[is].fenergy(temperature);
     }
 
     CalphadDataType lmixPhase(
@@ -123,6 +130,13 @@ private:
                        + LmixPhaseA_[index][2] * temperature * log(temperature)
 #endif
                     ;
+            case PhaseIndex::phaseB:
+                return LmixPhaseB_[index][0]
+                       + LmixPhaseB_[index][1] * temperature
+#ifdef LMIX_WTLOGT
+                       + LmixPhaseB_[index][2] * temperature * log(temperature)
+#endif
+                    ;
             default:
                 return NAN;
         }
@@ -132,7 +146,8 @@ private:
 #endif
 
     void computePhasesFreeEnergies(const double temperature,
-        const double* const hphi, const double conc, double& fl, double& fa);
+        const double* const hphi, const double conc, double& fl, double& fa,
+        double& fb);
 };
 }
 #endif

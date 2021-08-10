@@ -46,7 +46,7 @@ TEST_CASE("Dilute binary KKS", "[dilute binary kks]")
     double conc        = 0.05;
     double phi         = 0.5;
     double temperature = 1710.;
-    cafe.computePhaseConcentrations(temperature, &conc, phi, &sol[0]);
+    cafe.computePhaseConcentrations(temperature, &conc, &phi, &sol[0]);
 
     std::cout << "-------------------------------" << std::endl;
     std::cout << "Temperature = " << temperature << std::endl;

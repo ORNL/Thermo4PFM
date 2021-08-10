@@ -189,8 +189,8 @@ bool KKSFreeEnergyFunctionDiluteBinary::computeCeqT(
 //=======================================================================
 
 void KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies(
-    const double temperature, const double hphi, const double conc, double& fl,
-    double& fa)
+    const double temperature, const double* const hphi, const double conc,
+    double& fl, double& fa)
 {
     // std::cout<<"KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies()"<<endl;
 
@@ -199,7 +199,7 @@ void KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies(
     double fB = computeFB(temperature);
 
     KKSdiluteBinaryConcSolver solver;
-    solver.setup(conc, hphi, fA_, fB);
+    solver.setup(conc, *hphi, fA_, fB);
     int ret = solver.ComputeConcentration(c, tol_, maxiters_, alpha_);
 
 #ifndef HAVE_OPENMP_OFFLOAD
@@ -209,7 +209,7 @@ void KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies(
                      "KKSFreeEnergyFunctionDiluteBinary::"
                      "computePhasesFreeEnergies() "
                      "---"
-                  << "conc=" << conc << ", hphi=" << hphi << std::endl;
+                  << "conc=" << conc << ", hphi=" << &hphi << std::endl;
         abort();
     }
     assert(c[0] >= 0.);
@@ -223,7 +223,7 @@ void KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies(
 //-----------------------------------------------------------------------
 
 int KKSFreeEnergyFunctionDiluteBinary::computePhaseConcentrations(
-    const double temperature, const double* const conc, const double phi,
+    const double temperature, const double* const conc, const double* const phi,
     double* x)
 
 {
@@ -237,7 +237,7 @@ int KKSFreeEnergyFunctionDiluteBinary::computePhaseConcentrations(
 
     const double conc0 = conc[0];
 
-    const double hphi = interp_func(conc_interp_func_type_, phi);
+    const double hphi = interp_func(conc_interp_func_type_, phi[0]);
 
     const double fB = computeFB(temperature);
 
@@ -343,7 +343,7 @@ void KKSFreeEnergyFunctionDiluteBinary::printEnergyVsPhi(
     {
         const double phi = i * dphi;
 
-        double e       = fchem(phi, conc, temperature);
+        double e       = fchem(&phi, conc, temperature);
         const double w = phi_well_scale * well_func(phi);
 
         os << e + w + slopec * conc[0] << std::endl;
@@ -353,20 +353,20 @@ void KKSFreeEnergyFunctionDiluteBinary::printEnergyVsPhi(
 //=======================================================================
 // compute free energy in [J/mol]
 double KKSFreeEnergyFunctionDiluteBinary::fchem(
-    const double phi, const double* const conc, const double temperature)
+    const double* const phi, const double* const conc, const double temperature)
 {
-    const double hcphi = interp_func(conc_interp_func_type_, phi);
+    const double hcphi = interp_func(conc_interp_func_type_, phi[0]);
 
     const double tol = 1.e-8;
     double fl        = 0.;
     double fa        = 0.;
-    if ((phi > tol) & (phi < (1. - tol)))
+    if ((phi[0] > tol) & (phi[0] < (1. - tol)))
     {
-        computePhasesFreeEnergies(temperature, hcphi, conc[0], fl, fa);
+        computePhasesFreeEnergies(temperature, &hcphi, conc[0], fl, fa);
     }
     else
     {
-        if (phi <= tol)
+        if (phi[0] <= tol)
         {
             fl = computeFreeEnergy(temperature, conc, PhaseIndex::phaseL);
         }
@@ -376,7 +376,7 @@ double KKSFreeEnergyFunctionDiluteBinary::fchem(
         }
     }
 
-    const double hfphi = interp_func(energy_interp_func_type_, phi);
+    const double hfphi = interp_func(energy_interp_func_type_, phi[0]);
     double e           = (1.0 - hfphi) * fl + hfphi * fa;
 
     return e;
@@ -394,7 +394,9 @@ void KKSFreeEnergyFunctionDiluteBinary::printEnergyVsComposition(
     {
         const double conc = i * dc;
 
-        double e = fchem(0., &conc, temperature);
+        const double phi = 0.0;
+
+        double e = fchem(&phi, &conc, temperature);
         os << conc << "\t" << e << std::endl;
     }
     os << std::endl << std::endl;
@@ -404,7 +406,9 @@ void KKSFreeEnergyFunctionDiluteBinary::printEnergyVsComposition(
     {
         const double conc = i * dc;
 
-        double e = fchem(1., &conc, temperature);
+        const double phi = 1.0;
+
+        double e = fchem(&phi, &conc, temperature);
         os << conc << "\t" << e << std::endl;
     }
 }

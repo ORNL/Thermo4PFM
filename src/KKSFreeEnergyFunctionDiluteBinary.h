@@ -35,15 +35,15 @@ public:
     void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.) {}
 
     int computePhaseConcentrations(const double temperature, const double* conc,
-        const double phi, double* x);
+        const double* const phi, double* x);
     void energyVsPhiAndC(const double temperature, const double* const ceq,
         const bool found_ceq, const double phi_well_scale,
         const int npts_phi = 51,
         const int npts_c   = 50); // # of compositions to use (>1)
     void printEnergyVsComposition(
         const double temperature, std::ostream& os, const int npts = 100);
-    double fchem(
-        const double phi, const double* const conc, const double temperature);
+    double fchem(const double* const phi, const double* const conc,
+        const double temperature);
     void printEnergyVsPhiHeader(const double temperature, const int nphi,
         const int nc, const double cmin, const double cmax, const double slopec,
         std::ostream& os) const;
@@ -81,8 +81,8 @@ private:
 
     void readParameters(boost::property_tree::ptree& conc_db);
 
-    void computePhasesFreeEnergies(const double temperature, const double hphi,
-        const double conc, double& fl, double& fa);
+    void computePhasesFreeEnergies(const double temperature,
+        const double* const hphi, const double conc, double& fl, double& fa);
 };
 }
 #endif

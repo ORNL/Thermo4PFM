@@ -511,7 +511,7 @@ bool CALPHADFreeEnergyFunctionsTernary::computeTieLine(const double temperature,
 //=======================================================================
 
 void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
-    const double temperature, const double hphi, const double conc0,
+    const double temperature, const double* const hphi, const double conc0,
     const double conc1, double& fl, double& fa)
 {
     // std::cout<<"CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies()"<<endl;
@@ -539,7 +539,7 @@ void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
     CALPHADConcSolverTernary solver;
-    solver.setup(conc0, conc1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S,
+    solver.setup(conc0, conc1, hphi[0], RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S,
         L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
     int ret
         = solver.ComputeConcentration(cauxilliary, newton_tol_, newton_maxits_);
@@ -551,7 +551,7 @@ void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
                      "computePhasesFreeEnergies() "
                      "---"
                   << "conc0=" << conc0 << ", conc1=" << conc1
-                  << ", hphi=" << hphi << std::endl;
+                  << ", hphi=" << hphi[0] << std::endl;
         abort();
     }
 
@@ -567,7 +567,7 @@ void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
 //-----------------------------------------------------------------------
 // output: x
 int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
-    const double temperature, const double* const conc, const double phi,
+    const double temperature, const double* const conc, const double* const phi,
     double* x)
 {
     // assert(conc[0] == conc[0]);
@@ -602,7 +602,7 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
     // assert(fC[0] == fC[0]);
 
-    const double hphi = interp_func(conc_interp_func_type_, phi);
+    const double hphi = interp_func(conc_interp_func_type_, phi[0]);
 
     // conc could be outside of [0.,1.] in a trial step
     double c0 = conc0 >= 0. ? conc0 : 0.;
@@ -745,7 +745,7 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsPhi(const double* conc,
     {
         const double phi = i * dphi;
 
-        double e       = fchem(phi, conc, temperature);
+        double e       = fchem(&phi, conc, temperature);
         const double w = phi_well_scale * well_func(phi);
 
         os << e + w << std::endl;
@@ -756,26 +756,26 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsPhi(const double* conc,
 //=======================================================================
 // compute free energy in [J/mol]
 double CALPHADFreeEnergyFunctionsTernary::fchem(
-    const double phi, const double* const conc, const double temperature)
+    const double* const phi, const double* const conc, const double temperature)
 {
     const double conc0 = conc[0];
     const double conc1 = conc[1];
 
-    const double hcphi = interp_func(conc_interp_func_type_, phi);
+    const double hcphi = interp_func(conc_interp_func_type_, phi[0]);
 
     const double tol = 1.e-8;
     double fl        = 0.;
     double fa        = 0.;
-    if ((phi > tol) & (phi < 1. - tol))
+    if ((phi[0] > tol) & (phi[0] < 1. - tol))
     {
-        computePhasesFreeEnergies(temperature, hcphi, conc0, conc1, fl, fa);
+        computePhasesFreeEnergies(temperature, &hcphi, conc0, conc1, fl, fa);
     }
     else
     {
         // don't solve for phases concentrations, just compute energy
         // in either phase
         double conc[2] = { conc0, conc1 };
-        if (phi <= tol)
+        if (phi[0] <= tol)
         {
             fl = computeFreeEnergy(temperature, &conc[0], PhaseIndex::phaseL);
         }
@@ -785,7 +785,7 @@ double CALPHADFreeEnergyFunctionsTernary::fchem(
         }
     }
 
-    const double hfphi = interp_func(energy_interp_func_type_, phi);
+    const double hfphi = interp_func(energy_interp_func_type_, phi[0]);
 
     return (1.0 - hfphi) * fl + hfphi * fa;
 }
@@ -808,7 +808,9 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
         conc[0] = i * dc;
         conc[1] = 0.;
 
-        double e = fchem(0., conc, temperature);
+        const double phi = 0.;
+
+        double e = fchem(&phi, conc, temperature);
         os << conc[0] << "\t" << e << std::endl;
     }
     os << std::endl;
@@ -824,7 +826,9 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
         conc[0] = i * dc;
         conc[1] = 0.;
 
-        double e = fchem(1., conc, temperature);
+        const double phi = 1.;
+
+        double e = fchem(&phi, conc, temperature);
         os << conc[0] << "\t" << e << std::endl;
     }
     os << std::endl;
@@ -840,7 +844,9 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
         conc[0] = 0.;
         conc[1] = i * dc;
 
-        double e = fchem(0., conc, temperature);
+        const double phi = 0.;
+
+        double e = fchem(&phi, conc, temperature);
         os << conc[1] << "\t" << e << std::endl;
     }
     os << std::endl;
@@ -856,7 +862,9 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
         conc[0] = 0.;
         conc[1] = i * dc;
 
-        double e = fchem(1., conc, temperature);
+        const double phi = 1.;
+
+        double e = fchem(&phi, conc, temperature);
         os << conc[1] << "\t" << e << std::endl;
     }
     os << std::endl;
@@ -872,7 +880,9 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
         conc[0] = i * dc;
         conc[1] = 1. - i * dc;
 
-        double e = fchem(0., conc, temperature);
+        const double phi = 0.;
+
+        double e = fchem(&phi, conc, temperature);
         os << conc[0] << "\t" << e << std::endl;
     }
     os << std::endl;
@@ -888,7 +898,9 @@ void CALPHADFreeEnergyFunctionsTernary::printEnergyVsComposition(
         conc[0] = i * dc;
         conc[1] = 1. - i * dc;
 
-        double e = fchem(1., conc, temperature);
+        const double phi = 1.;
+
+        double e = fchem(&phi, conc, temperature);
         os << conc[0] << "\t" << e << std::endl;
     }
     os << std::endl;

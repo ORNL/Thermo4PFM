@@ -66,7 +66,8 @@ TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
             double conc[2];
 
             // compute concentrations in each phase
-            cafe->computePhaseConcentrations(temperature, &nominalc, phi, conc);
+            cafe->computePhaseConcentrations(
+                temperature, &nominalc, &phi, conc);
 
             std::cout << "Temperature = " << temperature << std::endl;
             std::cout << "Concentrations: cl = " << conc[0]
@@ -90,7 +91,7 @@ TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
 
         // compute concentrations in each phase
         nitscpu[i] = cafe->computePhaseConcentrations(
-            temperature, &nominalc, phi, conc);
+            temperature, &nominalc, &phi, conc);
 
         CHECK(conc[0] == Approx(cl[i]).margin(1.e-6));
         CHECK(conc[1] == Approx(cs[i]).margin(1.e-6));
@@ -118,7 +119,7 @@ TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
 
         // compute concentrations in each phase
         nits[i] = cafe->computePhaseConcentrations(
-            temperature, &c0, phi, &xdev[2 * i]);
+            temperature, &c0, &phi, &xdev[2 * i]);
     }
 
     for (int i = 0; i < nTintervals + 1; i++)
