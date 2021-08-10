@@ -40,6 +40,7 @@ set(PUBLIC_HEADERS
     xlogx.h
     functions.h
     well_functions.h
+    datatypes.h
     CALPHADFunctions.h
     CALPHADSpeciesPhaseGibbsEnergy.h
     CALPHADSpeciesPhaseGibbsEnergyExpansion.h
