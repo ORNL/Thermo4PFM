@@ -45,15 +45,15 @@ public:
     void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.);
 
     int computePhaseConcentrations(const double temperature,
-        const double* const conc, const double phi, double* x);
+        const double* const conc, const double* const phi, double* x);
     void energyVsPhiAndC(const double temperature, const double* const ceq,
         const bool found_ceq, const double phi_well_scale,
         const int npts_phi = 51,
         const int npts_c   = 50); // number of compositions to use (>1)
     void printEnergyVsComposition(
         const double temperature, std::ostream& os, const int npts = 100);
-    double fchem(
-        const double phi, const double* const conc, const double temperature);
+    double fchem(const double* const phi, const double* const conc,
+        const double temperature);
     void printEnergyVsPhiHeader(const double temperature, const int nphi,
         const int nc0, const int nc1, const double c0min, const double c0max,
         const double c1min, const double c1max, std::ostream& os) const;
@@ -468,8 +468,9 @@ private:
 #pragma omp end declare target
 #endif
 
-    void computePhasesFreeEnergies(const double temperature, const double hphi,
-        const double conc0, const double conc1, double& fl, double& fa);
+    void computePhasesFreeEnergies(const double temperature,
+        const double* const hphi, const double conc0, const double conc1,
+        double& fl, double& fa);
 };
 
 void readLmixTernaryParameters(

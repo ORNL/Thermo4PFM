@@ -15,6 +15,8 @@ add_executable(testCALPHADGibbsEnergy
                ${TEST_DIR}/testCALPHADGibbsEnergy.cc )
 add_executable(testCALPHADbinaryKKS
                ${TEST_DIR}/testCALPHADbinaryKKS.cc )
+add_executable(testCALPHADbinaryKKSThreePhase
+${TEST_DIR}/testCALPHADbinaryKKSThreePhase.cc )
 add_executable(testCALPHADbinaryEquilibrium
                ${TEST_DIR}/testCALPHADbinaryEquilibrium.cc )
 add_executable(testCALPHADConcSolverBinaryThreePhase
@@ -45,6 +47,7 @@ target_link_libraries(testInterpolationFunctions thermo4pfm)
 target_link_libraries(testCALPHADFunctions thermo4pfm)
 target_link_libraries(testCALPHADGibbsEnergy thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKS thermo4pfm)
+target_link_libraries(testCALPHADbinaryKKSThreePhase thermo4pfm)
 target_link_libraries(testCALPHADbinaryEquilibrium thermo4pfm)
 target_link_libraries(testCALPHADConcSolverBinaryThreePhase thermo4pfm)
 target_link_libraries(testCALPHADternaryKKS thermo4pfm)
@@ -81,10 +84,13 @@ add_test(NAME testCALPHADGibbsEnergy
 add_test(NAME testCALPHADbinaryKKS
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADbinaryKKS
          WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testCALPHADbinaryKKSThreePhase
+         COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADbinaryKKSThreePhase
+         WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testCALPHADbinaryEquilibrium
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADbinaryEquilibrium
          WORKING_DIRECTORY ${TEST_DIR})
- add_test(NAME testCALPHADConcSolverBinaryThreePhase
+add_test(NAME testCALPHADConcSolverBinaryThreePhase
           COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADConcSolverBinaryThreePhase
           WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testKKSdiluteBinaryKKS

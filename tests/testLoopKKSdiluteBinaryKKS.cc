@@ -66,7 +66,7 @@ TEST_CASE("Loop dilute binary KKS", "[loop dilute binary kks]")
             sol[0] = c_init0;
             sol[1] = c_init1;
             cafe->computePhaseConcentrations(
-                temperature, &nominalc, phi, &sol[0]);
+                temperature, &nominalc, &phi, &sol[0]);
 
             std::cout << "-------------------------------" << std::endl;
             std::cout << "Temperature = " << temperature << std::endl;
@@ -90,7 +90,7 @@ TEST_CASE("Loop dilute binary KKS", "[loop dilute binary kks]")
 
         // compute concentrations in each phase
         nitscpu[i] = cafe->computePhaseConcentrations(
-            temperature, &nominalc, phi, conc);
+            temperature, &nominalc, &phi, conc);
 
         CHECK(conc[0] == Approx(cl[i]).margin(1.e-6));
         CHECK(conc[1] == Approx(cs[i]).margin(1.e-6));
@@ -122,7 +122,7 @@ TEST_CASE("Loop dilute binary KKS", "[loop dilute binary kks]")
 
         // compute concentrations in each phase
         nits[i] = cafe->computePhaseConcentrations(
-            temperature, &nominalc, phi, &xdev[2 * i]);
+            temperature, &nominalc, &phi, &xdev[2 * i]);
     }
 
     // verify results

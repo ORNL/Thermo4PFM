@@ -70,7 +70,7 @@ TEST_CASE("CALPHAD ternary kks in a loop", "[ternary kks loop]")
                 init_guess[2], init_guess[3] }; // solid
 
             // compute equilibrium concentrations in each phase
-            cafe->computePhaseConcentrations(temperature, nominalc, phi, conc);
+            cafe->computePhaseConcentrations(temperature, nominalc, &phi, conc);
 
             std::cout << "Temperature = " << temperature << std::endl;
             std::cout << "Concentrations: cl = (" << conc[0] << "." << conc[1]
@@ -96,7 +96,7 @@ TEST_CASE("CALPHAD ternary kks in a loop", "[ternary kks loop]")
             init_guess[2], init_guess[3] }; // solid
 
         // compute equilibrium concentrations in each phase
-        cafe->computePhaseConcentrations(temperature, nominalc, phi, &conc[0]);
+        cafe->computePhaseConcentrations(temperature, nominalc, &phi, &conc[0]);
 
         CHECK(conc[0] == Approx(cl[2 * i]).margin(1.e-6));
         CHECK(conc[1] == Approx(cl[2 * i + 1]).margin(1.e-6));
@@ -124,7 +124,7 @@ TEST_CASE("CALPHAD ternary kks in a loop", "[ternary kks loop]")
         xdev[4 * i + 3] = init_guess[3]; // solid
         // compute equilibrium concentrations in each phase
         cafe->computePhaseConcentrations(
-            temperature, nominalc, phi, &xdev[4 * i]);
+            temperature, nominalc, &phi, &xdev[4 * i]);
     }
 
     for (int i = 0; i < nTintervals + 1; i++)

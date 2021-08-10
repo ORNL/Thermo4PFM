@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
         double conc[4] = { init_guess[0], init_guess[1], // liquid
             init_guess[2], init_guess[3] }; // solid
 
-        cafe.computePhaseConcentrations(temperature, nominalc, phi, conc);
+        cafe.computePhaseConcentrations(temperature, nominalc, &phi, conc);
         std::cout << "phi=" << phi << ", nominalc=" << nominalc[0] << ", "
                   << nominalc[1] << std::endl;
         std::cout << "KKS solution: cl = (" << conc[0] << "." << conc[1] << ")"
