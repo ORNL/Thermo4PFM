@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
 
         // compute concentrations in each phase
         nits[i] = cafe->computePhaseConcentrations(
-            temperature, &c0, phi, &xdev[2 * i]);
+            temperature, &c0, &phi, &xdev[2 * i]);
     }
 
     for (int i = 0; i < nintervals; i++)
