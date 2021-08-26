@@ -12,7 +12,9 @@ cd ${BUILD_DIR}
 
 # call cmake
 cmake -DCMAKE_CXX_COMPILER=mpiCC \
+      -DCMAKE_BUILD_TYPE=Release \
       -DWITH_CLANG_FORMAT=ON \
+      -DCMAKE_INSTALL_PREFIX=${HOME}/Thermo4PFM \
       -DCMAKE_PREFIX_PATH=${HOME}/bin \
       ..
 

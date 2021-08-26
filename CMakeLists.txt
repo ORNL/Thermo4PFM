@@ -7,6 +7,9 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Specify the location of additional CMAKE modules
 SET(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
+SET(CMAKE_INSTALL_PREFIX "$(CMAKE_SOURCE_DIR}/install" CACHE PATH
+    "Directory to install Thermo4PFM")
+
 find_package(Boost)
 if(Boost_FOUND)
   include_directories(${Boost_INCLUDE_DIRS})

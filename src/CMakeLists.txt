@@ -28,8 +28,6 @@ else()
   add_library(thermo4pfm ${SOURCES})
 endif()
 
-set(INSTALL_DIR ${CMAKE_SOURCE_DIR})
-
 set(PUBLIC_HEADERS
     PhysicalConstants.h
     KKSFreeEnergyFunctionDiluteBinary.h
@@ -55,6 +53,15 @@ set(PUBLIC_HEADERS
     CALPHADTieLineConcSolverTernary.h
     KKSdiluteBinaryConcSolver.h
    )
-install(TARGETS thermo4pfm DESTINATION ${INSTALL_DIR}/lib)
+set(THERMODATA
+    ${CMAKE_SOURCE_DIR}/thermodynamic_data/calphadAlCuLFccTheta.json
+    ${CMAKE_SOURCE_DIR}/thermodynamic_data/calphadAuNi.json
+    ${CMAKE_SOURCE_DIR}/thermodynamic_data/calphadMoNbTa.json
+    )
+
 install(FILES ${PUBLIC_HEADERS}
-        DESTINATION ${INSTALL_DIR}/include)
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/include)
+install(TARGETS thermo4pfm
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/lib)
+install(FILES ${THERMODATA}
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/thermodynamic_data)
