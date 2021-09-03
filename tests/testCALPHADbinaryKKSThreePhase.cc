@@ -29,7 +29,7 @@ TEST_CASE("CALPHAD binary three phase KKS", "[binary three phase kks]")
     try
     {
         pt::read_json(
-            "../thermodynamic_data/calphadAlCuLFccTheta.json", calphad_db);
+            "../thermodynamic_data/calphadAlCuLFccBcc.json", calphad_db);
     }
     catch (std::exception& e)
     {

@@ -344,6 +344,53 @@ void readLmixBinary(
     }
 }
 
+void readSublatticeStoichiometry(
+    boost::property_tree::ptree& db, int sublatticeStoichiometryPhase[2])
+{
+    if (db.get_child_optional("p"))
+    {
+        sublatticeStoichiometryPhase[0] = db.get_child("p").get_value<int>();
+    }
+    else
+    {
+        sublatticeStoichiometryPhase[0] = 0;
+    }
+
+    if (db.get_child_optional("q"))
+    {
+        sublatticeStoichiometryPhase[1] = db.get_child("q").get_value<int>();
+    }
+    else
+    {
+        sublatticeStoichiometryPhase[1] = 1;
+    }
+}
+
+bool checkSingleSublattice(boost::property_tree::ptree& db)
+{
+    int p = 0;
+    int q = 1;
+
+    if (db.get_child_optional("p"))
+    {
+        p = db.get_child("p").get_value<int>();
+    }
+
+    if (db.get_child_optional("q"))
+    {
+        q = db.get_child("q").get_value<int>();
+    }
+
+    if (p == 0 && q == 1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
 #endif

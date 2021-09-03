@@ -1,11 +1,19 @@
 {
+"References" :
+{
+    "Authors" : "Witusiewicz, Hect, Fries, Rex",
+    "Title" : "The Ag-Al-Cu system Part I: Reassessment of the constituent binaries on the basis of new experimental data",
+    "Journal" : "Journal of Alloys and Compounds",
+    "Volume" : "385",
+    "Year" : "2004",
+    "Note" : "Also indirectly references the Dinsdale SGTE database and the Saunders COST 507 database."
+},
 "GofT" : "a + b*T + c*T*ln(T)+sum_i di*T^i",
 "units":
 {
    "energy" : "J/mol",
    "temperature" : "Kelvin"
 },
-
 "SpeciesA" :
 {
    "name" : "Al",
@@ -33,7 +41,6 @@
       "dm9": [0.0, 0.0, -1.231E+28]
    }
 },
-
 "SpeciesB":
 {
    "name" : "Cu",
@@ -61,10 +68,8 @@
       "dm9" : [0.0, 3.642E+29]
    }
 },
-
 "fmix" : "c(1-c)*[ L0(T)+L1(T)*(2c-1)+L2(T)*(2c-1)^2 ]",
 "Li(T)" : " Li[0] + Li[1]*T",
-
 "LmixPhaseL":
 {
    "L0" : [-67094.0, 8.555],
@@ -72,7 +77,6 @@
    "L2" : [5915.0, -5.889],
    "L3" : [-8175.0, 6.049]
 },
-
 "LmixPhaseA":
 {
    "L0" : [-53520.0, 2.0],

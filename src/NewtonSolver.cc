@@ -1,4 +1,5 @@
 #include "CALPHADConcSolverBinary.h"
+#include "CALPHADConcSolverBinary3Ph2Sl.h"
 #include "CALPHADConcSolverBinaryThreePhase.h"
 #include "CALPHADConcSolverTernary.h"
 #include "CALPHADEqConcSolverBinary.h"
@@ -215,6 +216,7 @@ int NewtonSolver<Dimension, SolverType,
 template class NewtonSolver<2, CALPHADConcSolverBinary, JacobianDataType>;
 template class NewtonSolver<3, CALPHADConcSolverBinaryThreePhase,
     JacobianDataType>;
+template class NewtonSolver<3, CALPHADConcSolverBinary3Ph2Sl, JacobianDataType>;
 template class NewtonSolver<2, CALPHADEqConcSolverBinary, JacobianDataType>;
 template class NewtonSolver<4, CALPHADConcSolverTernary, JacobianDataType>;
 template class NewtonSolver<4, CALPHADEqConcSolverTernary, JacobianDataType>;

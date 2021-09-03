@@ -171,7 +171,7 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, three-phase convergence",
     try
     {
         pt::read_json(
-            "../thermodynamic_data/calphadAlCuLFccTheta.json", calphad_db);
+            "../thermodynamic_data/calphadAlCuLFccBcc.json", calphad_db);
     }
     catch (std::exception& e)
     {
