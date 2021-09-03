@@ -41,6 +41,9 @@ void CALPHADcomputeFMix_deriv2Ternary(const CalphadDataType* lAB,
     double* deriv);
 void readLmixBinary(boost::property_tree::ptree& db,
     CalphadDataType LmixPhase[4][MAX_POL_T_INDEX]);
+void readSublatticeStoichiometry(
+    boost::property_tree::ptree& db, int sublatticeStoichiometryPhase[2]);
+bool checkSingleSublattice(boost::property_tree::ptree& db);
 }
 
 #endif

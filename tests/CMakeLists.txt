@@ -6,7 +6,8 @@ set( TEST_DIR ${CMAKE_SOURCE_DIR}/tests )
 
 add_executable(testPropertyTree
       ${TEST_DIR}/property_tree/testPropertyTree.cc)
-
+add_executable(testAlCuDatabases
+             ${TEST_DIR}/testAlCuDatabases.cc )
 add_executable(testInterpolationFunctions
                ${TEST_DIR}/testInterpolationFunctions.cc )
 add_executable(testCALPHADFunctions
@@ -16,11 +17,15 @@ add_executable(testCALPHADGibbsEnergy
 add_executable(testCALPHADbinaryKKS
                ${TEST_DIR}/testCALPHADbinaryKKS.cc )
 add_executable(testCALPHADbinaryKKSThreePhase
-${TEST_DIR}/testCALPHADbinaryKKSThreePhase.cc )
+               ${TEST_DIR}/testCALPHADbinaryKKSThreePhase.cc )
+add_executable(testCALPHADbinaryKKS3Ph2Sl
+                ${TEST_DIR}/testCALPHADbinaryKKS3Ph2Sl.cc )
 add_executable(testCALPHADbinaryEquilibrium
                ${TEST_DIR}/testCALPHADbinaryEquilibrium.cc )
 add_executable(testCALPHADConcSolverBinaryThreePhase
               ${TEST_DIR}/testCALPHADConcSolverBinaryThreePhase.cc )
+add_executable(testCALPHADConcSolverBinary3Ph2Sl
+                ${TEST_DIR}/testCALPHADConcSolverBinary3Ph2Sl.cc )
 add_executable(testKKSdiluteBinaryKKS
                ${TEST_DIR}/testKKSdiluteBinaryKKS.cc )
 add_executable(testKKSdiluteBinaryEquilibrium
@@ -43,13 +48,16 @@ add_executable(testLoopCALPHADternaryTieLine
 add_executable(testLoopKKSdiluteBinaryKKS
                ${TEST_DIR}/testLoopKKSdiluteBinaryKKS.cc )
 
+target_link_libraries(testAlCuDatabases thermo4pfm)
 target_link_libraries(testInterpolationFunctions thermo4pfm)
 target_link_libraries(testCALPHADFunctions thermo4pfm)
 target_link_libraries(testCALPHADGibbsEnergy thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKS thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKSThreePhase thermo4pfm)
+target_link_libraries(testCALPHADbinaryKKS3Ph2Sl thermo4pfm)
 target_link_libraries(testCALPHADbinaryEquilibrium thermo4pfm)
 target_link_libraries(testCALPHADConcSolverBinaryThreePhase thermo4pfm)
+target_link_libraries(testCALPHADConcSolverBinary3Ph2Sl thermo4pfm)
 target_link_libraries(testCALPHADternaryKKS thermo4pfm)
 target_link_libraries(testCALPHADternaryTieLine thermo4pfm)
 target_link_libraries(testKKSdiluteBinaryKKS thermo4pfm)
@@ -74,6 +82,8 @@ add_test(NAME testPropertyTree
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testPropertyTree
          WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/tests/property_tree)
 
+add_test(NAME testAlCuDatabases
+      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testAlCuDatabases)
 add_test(NAME testInterpolationFunctions
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testInterpolationFunctions)
 add_test(NAME testCALPHADFunctions
@@ -87,12 +97,18 @@ add_test(NAME testCALPHADbinaryKKS
 add_test(NAME testCALPHADbinaryKKSThreePhase
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADbinaryKKSThreePhase
          WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testCALPHADbinaryKKS3Ph2Sl
+      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADbinaryKKS3Ph2Sl
+      WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testCALPHADbinaryEquilibrium
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADbinaryEquilibrium
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testCALPHADConcSolverBinaryThreePhase
           COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADConcSolverBinaryThreePhase
           WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testCALPHADConcSolverBinary3Ph2Sl
+        COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADConcSolverBinary3Ph2Sl
+        WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testKKSdiluteBinaryKKS
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testKKSdiluteBinaryKKS
          WORKING_DIRECTORY ${TEST_DIR})

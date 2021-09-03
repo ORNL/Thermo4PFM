@@ -1,5 +1,5 @@
-#include "CALPHADFreeEnergyFunctionsBinaryThreePhase.h"
-#include "CALPHADConcSolverBinaryThreePhase.h"
+#include "CALPHADFreeEnergyFunctionsBinary3Ph2Sl.h"
+#include "CALPHADConcSolverBinary3Ph2Sl.h"
 #include "CALPHADFunctions.h"
 #include "PhysicalConstants.h"
 #include "functions.h"
@@ -15,11 +15,10 @@ namespace pt = boost::property_tree;
 namespace Thermo4PFM
 {
 
-CALPHADFreeEnergyFunctionsBinaryThreePhase::
-    CALPHADFreeEnergyFunctionsBinaryThreePhase(pt::ptree& calphad_db,
-        boost::optional<pt::ptree&> newton_db,
-        const EnergyInterpolationType energy_interp_func_type,
-        const ConcInterpolationType conc_interp_func_type)
+CALPHADFreeEnergyFunctionsBinary3Ph2Sl::CALPHADFreeEnergyFunctionsBinary3Ph2Sl(
+    pt::ptree& calphad_db, boost::optional<pt::ptree&> newton_db,
+    const EnergyInterpolationType energy_interp_func_type,
+    const ConcInterpolationType conc_interp_func_type)
     : energy_interp_func_type_(energy_interp_func_type),
       conc_interp_func_type_(conc_interp_func_type),
       newton_tol_(1.e-8),
@@ -37,7 +36,7 @@ CALPHADFreeEnergyFunctionsBinaryThreePhase::
 }
 
 //=======================================================================
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::readNewtonparameters(
+void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::readNewtonparameters(
     pt::ptree& newton_db)
 {
     newton_tol_     = newton_db.get<double>("tol", newton_tol_);
@@ -47,7 +46,7 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::readNewtonparameters(
 }
 
 //=======================================================================
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::readParameters(
+void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::readParameters(
     pt::ptree& calphad_db)
 {
     // print database to be read
@@ -55,20 +54,22 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::readParameters(
     // pt::write_json(std::clog, calphad_db);
 
     pt::ptree& speciesA_db = calphad_db.get_child("SpeciesA");
-    std::string dbnameL("PhaseL");
-    g_species_phaseL_[0].initialize("L0", speciesA_db.get_child(dbnameL));
-    // assert(checkSingleSublattice(speciesA_db.get_child(dbnameL)));
-    std::string dbnameA("PhaseA");
-    g_species_phaseA_[0].initialize("A0", speciesA_db.get_child(dbnameA));
-    // assert(checkSingleSublattice(speciesA_db.get_child(dbnameA)));
-    std::string dbnameB("PhaseB");
-    g_species_phaseB_[0].initialize("B0", speciesA_db.get_child(dbnameB));
-    // assert(checkSingleSublattice(speciesA_db.get_child(dbnameB)));
+    auto phase_db          = speciesA_db.get_child("PhaseL");
+    g_species_phaseL_[0].initialize("L0", phase_db);
+    readSublatticeStoichiometry(phase_db, sublattice_stoichiometry_phaseL_);
+
+    phase_db = speciesA_db.get_child("PhaseA");
+    g_species_phaseA_[0].initialize("A0", phase_db);
+    readSublatticeStoichiometry(phase_db, sublattice_stoichiometry_phaseA_);
+
+    phase_db = speciesA_db.get_child("PhaseB");
+    g_species_phaseB_[0].initialize("B0", phase_db);
+    readSublatticeStoichiometry(phase_db, sublattice_stoichiometry_phaseB_);
 
     pt::ptree& speciesB_db = calphad_db.get_child("SpeciesB");
-    g_species_phaseL_[1].initialize("L1", speciesB_db.get_child(dbnameL));
-    g_species_phaseA_[1].initialize("A1", speciesB_db.get_child(dbnameA));
-    g_species_phaseB_[1].initialize("B1", speciesB_db.get_child(dbnameB));
+    g_species_phaseL_[1].initialize("L1", speciesB_db.get_child("PhaseL"));
+    g_species_phaseA_[1].initialize("A1", speciesB_db.get_child("PhaseA"));
+    g_species_phaseB_[1].initialize("B1", speciesB_db.get_child("PhaseB"));
 
     // read Lmix coefficients
     std::string dbnamemixL("LmixPhaseL");
@@ -88,7 +89,7 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::readParameters(
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
 #endif
-double CALPHADFreeEnergyFunctionsBinaryThreePhase::computeFreeEnergy(
+double CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeFreeEnergy(
     const double temperature, const double* const conc, const PhaseIndex pi,
     const bool gp)
 {
@@ -98,17 +99,31 @@ double CALPHADFreeEnergyFunctionsBinaryThreePhase::computeFreeEnergy(
     const CalphadDataType l3 = lmixPhase(3, pi, temperature);
 
     CALPHADSpeciesPhaseGibbsEnergy* g_species;
+    CalphadDataType p;
+    CalphadDataType q;
 
     switch (pi)
     {
         case PhaseIndex::phaseL:
             g_species = &g_species_phaseL_[0];
+            p         = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseL_[0]);
+            q = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseL_[1]);
             break;
         case PhaseIndex::phaseA:
             g_species = &g_species_phaseA_[0];
+            p         = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseA_[0]);
+            q = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseA_[1]);
             break;
         case PhaseIndex::phaseB:
             g_species = &g_species_phaseB_[0];
+            p         = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseB_[0]);
+            q = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseB_[1]);
             break;
         default:
             //            std::cerr << "CALPHADFreeEnergyFunctionsBinary::"
@@ -118,11 +133,14 @@ double CALPHADFreeEnergyFunctionsBinaryThreePhase::computeFreeEnergy(
             return 0.;
     }
 
-    double fe = conc[0] * g_species[0].fenergy(temperature)
-                + (1. - conc[0]) * g_species[1].fenergy(temperature)
-                + CALPHADcomputeFMixBinary(l0, l1, l2, l3, conc[0])
-                + CALPHADcomputeFIdealMixBinary(
-                      gas_constant_R_JpKpmol * temperature, conc[0]);
+    CalphadDataType ypp_A = (p + q) * conc[0] - p;
+
+    double fe = (ypp_A * g_species[0].fenergy(temperature)
+                    + (1. - ypp_A) * g_species[1].fenergy(temperature)
+                    + CALPHADcomputeFMixBinary(l0, l1, l2, l3, ypp_A)
+                    + CALPHADcomputeFIdealMixBinary(
+                          gas_constant_R_JpKpmol * temperature * q, ypp_A))
+                / (p + q);
 
     // subtract -mu*c to get grand potential
     if (gp)
@@ -137,7 +155,7 @@ double CALPHADFreeEnergyFunctionsBinaryThreePhase::computeFreeEnergy(
 
 //=======================================================================
 
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::computeDerivFreeEnergy(
+void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeDerivFreeEnergy(
     const double temperature, const double* const conc, const PhaseIndex pi,
     double* deriv)
 {
@@ -147,40 +165,50 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::computeDerivFreeEnergy(
     const CalphadDataType l3 = lmixPhase(3, pi, temperature);
 
     CALPHADSpeciesPhaseGibbsEnergy* g_species;
+    CalphadDataType p;
+    CalphadDataType q;
 
     switch (pi)
     {
         case PhaseIndex::phaseL:
             g_species = &g_species_phaseL_[0];
+            p         = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseL_[0]);
+            q = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseL_[1]);
             break;
         case PhaseIndex::phaseA:
             g_species = &g_species_phaseA_[0];
+            p         = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseA_[0]);
+            q = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseA_[1]);
             break;
         case PhaseIndex::phaseB:
             g_species = &g_species_phaseB_[0];
+            p         = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseB_[0]);
+            q = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseB_[1]);
             break;
-        default:
-            //            std::cerr << "CALPHADFreeEnergyFunctionsBinary::"
-            //                         "computeFreeEnergy(), undefined phase!!!"
-            //                      << std::endl;
-            // abort();
-            return;
     }
+
+    CalphadDataType ypp_A = (p + q) * conc[0] - p;
 
     double mu = (g_species[0].fenergy(temperature)
                     - g_species[1].fenergy(temperature))
-                + CALPHADcomputeFMix_derivBinary(l0, l1, l2, l3, conc[0])
+                + CALPHADcomputeFMix_derivBinary(l0, l1, l2, l3, ypp_A)
                 + CALPHADcomputeFIdealMix_derivBinary(
-                      gas_constant_R_JpKpmol * temperature, conc[0]);
+                      gas_constant_R_JpKpmol * temperature * q, ypp_A);
 
     deriv[0] = mu;
 }
 
 //=======================================================================
 
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::
-    computeSecondDerivativeFreeEnergy(const double temp,
-        const double* const conc, const PhaseIndex pi, double* d2fdc2)
+void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeSecondDerivativeFreeEnergy(
+    const double temp, const double* const conc, const PhaseIndex pi,
+    double* d2fdc2)
 {
     // assert(conc[0] >= 0.);
     // assert(conc[0] <= 1.);
@@ -191,13 +219,41 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::
     const CalphadDataType l3 = lmixPhase(3, pi, temp);
     const double rt          = gas_constant_R_JpKpmol * temp;
 
-    d2fdc2[0] = (CALPHADcomputeFMix_deriv2Binary(l0, l1, l2, l3, conc[0])
-                 + CALPHADcomputeFIdealMix_deriv2Binary(rt, conc[0]));
+    CalphadDataType p;
+    CalphadDataType q;
+
+    switch (pi)
+    {
+        case PhaseIndex::phaseL:
+            p = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseL_[0]);
+            q = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseL_[1]);
+            break;
+        case PhaseIndex::phaseA:
+            p = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseA_[0]);
+            q = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseA_[1]);
+            break;
+        case PhaseIndex::phaseB:
+            p = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseB_[0]);
+            q = static_cast<CalphadDataType>(
+                sublattice_stoichiometry_phaseB_[1]);
+            break;
+    }
+
+    CalphadDataType ypp_A = (p + q) * conc[0] - p;
+
+    d2fdc2[0] = (p + q)
+                * (CALPHADcomputeFMix_deriv2Binary(l0, l1, l2, l3, ypp_A)
+                      + CALPHADcomputeFIdealMix_deriv2Binary(rt, ypp_A));
 }
 
 //=======================================================================
 
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::computeTdependentParameters(
+void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeTdependentParameters(
     const double temperature, CalphadDataType* Lmix_L, CalphadDataType* Lmix_A,
     CalphadDataType* Lmix_B, CalphadDataType* fA, CalphadDataType* fB)
 {
@@ -227,7 +283,7 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::computeTdependentParameters(
 
 // compute equilibrium concentrations in various phases for given temperature
 
-bool CALPHADFreeEnergyFunctionsBinaryThreePhase::computeCeqT(
+bool CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeCeqT(
     const double temperature, double* ceq, const int maxits, const bool verbose)
 {
     // Not used since the three phases are only in equilibrium at the eutectic
@@ -237,7 +293,7 @@ bool CALPHADFreeEnergyFunctionsBinaryThreePhase::computeCeqT(
 
 //=======================================================================
 
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhasesFreeEnergies(
+void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhasesFreeEnergies(
     const double temperature, const double* const hphi, const double conc,
     double& fl, double& fa, double& fb)
 {
@@ -257,16 +313,26 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhasesFreeEnergies(
 
     double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
 
-    CALPHADConcSolverBinaryThreePhase solver;
-    solver.setup(
-        conc, hphi[0], hphi[1], hphi[2], RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB);
+    // Get the sublattice stoichiometry
+    int p[3];
+    int q[3];
+    p[0] = sublattice_stoichiometry_phaseL_[0];
+    p[1] = sublattice_stoichiometry_phaseA_[0];
+    p[2] = sublattice_stoichiometry_phaseB_[0];
+    q[0] = sublattice_stoichiometry_phaseL_[1];
+    q[1] = sublattice_stoichiometry_phaseA_[1];
+    q[2] = sublattice_stoichiometry_phaseB_[1];
+
+    CALPHADConcSolverBinary3Ph2Sl solver;
+    solver.setup(conc, hphi[0], hphi[1], hphi[2], RTinv, Lmix_L, Lmix_A, Lmix_B,
+        fA, fB, p, q);
     int ret = solver.ComputeConcentration(
         c, newton_tol_, newton_maxits_, newton_alpha_);
     if (ret < 0)
     {
 #if 0
         std::cerr << "ERROR in "
-                     "CALPHADFreeEnergyFunctionsBinaryThreePhase::"
+                     "CALPHADFreeEnergyFunctionsBinary3Ph2Sl::"
                      "computePhasesFreeEnergies()"
                      " ---"
                   << "conc=" << conc << ", hphi=" << hphi[0] << std::endl;
@@ -286,7 +352,7 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhasesFreeEnergies(
 
 //-----------------------------------------------------------------------
 
-int CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhaseConcentrations(
+int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
     const double temperature, const double* const conc, const double* const phi,
     double* x)
 {
@@ -309,14 +375,24 @@ int CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhaseConcentrations(
     const double hphi1 = interp_func(conc_interp_func_type_, phi[1]);
     const double hphi2 = interp_func(conc_interp_func_type_, phi[2]);
 
+    // Get the sublattice stoichiometry
+    int p[3];
+    int q[3];
+    p[0] = sublattice_stoichiometry_phaseL_[0];
+    p[1] = sublattice_stoichiometry_phaseA_[0];
+    p[2] = sublattice_stoichiometry_phaseB_[0];
+    q[0] = sublattice_stoichiometry_phaseL_[1];
+    q[1] = sublattice_stoichiometry_phaseA_[1];
+    q[2] = sublattice_stoichiometry_phaseB_[1];
+
     // conc could be outside of [0.,1.] in a trial step
     double c0 = conc[0] >= 0. ? conc[0] : 0.;
     c0        = c0 <= 1. ? c0 : 1.;
     // solve system of equations to find (cl,cs) given c0 and hphi
     // x: initial guess and solution
-    CALPHADConcSolverBinaryThreePhase solver;
+    CALPHADConcSolverBinary3Ph2Sl solver;
     solver.setup(
-        c0, hphi0, hphi1, hphi2, RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB);
+        c0, hphi0, hphi1, hphi2, RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB, p, q);
     int ret = solver.ComputeConcentration(
         x, newton_tol_, newton_maxits_, newton_alpha_);
 #if 0
@@ -338,7 +414,7 @@ int CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhaseConcentrations(
 #endif
 
 //-----------------------------------------------------------------------
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::energyVsPhiAndC(
+void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::energyVsPhiAndC(
     const double temperature, const double* const ceq, const bool found_ceq,
     const double phi_well_scale, const int npts_phi, const int npts_c)
 {
@@ -348,7 +424,7 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::energyVsPhiAndC(
 // Print out free energy as a function of phase
 // for given composition and temperature
 // File format: ASCII VTK, readble with Visit
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::printEnergyVsPhiHeader(
+void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::printEnergyVsPhiHeader(
     const double temperature, const int nphi, const int nc, const double cmin,
     const double cmax, const double slopec, std::ostream& os) const
 {
@@ -356,7 +432,7 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::printEnergyVsPhiHeader(
 }
 
 //=======================================================================
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::printEnergyVsPhi(
+void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::printEnergyVsPhi(
     const double* const conc, const double temperature,
     const double phi_well_scale, const int npts, const double slopec,
     std::ostream& os)
@@ -367,7 +443,7 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::printEnergyVsPhi(
 //=======================================================================
 // compute free energy in [J/mol]
 
-double CALPHADFreeEnergyFunctionsBinaryThreePhase::fchem(
+double CALPHADFreeEnergyFunctionsBinary3Ph2Sl::fchem(
     const double* const phi, const double* const conc, const double temperature)
 {
     double hcphi[3];
@@ -416,7 +492,7 @@ double CALPHADFreeEnergyFunctionsBinaryThreePhase::fchem(
 
 //=======================================================================
 
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::printEnergyVsComposition(
+void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::printEnergyVsComposition(
     const double temperature, std::ostream& os, const int npts)
 {
     const double dc = 1.0 / (double)(npts - 1);
@@ -456,7 +532,7 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::printEnergyVsComposition(
 
 //=======================================================================
 
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::preRunDiagnostics(
+void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::preRunDiagnostics(
     const double T0, const double T1)
 {
     std::ofstream os1("FlC0vsT.dat", std::ios::out);
