@@ -83,7 +83,8 @@ add_test(NAME testPropertyTree
          WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/tests/property_tree)
 
 add_test(NAME testAlCuDatabases
-      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testAlCuDatabases)
+      COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testAlCuDatabases
+      WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testInterpolationFunctions
          COMMAND ${CMAKE_CURRENT_BINARY_DIR}/testInterpolationFunctions)
 add_test(NAME testCALPHADFunctions
