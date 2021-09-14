@@ -3,6 +3,7 @@
 #include "CALPHADConcSolverBinary3Ph2Sl.h"
 #include "CALPHADConcSolverBinaryThreePhase.h"
 #include "CALPHADFreeEnergyFunctionsBinary.h"
+#include "CALPHADFreeEnergyFunctionsBinary3Ph2Sl.h"
 #include "CALPHADFreeEnergyFunctionsBinaryThreePhase.h"
 
 #include "InterpolationType.h"
@@ -114,4 +115,102 @@ TEST_CASE("CALPHAD conc solver binary 3 phase, 2 sublattice KKS, "
     REQUIRE(sol_test[0] == Approx(sol_ref[0]).margin(1.e-5));
     REQUIRE(sol_test[1] == Approx(sol_ref[1]).margin(1.e-5));
     REQUIRE(sol_test[2] == Approx(sol_ref[2]).margin(1.e-5));
+}
+
+TEST_CASE("CALPHAD conc solver binary 3 phase, 2 sublattice KKS, "
+          "convergence",
+    "[conc solver binary 3 phase, 2 sublattice kks, convergence]")
+{
+    // Calculate the inputs and the reference solution
+    Thermo4PFM::EnergyInterpolationType energy_interp_func_type
+        = Thermo4PFM::EnergyInterpolationType::PBG;
+    Thermo4PFM::ConcInterpolationType conc_interp_func_type
+        = Thermo4PFM::ConcInterpolationType::PBG;
+
+    double temperature = 820.;
+
+    std::cout << " Read CALPHAD database..." << std::endl;
+    pt::ptree calphad_db;
+    try
+    {
+        pt::read_json(
+            "../thermodynamic_data/calphadAlCuLFccTheta.json", calphad_db);
+    }
+    catch (std::exception& e)
+    {
+        std::cerr << "exception caught: " << e.what() << std::endl;
+    }
+
+    boost::optional<pt::ptree&> newton_db;
+
+    // First calculate the reference solution
+
+    Thermo4PFM::CALPHADFreeEnergyFunctionsBinary3Ph2Sl cafe(
+        calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
+
+    // Get the CALPHAD parameters
+    CalphadDataType fA[3];
+    CalphadDataType fB[3];
+    CalphadDataType Lmix_L[4];
+    CalphadDataType Lmix_A[4];
+    CalphadDataType Lmix_B[4];
+
+    cafe.computeTdependentParameters(
+        temperature, Lmix_L, Lmix_A, Lmix_B, fA, fB);
+
+    // initial guesses
+    double c_init0 = 0.8;
+    double c_init1 = 0.6;
+    double c_init2 = 0.67;
+
+    // compute concentrations satisfying KKS equations
+
+    // I think the system at 820K is best behaved in the conc = 0.67-0.8 range
+    const double conc = 0.7;
+
+    // Inputs to the solver
+    const double RTinv
+        = 1.0 / (Thermo4PFM::gas_constant_R_JpKpmol * temperature);
+
+    // NOTE: The sum of hphi should equal one, which is not necessarily true for
+    // phi
+    double hphi0 = 0.1;
+    double hphi1 = 0.4;
+    double hphi2 = 0.5;
+
+    const double tol    = 1.e-8;
+    const double alpha  = 0.5; // Using alpha=1 can lead to convergence issues
+    const int max_iters = 100;
+
+    int p[3];
+    int q[3];
+    for (int i = 0; i < 3; ++i)
+    {
+        p[i] = 0;
+        q[i] = 1;
+    }
+
+    p[2] = 2;
+
+    Thermo4PFM::CALPHADConcSolverBinary3Ph2Sl solver;
+    solver.setup(
+        conc, hphi0, hphi1, hphi2, RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB, p, q);
+
+    // Run the solver
+    double sol_test[3] = { c_init0, c_init1, c_init2 };
+    int ret = solver.ComputeConcentration(sol_test, tol, max_iters, alpha);
+
+    std::cout << "-------------------------------" << std::endl;
+    std::cout << "Temperature = " << temperature << std::endl;
+    std::cout << "Result for c = " << conc << std::endl;
+    std::cout << "   cL = " << sol_test[0] << std::endl;
+    std::cout << "   cA = " << sol_test[1] << std::endl;
+    std::cout << "   cB = " << sol_test[2] << std::endl;
+
+    REQUIRE(ret >= 0);
+
+    // Check consistency
+    // REQUIRE((sol_test[0] >= 0.0 && sol_test[0] <= 1.0));
+    // REQUIRE((sol_test[1] >= 0.0 && sol_test[1] <= 1.0));
+    // REQUIRE((sol_test[2] >= 0.0 && sol_test[2] <= 1.0));
 }

@@ -71,18 +71,37 @@ void CALPHADConcSolverBinary3Ph2Sl::RHS(
     fvec[1] = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
               - q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
               + (xi[0] - xi[1]);
-    fvec[2] = q_[1] * (xlogx_deriv(c[1]) - xlogx_deriv(1. - ypp_A[1]))
+    fvec[2] = q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
               - q_[2] * (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
               + (xi[1] - xi[2]);
 
+    // Debugging output
     /*
+    std::cout << "compositions: ";
+    std::cout << c[0] << " " << c[1] << " " << c[2] << std::endl;
+
+    std::cout << "p: " << p_[0] << " " << p_[1] << " " << p_[2] << std::endl;
+
+    std::cout << "xi: " << xi[0] << " " << xi[1] << " " << xi[2] << std::endl;
+
     std::cout << "chemical potentials: ";
-    double temp = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) + xi[0];
+    double temp = (q_[0] * xlogx_deriv(ypp_A[0])
+                   - q_[0] * xlogx_deriv(1. - ypp_A[0]) + xi[0]);
     std::cout << temp << " ";
-    temp = xlogx_deriv(c[1]) - xlogx_deriv(1. - c[1]) + xi[1];
+    temp = (q_[1] * xlogx_deriv(ypp_A[1]) - q_[1] * xlogx_deriv(1. - ypp_A[1])
+            + xi[1]);
     std::cout << temp << " ";
-    temp = xlogx_deriv(c[2]) - xlogx_deriv(1. - c[2]) + xi[2];
+    temp = (q_[2] * xlogx_deriv(ypp_A[2]) - q_[2] * xlogx_deriv(1. - ypp_A[2])
+            + xi[2]);
     std::cout << temp << std::endl;
+
+    std::cout << "composition sum: ";
+    std::cout << c0_ << " ";
+    temp = hphi0_ * c[0] + hphi1_ * c[1] + hphi2_ * c[2];
+    std::cout << temp << std::endl;
+
+    std::cout << "interpolation terms: ";
+    std::cout << hphi0_ << " " << hphi1_ << " " << hphi2_ << std::endl;
     */
 }
 
@@ -95,15 +114,15 @@ void CALPHADConcSolverBinary3Ph2Sl::computeDxiDc(
     // loop over phases
     dxidc[0] = RTinv_
                * CALPHADcomputeFMix_deriv2Binary(
-                     Lmix_L_[0], Lmix_L_[1], Lmix_L_[2], Lmix_L_[3], c[0]);
+                   Lmix_L_[0], Lmix_L_[1], Lmix_L_[2], Lmix_L_[3], c[0]);
 
     dxidc[1] = RTinv_
                * CALPHADcomputeFMix_deriv2Binary(
-                     Lmix_S0_[0], Lmix_S0_[1], Lmix_S0_[2], Lmix_S0_[3], c[1]);
+                   Lmix_S0_[0], Lmix_S0_[1], Lmix_S0_[2], Lmix_S0_[3], c[1]);
 
     dxidc[2] = RTinv_
                * CALPHADcomputeFMix_deriv2Binary(
-                     Lmix_S1_[0], Lmix_S1_[1], Lmix_S1_[2], Lmix_S1_[3], c[2]);
+                   Lmix_S1_[0], Lmix_S1_[1], Lmix_S1_[2], Lmix_S1_[3], c[2]);
 }
 
 //=======================================================================
@@ -126,21 +145,21 @@ void CALPHADConcSolverBinary3Ph2Sl::Jacobian(
     fjac[0][1] = hphi1_;
     fjac[0][2] = hphi2_;
 
-    fjac[1][0]
-        = (p_[0] + q_[0])
-          * (dxidc[0] + xlogx_deriv2(ypp_A[0]) + xlogx_deriv2(1. - ypp_A[0]));
-    fjac[1][1]
-        = (p_[1] + q_[1])
-          * (-dxidc[1] - xlogx_deriv2(ypp_A[1]) - xlogx_deriv2(1. - ypp_A[1]));
+    fjac[1][0] = (p_[0] + q_[0])
+                 * (dxidc[0] + q_[0] * xlogx_deriv2(ypp_A[0])
+                     + q_[0] * xlogx_deriv2(1. - ypp_A[0]));
+    fjac[1][1] = (p_[1] + q_[1])
+                 * (-dxidc[1] - q_[1] * xlogx_deriv2(ypp_A[1])
+                     - q_[1] * xlogx_deriv2(1. - ypp_A[1]));
     fjac[1][2] = 0.;
 
     fjac[2][0] = 0.;
-    fjac[2][1]
-        = (p_[1] + q_[1])
-          * (dxidc[1] + xlogx_deriv2(ypp_A[1]) - xlogx_deriv2(1. - ypp_A[1]));
-    fjac[2][2]
-        = (p_[2] + q_[2])
-          * (-dxidc[2] - xlogx_deriv2(ypp_A[2]) - xlogx_deriv2(1. - ypp_A[2]));
+    fjac[2][1] = (p_[1] + q_[1])
+                 * (dxidc[1] + q_[1] * xlogx_deriv2(ypp_A[1])
+                     - q_[1] * xlogx_deriv2(1. - ypp_A[1]));
+    fjac[2][2] = (p_[2] + q_[2])
+                 * (-dxidc[2] - q_[2] * xlogx_deriv2(ypp_A[2])
+                     - q_[2] * xlogx_deriv2(1. - ypp_A[2]));
 }
 
 // set values of internal variables used to evaluate
