@@ -13,9 +13,10 @@ cd ${BUILD_DIR}
 
 # call cmake
 cmake -DCMAKE_CXX_COMPILER=mpicxx \
-      -DCMAKE_BUILD_TYPE=Debug \
+      -DCMAKE_BUILD_TYPE=Release \
       -DMPIEXEC_EXECUTABLE="/sw/summit/xalt/1.2.1/bin/jsrun" \
       -DMPIEXEC_NUMPROCS_FLAG="-n" \
+      -DMPIEXEC_NUMPROCS="1" \
       -DMPIEXEC_PREFLAGS="-a1;-c4;-bpacked:2;-g1" \
       -DWITH_OPENMP_OFFLOAD=ON \
       -DCMAKE_CXX_FLAGS="-fopenmp -foffload=-lm -foffload=nvptx-none -foffload="-O3" -fno-stack-protector" \
