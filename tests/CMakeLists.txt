@@ -37,6 +37,8 @@ add_executable(testCALPHADternaryKKS
 add_executable(testCALPHADternaryTieLine
                ${TEST_DIR}/testCALPHADternaryTieLine.cc )
 
+add_executable(testLoopCALPHADSpeciesPhaseGibbsEnergy
+               ${TEST_DIR}/testLoopCALPHADSpeciesPhaseGibbsEnergy.cc )
 add_executable(testLoopCALPHADbinaryEquilibrium
                ${TEST_DIR}/testLoopCALPHADbinaryEquilibrium.cc )
 add_executable(testLoopCALPHADbinaryKKS
@@ -63,6 +65,7 @@ target_link_libraries(testCALPHADternaryTieLine thermo4pfm)
 target_link_libraries(testKKSdiluteBinaryKKS thermo4pfm)
 target_link_libraries(testKKSdiluteBinaryEquilibrium thermo4pfm)
 
+target_link_libraries(testLoopCALPHADSpeciesPhaseGibbsEnergy thermo4pfm)
 target_link_libraries(testLoopCALPHADbinaryKKS thermo4pfm)
 target_link_libraries(testLoopCALPHADbinaryEquilibrium thermo4pfm)
 target_link_libraries(testLoopCALPHADternaryKKS thermo4pfm)
@@ -71,6 +74,7 @@ target_link_libraries(testCALPHADJacobianTernary thermo4pfm)
 target_link_libraries(testLoopKKSdiluteBinaryKKS thermo4pfm)
 
 if (${OPENMP_CXX_FOUND})
+  target_link_libraries(testLoopCALPHADSpeciesPhaseGibbsEnergy OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADbinaryEquilibrium OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADbinaryKKS OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADternaryTieLine OpenMP::OpenMP_CXX)
@@ -156,6 +160,11 @@ add_test(NAME testCALPHADternaryTieLine
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
          ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADternaryTieLine
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testLoopCALPHADSpeciesPhaseGibbsEnergy
+         COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
+         ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
+         ${CMAKE_CURRENT_BINARY_DIR}/testLoopCALPHADSpeciesPhaseGibbsEnergy
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testLoopCALPHADbinaryEquilibrium
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
