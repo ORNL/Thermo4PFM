@@ -76,9 +76,6 @@ private:
     int maxiters_;
     double alpha_;
 
-    double (*fun_ptr_arr_[3])(
-        double){ linear_interp_func, pbg_interp_func, harmonic_interp_func };
-
     void readParameters(boost::property_tree::ptree& conc_db);
 
     void computePhasesFreeEnergies(const double temperature,
