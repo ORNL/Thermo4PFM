@@ -186,7 +186,7 @@ int main(int argc, char* argv[])
         L_ABC_S[i] = LmixABCPhaseA[i][0] + temperature * LmixABCPhaseA[i][1];
 
     const double RTinv
-        = 1.0 / (Thermo4PFM::gas_constant_R_JpKpmol * temperature);
+        = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     double sol[4] = { 0.33, 0.38, 0.32, 0.33 };
 

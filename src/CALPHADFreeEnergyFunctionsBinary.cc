@@ -111,7 +111,7 @@ double CALPHADFreeEnergyFunctionsBinary::computeFreeEnergy(
                 + (1. - conc[0]) * g_species[1].fenergy(temperature)
                 + CALPHADcomputeFMixBinary(l0, l1, l2, l3, conc[0])
                 + CALPHADcomputeFIdealMixBinary(
-                      gas_constant_R_JpKpmol * temperature, conc[0]);
+                      GASCONSTANT_R_JPKPMOL * temperature, conc[0]);
 
     // subtract -mu*c to get grand potential
     if (gp)
@@ -157,7 +157,7 @@ void CALPHADFreeEnergyFunctionsBinary::computeDerivFreeEnergy(
                     - g_species[1].fenergy(temperature))
                 + CALPHADcomputeFMix_derivBinary(l0, l1, l2, l3, conc[0])
                 + CALPHADcomputeFIdealMix_derivBinary(
-                      gas_constant_R_JpKpmol * temperature, conc[0]);
+                      GASCONSTANT_R_JPKPMOL * temperature, conc[0]);
 
     deriv[0] = mu;
 }
@@ -175,7 +175,7 @@ void CALPHADFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
     const CalphadDataType l1 = lmixPhase(1, pi, temp);
     const CalphadDataType l2 = lmixPhase(2, pi, temp);
     const CalphadDataType l3 = lmixPhase(3, pi, temp);
-    const double rt          = gas_constant_R_JpKpmol * temp;
+    const double rt          = GASCONSTANT_R_JPKPMOL * temp;
 
     d2fdc2[0] = (CALPHADcomputeFMix_deriv2Binary(l0, l1, l2, l3, conc[0])
                  + CALPHADcomputeFIdealMix_deriv2Binary(rt, conc[0]));
@@ -224,7 +224,7 @@ bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(
 
     computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
 
-    double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
+    double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     CALPHADEqConcSolverBinary eq_solver;
 
@@ -269,7 +269,7 @@ void CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
     CalphadDataType Lmix_A[4];
     computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
 
-    double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
+    double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     CALPHADConcSolverBinary solver;
     solver.setup(conc, hphi[0], RTinv, Lmix_L, Lmix_A, fA, fB);
@@ -305,7 +305,7 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
     // assert(x[0] <= 1.);
     // assert(x[1] <= 1.);
 
-    const double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
+    const double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     CalphadDataType fA[2];
     CalphadDataType fB[2];

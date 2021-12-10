@@ -22,7 +22,7 @@ KKSFreeEnergyFunctionDiluteBinary::KKSFreeEnergyFunctionDiluteBinary(
       alpha_(1.)
 {
     std::string fenergy_diag_filename("energy.vtk");
-    fenergy_diag_filename_ = new char[fenergy_diag_filename.length() + 1];
+    //fenergy_diag_filename_ = new char[fenergy_diag_filename.length() + 1];
     strcpy(fenergy_diag_filename_, fenergy_diag_filename.c_str());
 
     readParameters(conc_db);
@@ -88,7 +88,7 @@ double KKSFreeEnergyFunctionDiluteBinary::computeFreeEnergy(
             return 0.;
     }
 
-    fe *= gas_constant_R_JpKpmol * temperature;
+    fe *= GASCONSTANT_R_JPKPMOL * temperature;
 
     // subtract -mu*c to get grand potential
     if (gp)
@@ -126,7 +126,7 @@ void KKSFreeEnergyFunctionDiluteBinary::computeDerivFreeEnergy(
             return;
     }
 
-    deriv[0] = gas_constant_R_JpKpmol * temperature * mu;
+    deriv[0] = GASCONSTANT_R_JPKPMOL * temperature * mu;
 }
 
 //=======================================================================
@@ -140,7 +140,7 @@ void KKSFreeEnergyFunctionDiluteBinary::computeSecondDerivativeFreeEnergy(
     assert(conc[0] <= 1.);
 #endif
 
-    const double rt = gas_constant_R_JpKpmol * temp;
+    const double rt = GASCONSTANT_R_JPKPMOL * temp;
 
     d2fdc2[0] = rt * (xlogx_deriv2(conc[0]) + xlogx_deriv2(1.0 - conc[0]));
 }
