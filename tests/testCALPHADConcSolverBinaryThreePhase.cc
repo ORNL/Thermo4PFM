@@ -67,7 +67,7 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, two-phase consistancy",
         temperature, &conc, &phi, &sol_reference[0]);
 
     // Inputs to the solver
-    const double RT = Thermo4PFM::gas_constant_R_JpKpmol * temperature;
+    const double RT = GASCONSTANT_R_JPKPMOL * temperature;
 
     double hphi0 = interp_func(conc_interp_func_type, 1.0 - phi);
     double hphi1 = interp_func(conc_interp_func_type, phi);
@@ -203,7 +203,7 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, three-phase convergence",
     const double conc = 0.5;
 
     // Inputs to the solver
-    const double RT = Thermo4PFM::gas_constant_R_JpKpmol * temperature;
+    const double RT = GASCONSTANT_R_JPKPMOL * temperature;
 
     double hphi0 = interp_func(conc_interp_func_type, 0.5);
     double hphi1 = interp_func(conc_interp_func_type, 0.4);

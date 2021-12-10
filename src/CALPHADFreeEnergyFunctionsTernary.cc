@@ -246,7 +246,7 @@ double CALPHADFreeEnergyFunctionsTernary::computeFreeEnergy(
                 + conc2 * g_species[2].fenergy(temperature)
                 + CALPHADcomputeFMixTernary(lAB, lAC, lBC, lABC, conc0, conc1)
                 + CALPHADcomputeFIdealMixTernary(
-                      gas_constant_R_JpKpmol * temperature, conc0, conc1);
+                      GASCONSTANT_R_JPKPMOL * temperature, conc0, conc1);
 
     // subtract -mu*c to get grand potential
     if (gp)
@@ -308,7 +308,7 @@ void CALPHADFreeEnergyFunctionsTernary::computeDerivFreeEnergy(
 
     double tmp[2];
     CALPHADcomputeFIdealMix_derivTernary(
-        gas_constant_R_JpKpmol * temperature, conc[0], conc[1], tmp);
+        GASCONSTANT_R_JPKPMOL * temperature, conc[0], conc[1], tmp);
     deriv[0] += tmp[0];
     deriv[1] += tmp[1];
 }
@@ -332,7 +332,7 @@ void CALPHADFreeEnergyFunctionsTernary::computeSecondDerivativeFreeEnergy(
         lmix2BCPhase(pi, temp), lmix3BCPhase(pi, temp) };
     CalphadDataType lABC[3] = { lmix0ABCPhase(pi, temp),
         lmix1ABCPhase(pi, temp), lmix2ABCPhase(pi, temp) };
-    const double rt         = gas_constant_R_JpKpmol * temp;
+    const double rt         = GASCONSTANT_R_JPKPMOL * temp;
 
     double deriv1[4];
     CALPHADcomputeFIdealMix_deriv2Ternary(rt, conc[0], conc[1], &deriv1[0]);
@@ -429,7 +429,7 @@ bool CALPHADFreeEnergyFunctionsTernary::computeCeqT(
     computeTdependentParameters(temperature, L_AB_L, L_AC_L, L_BC_L, L_ABC_L,
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
 
-    double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
+    double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     CALPHADEqConcSolverTernary eq_solver;
     eq_solver.setup(RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S, L_BC_S,
@@ -481,7 +481,7 @@ bool CALPHADFreeEnergyFunctionsTernary::computeTieLine(const double temperature,
     computeTdependentParameters(temperature, L_AB_L, L_AC_L, L_BC_L, L_ABC_L,
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
 
-    double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
+    double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     CALPHADTieLineConcSolverTernary eq_solver;
     eq_solver.setup(c0, c1, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S,
@@ -537,7 +537,7 @@ void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
     computeTdependentParameters(temperature, L_AB_L, L_AC_L, L_BC_L, L_ABC_L,
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
 
-    double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
+    double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
     CALPHADConcSolverTernary solver;
     solver.setup(conc0, conc1, hphi[0], RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S,
         L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
@@ -580,7 +580,7 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
     const double conc0 = conc[0];
     const double conc1 = conc[1];
 
-    const double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
+    const double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     CalphadDataType L_AB_L[4];
     CalphadDataType L_AC_L[4];
