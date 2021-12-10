@@ -12,6 +12,8 @@ add_executable(testInterpolationFunctions
                ${TEST_DIR}/testInterpolationFunctions.cc )
 add_executable(testCALPHADFunctions
                ${TEST_DIR}/testCALPHADFunctions.cc )
+add_executable(testCALPHADSpeciesPhaseGibbsEnergyExpansion
+               ${TEST_DIR}/testCALPHADSpeciesPhaseGibbsEnergyExpansion.cc )
 add_executable(testCALPHADGibbsEnergy
                ${TEST_DIR}/testCALPHADGibbsEnergy.cc )
 add_executable(testCALPHADbinaryKKS
@@ -53,6 +55,7 @@ add_executable(testLoopKKSdiluteBinaryKKS
 target_link_libraries(testAlCuDatabases thermo4pfm)
 target_link_libraries(testInterpolationFunctions thermo4pfm)
 target_link_libraries(testCALPHADFunctions thermo4pfm)
+target_link_libraries(testCALPHADSpeciesPhaseGibbsEnergyExpansion thermo4pfm)
 target_link_libraries(testCALPHADGibbsEnergy thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKS thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKSThreePhase thermo4pfm)
@@ -74,6 +77,7 @@ target_link_libraries(testCALPHADJacobianTernary thermo4pfm)
 target_link_libraries(testLoopKKSdiluteBinaryKKS thermo4pfm)
 
 if (${OPENMP_CXX_FOUND})
+  target_link_libraries(testCALPHADSpeciesPhaseGibbsEnergyExpansion OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADSpeciesPhaseGibbsEnergy OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADbinaryEquilibrium OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADbinaryKKS OpenMP::OpenMP_CXX)
@@ -101,6 +105,11 @@ add_test(NAME testCALPHADFunctions
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
          ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADFunctions)
+add_test(NAME testCALPHADSpeciesPhaseGibbsEnergyExpansion
+         COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
+         ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
+         ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADSpeciesPhaseGibbsEnergyExpansion
+         WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testCALPHADGibbsEnergy
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
