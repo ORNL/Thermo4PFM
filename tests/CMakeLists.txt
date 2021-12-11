@@ -32,6 +32,8 @@ add_executable(testKKSdiluteBinaryKKS
                ${TEST_DIR}/testKKSdiluteBinaryKKS.cc )
 add_executable(testKKSdiluteBinaryEquilibrium
                ${TEST_DIR}/testKKSdiluteBinaryEquilibrium.cc )
+add_executable(testCALPHADJacobianBinary
+               ${TEST_DIR}/testCALPHADJacobianBinary.cc )
 add_executable(testCALPHADJacobianTernary
                ${TEST_DIR}/testCALPHADJacobianTernary.cc )
 add_executable(testCALPHADternaryKKS
@@ -73,6 +75,7 @@ target_link_libraries(testLoopCALPHADbinaryKKS thermo4pfm)
 target_link_libraries(testLoopCALPHADbinaryEquilibrium thermo4pfm)
 target_link_libraries(testLoopCALPHADternaryKKS thermo4pfm)
 target_link_libraries(testLoopCALPHADternaryTieLine thermo4pfm)
+target_link_libraries(testCALPHADJacobianBinary thermo4pfm)
 target_link_libraries(testCALPHADJacobianTernary thermo4pfm)
 target_link_libraries(testLoopKKSdiluteBinaryKKS thermo4pfm)
 
@@ -154,6 +157,11 @@ add_test(NAME testKKSdiluteBinaryEquilibrium
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
          ${CMAKE_CURRENT_BINARY_DIR}/testKKSdiluteBinaryEquilibrium
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testCALPHADJacobianBinary
+         COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
+         ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
+         ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADJacobianBinary
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testCALPHADJacobianTernary
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
