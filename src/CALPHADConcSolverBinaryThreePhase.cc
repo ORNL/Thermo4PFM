@@ -114,7 +114,7 @@ void CALPHADConcSolverBinaryThreePhase::Jacobian(
     fjac[1][2] = 0.;
 
     fjac[2][0] = 0.;
-    fjac[2][1] = dxidc[1] + xlogx_deriv2(c[1]) - xlogx_deriv2(1. - c[1]);
+    fjac[2][1] = dxidc[1] + xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]);
     fjac[2][2] = -dxidc[2] - xlogx_deriv2(c[2]) - xlogx_deriv2(1. - c[2]);
 }
 

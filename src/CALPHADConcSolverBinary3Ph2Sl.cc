@@ -156,7 +156,7 @@ void CALPHADConcSolverBinary3Ph2Sl::Jacobian(
     fjac[2][0] = 0.;
     fjac[2][1] = (p_[1] + q_[1])
                  * (dxidc[1] + q_[1] * xlogx_deriv2(ypp_A[1])
-                       - q_[1] * xlogx_deriv2(1. - ypp_A[1]));
+                       + q_[1] * xlogx_deriv2(1. - ypp_A[1]));
     fjac[2][2] = (p_[2] + q_[2])
                  * (-dxidc[2] - q_[2] * xlogx_deriv2(ypp_A[2])
                        - q_[2] * xlogx_deriv2(1. - ypp_A[2]));
