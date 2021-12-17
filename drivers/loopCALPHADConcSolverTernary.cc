@@ -169,6 +169,8 @@ int main(int argc, char* argv[])
 
     const double deviation = 1.e-4;
 
+#ifndef HAVE_OPENMP_OFFLOAD
+
     double* xhost = new double[4 * N];
     for (int i = 0; i < 4 * N; i++)
     {
@@ -213,32 +215,36 @@ int main(int argc, char* argv[])
                       << std::endl;
             std::cout << "nits=" << nits[i] << std::endl;
         }
+        std::cout << "Host: x=" << xhost[4 * i] << "," << xhost[4 * i + 1]
+                  << "," << xhost[4 * i + 2] << "," << xhost[4 * i + 3]
+                  << std::endl;
+        std::cout << "nits=" << nits[i] << std::endl;
         delete[] nits;
     }
+    delete[] xhost;
+#else
+    double* xdev = new double[4 * N];
+    short* nits  = new short[N];
 
-#ifdef HAVE_OPENMP_OFFLOAD
     // Device solve
     {
-        double* xdev = new double[4 * N];
         for (int i = 0; i < 4 * N; i++)
         {
             xdev[i] = -1;
         }
 
-        short* nits = new short[N];
+        // warm-up GPU with a dummy allocation
+        double dummy[N];
+#pragma omp target enter data map(alloc : dummy[:N])
 
         auto t1 = Clock::now();
 
 // clang-format off
-#pragma omp target map(to : sol) \
-                   map(tofrom : xdev[:4*N]) \
-                   map(to : fA, fB, fC) \
-                   map(to : L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S, L_BC_S, L_ABC_L, L_ABC_S) \
-                   map(to : RTinv) \
+#pragma omp target map(from : xdev[:4*N]) \
                    map(from : nits[:N])
-        // clang-format on
-        {
+{
 #pragma omp teams distribute parallel for
+            // clang-format on
             for (int i = 0; i < N; i++)
             {
                 // if( omp_is_initial_device() ) abort();
@@ -258,33 +264,52 @@ int main(int argc, char* argv[])
         }
 
         auto t2 = Clock::now();
+
         long int usec
             = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
                   .count();
         std::cout << "Device time/us/solve: " << (double)usec / (double)N
                   << std::endl;
 
-        double tol = 1.e-8;
+#pragma omp target exit data map(delete : dummy[:N])
+
+        // print out some results
+        std::cout << std::setprecision(12);
+        int n = N > 20 ? 20 : N;
+        for (int i = 0; i < n; i++)
+        {
+            std::cout << "Dev: x=" << xdev[4 * i] << "," << xdev[4 * i + 1]
+                      << "," << xdev[4 * i + 2] << "," << xdev[4 * i + 3]
+                      << std::endl;
+            std::cout << "nits=" << nits[i] << std::endl;
+        }
+
+        // verify results
+        double tol = 0.03;
+        int count  = 0;
         for (int i = 0; i < N; i++)
         {
-            if (std::abs(xdev[4 * i] - xhost[4 * i]) > tol
-                || std::abs(xdev[4 * i + 1] - xhost[4 * i + 1]) > tol
-                || std::abs(xdev[4 * i + 2] - xhost[4 * i + 2]) > tol
-                || std::abs(xdev[4 * i + 3] - xhost[4 * i + 3]) > tol || N < 20)
+            if ((xdev[4 * i + 1] != xdev[4 * i + 1])
+                || std::abs(xdev[4 * i] - 0.33) > tol
+                || std::abs(xdev[4 * i + 1] - 0.33) > tol
+                || std::abs(xdev[4 * i + 2] - 0.33) > tol
+                || std::abs(xdev[4 * i + 3] - 0.33) > tol)
             {
                 std::cout << "Device: x=" << xdev[4 * i] << ","
                           << xdev[4 * i + 1] << "," << xdev[4 * i + 2] << ","
                           << xdev[4 * i + 3] << std::endl;
-                std::cout << "Difference: " << xdev[4 * i] - xhost[4 * i]
-                          << ", " << xdev[4 * i + 1] - xhost[4 * i + 1] << ", "
-                          << xdev[4 * i + 2] - xhost[4 * i + 2] << ", "
-                          << xdev[4 * i + 3] - xhost[4 * i + 3] << std::endl;
+                std::cout << "Difference: " << xdev[4 * i] - 0.33 << ", "
+                          << xdev[4 * i + 1] - 0.33 << ", "
+                          << xdev[4 * i + 2] - 0.33 << ", "
+                          << xdev[4 * i + 3] - 0.33 << std::endl;
                 std::cout << "nits[" << i << "]=" << nits[i] << std::endl;
+                count++;
             }
+            if (count > 20) break;
         }
-        delete[] xdev;
-        delete[] nits;
     }
+
+    delete[] xdev;
+    delete[] nits;
 #endif
-    delete[] xhost;
 }
