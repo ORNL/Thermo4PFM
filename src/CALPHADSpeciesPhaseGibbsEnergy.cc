@@ -124,7 +124,6 @@ void CALPHADSpeciesPhaseGibbsEnergy::initialize(
             "CALPHADSpeciesPhaseGibbsEnergy: T**-2 not implemented!!!");
     }
 
-    // expansion_.resize(nintervals);
     double* pa   = a.data();
     double* pb   = b.data();
     double* pc   = c.data();
@@ -135,32 +134,13 @@ void CALPHADSpeciesPhaseGibbsEnergy::initialize(
     double* pdm1 = dm1.data();
     double* pdm9 = dm9.data();
 
-    CALPHADSpeciesPhaseGibbsEnergyExpansion<coeffsdatatype>* expansion
-        = new CALPHADSpeciesPhaseGibbsEnergyExpansion<
-            coeffsdatatype>[nintervals];
-    expansion_ = expansion;
+    expansion_ = new CALPHADSpeciesPhaseGibbsEnergyExpansion<
+        coeffsdatatype>[nintervals];
 
-#ifdef HAVE_OPENMP_OFFLOAD
-// clang-format off
-#pragma omp target data map(to : pa[:nintervals],     \
-                                 pb[:nintervals],     \
-                                 pc[:nintervals],     \
-                                 pd2[:nintervals],    \
-                                 pd3[:nintervals],    \
-                                 pd4[:nintervals],    \
-                                 pd7[:nintervals],    \
-                                 pdm1[:nintervals],   \
-                                 pdm9[:nintervals])   \
-                        map(to : expansion [0:nintervals])
-// clang-format on
-#endif
+    for (unsigned i = 0; i < nintervals; i++)
     {
-#pragma omp parallel for
-        for (unsigned i = 0; i < nintervals; i++)
-        {
-            expansion[i].init(pa[i], pb[i], pc[i], pd2[i], pd3[i], pd4[i],
-                pd7[i], pdm1[i], pdm9[i]);
-        }
+        expansion_[i].init(pa[i], pb[i], pc[i], pd2[i], pd3[i], pd4[i], pd7[i],
+            pdm1[i], pdm9[i]);
     }
 }
 
