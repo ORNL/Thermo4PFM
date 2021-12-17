@@ -215,10 +215,6 @@ int main(int argc, char* argv[])
                       << std::endl;
             std::cout << "nits=" << nits[i] << std::endl;
         }
-        std::cout << "Host: x=" << xhost[4 * i] << "," << xhost[4 * i + 1]
-                  << "," << xhost[4 * i + 2] << "," << xhost[4 * i + 3]
-                  << std::endl;
-        std::cout << "nits=" << nits[i] << std::endl;
         delete[] nits;
     }
     delete[] xhost;
