@@ -1,4 +1,5 @@
 find_package(PythonInterp 3.2 REQUIRED)
+message(STATUS "SOURCES=${SOURCES}")
 
 include_directories( ${CMAKE_SOURCE_DIR}/src )
 
@@ -13,7 +14,7 @@ add_executable(testInterpolationFunctions
 add_executable(testCALPHADFunctions
                ${TEST_DIR}/testCALPHADFunctions.cc )
 add_executable(testCALPHADSpeciesPhaseGibbsEnergyExpansion
-               ${TEST_DIR}/testCALPHADSpeciesPhaseGibbsEnergyExpansion.cc )
+               ${TEST_DIR}/testCALPHADSpeciesPhaseGibbsEnergyExpansion.cc ${SOURCES})
 add_executable(testCALPHADGibbsEnergy
                ${TEST_DIR}/testCALPHADGibbsEnergy.cc )
 add_executable(testCALPHADbinaryKKS
@@ -44,22 +45,22 @@ add_executable(testCALPHADternaryTieLine
                ${TEST_DIR}/testCALPHADternaryTieLine.cc )
 
 add_executable(testLoopCALPHADSpeciesPhaseGibbsEnergy
-               ${TEST_DIR}/testLoopCALPHADSpeciesPhaseGibbsEnergy.cc )
+               ${TEST_DIR}/testLoopCALPHADSpeciesPhaseGibbsEnergy.cc ${SOURCES})
 add_executable(testLoopCALPHADbinaryEquilibrium
-               ${TEST_DIR}/testLoopCALPHADbinaryEquilibrium.cc )
+               ${TEST_DIR}/testLoopCALPHADbinaryEquilibrium.cc ${SOURCES})
 add_executable(testLoopCALPHADbinaryKKS
-               ${TEST_DIR}/testLoopCALPHADbinaryKKS.cc )
+               ${TEST_DIR}/testLoopCALPHADbinaryKKS.cc ${SOURCES})
 add_executable(testLoopCALPHADternaryKKS
-               ${TEST_DIR}/testLoopCALPHADternaryKKS.cc )
+               ${TEST_DIR}/testLoopCALPHADternaryKKS.cc ${SOURCES})
 add_executable(testLoopCALPHADternaryTieLine
-               ${TEST_DIR}/testLoopCALPHADternaryTieLine.cc )
+               ${TEST_DIR}/testLoopCALPHADternaryTieLine.cc ${SOURCES})
 add_executable(testLoopKKSdiluteBinaryKKS
-               ${TEST_DIR}/testLoopKKSdiluteBinaryKKS.cc )
+               ${TEST_DIR}/testLoopKKSdiluteBinaryKKS.cc ${SOURCES})
 
 target_link_libraries(testAlCuDatabases thermo4pfm)
 target_link_libraries(testInterpolationFunctions thermo4pfm)
 target_link_libraries(testCALPHADFunctions thermo4pfm)
-target_link_libraries(testCALPHADSpeciesPhaseGibbsEnergyExpansion thermo4pfm)
+#target_link_libraries(testCALPHADSpeciesPhaseGibbsEnergyExpansion thermo4pfm)
 target_link_libraries(testCALPHADGibbsEnergy thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKS thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKSThreePhase thermo4pfm)
@@ -73,14 +74,14 @@ target_link_libraries(testCALPHADternaryTieLine thermo4pfm)
 target_link_libraries(testKKSdiluteBinaryKKS thermo4pfm)
 target_link_libraries(testKKSdiluteBinaryEquilibrium thermo4pfm)
 
-target_link_libraries(testLoopCALPHADSpeciesPhaseGibbsEnergy thermo4pfm)
-target_link_libraries(testLoopCALPHADbinaryKKS thermo4pfm)
-target_link_libraries(testLoopCALPHADbinaryEquilibrium thermo4pfm)
-target_link_libraries(testLoopCALPHADternaryKKS thermo4pfm)
-target_link_libraries(testLoopCALPHADternaryTieLine thermo4pfm)
+#target_link_libraries(testLoopCALPHADSpeciesPhaseGibbsEnergy thermo4pfm)
+#target_link_libraries(testLoopCALPHADbinaryKKS thermo4pfm)
+#target_link_libraries(testLoopCALPHADbinaryEquilibrium thermo4pfm)
+#target_link_libraries(testLoopCALPHADternaryKKS thermo4pfm)
+#target_link_libraries(testLoopCALPHADternaryTieLine thermo4pfm)
 target_link_libraries(testCALPHADJacobianBinary thermo4pfm)
 target_link_libraries(testCALPHADJacobianTernary thermo4pfm)
-target_link_libraries(testLoopKKSdiluteBinaryKKS thermo4pfm)
+#target_link_libraries(testLoopKKSdiluteBinaryKKS thermo4pfm)
 
 if (${OPENMP_CXX_FOUND})
   target_link_libraries(testCALPHADSpeciesPhaseGibbsEnergyExpansion OpenMP::OpenMP_CXX)
