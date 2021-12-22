@@ -192,7 +192,7 @@ int main(int argc, char* argv[])
 
     const double deviation = 1.e-4;
 
-#ifndef HAVE_OPENMP_OFFLOAD
+//#ifndef HAVE_OPENMP_OFFLOAD
 
     double* xhost = new double[4 * N];
     for (int i = 0; i < 4 * N; i++)
@@ -242,7 +242,7 @@ int main(int argc, char* argv[])
         delete[] nits;
     }
     delete[] xhost;
-#else
+//#else
     double* xdev = new double[4 * N];
     short* nits  = new short[N];
 
@@ -331,5 +331,5 @@ int main(int argc, char* argv[])
 
     delete[] xdev;
     delete[] nits;
-#endif
+//#endif
 }
