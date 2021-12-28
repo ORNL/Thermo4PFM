@@ -17,8 +17,10 @@ namespace pt = boost::property_tree;
 
 TEST_CASE("CALPHAD ternary equilibrium", "[ternary equilibrium]")
 {
+#ifdef _OPENMP
     std::cout << "Run test with " << omp_get_max_threads() << " threads"
               << std::endl;
+#endif
 
     Thermo4PFM::EnergyInterpolationType energy_interp_func_type
         = Thermo4PFM::EnergyInterpolationType::PBG;

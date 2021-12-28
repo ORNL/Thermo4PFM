@@ -26,7 +26,10 @@ public:
         const EnergyInterpolationType energy_interp_func_type,
         const ConcInterpolationType conc_interp_func_type);
 
-    ~CALPHADFreeEnergyFunctionsBinary3Ph2Sl(){};
+    ~CALPHADFreeEnergyFunctionsBinary3Ph2Sl()
+    {
+        delete[] fenergy_diag_filename_;
+    };
 
     double computeFreeEnergy(const double temperature, const double* const conc,
         const PhaseIndex pi, const bool gp = false);

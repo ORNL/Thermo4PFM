@@ -17,8 +17,10 @@ namespace pt = boost::property_tree;
 
 TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
 {
+#ifdef _OPENMP
     std::cout << "Run test with " << omp_get_max_threads() << " threads"
               << std::endl;
+#endif
 
     Thermo4PFM::EnergyInterpolationType energy_interp_func_type
         = Thermo4PFM::EnergyInterpolationType::PBG;
@@ -97,6 +99,7 @@ TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
         CHECK(conc[1] == Approx(cs[i]).margin(1.e-6));
     }
 
+#ifdef HAVE_OPENMP_OFFLOAD
     short* nits  = new short[nTintervals + 1];
     double* xdev = new double[2 * (nTintervals + 1)];
 
@@ -133,4 +136,7 @@ TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
     }
     delete[] nits;
     delete[] xdev;
+#endif
+
+    delete cafe;
 }
