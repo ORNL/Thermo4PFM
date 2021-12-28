@@ -12,8 +12,10 @@ using namespace Thermo4PFM;
 
 int main(int argc, char* argv[])
 {
+#ifdef _OPENMP
     std::cout << "Run test with " << omp_get_max_threads() << " threads"
               << std::endl;
+#endif
 
     const int nDet = 10;
 

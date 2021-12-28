@@ -14,8 +14,10 @@ namespace pt = boost::property_tree;
 
 int main(int argc, char* argv[])
 {
-    std::cout << "Run test with " << omp_get_max_threads() << " threads"
+#ifdef _OPENMP
+    std::cout << "Run with " << omp_get_max_threads() << " threads"
               << std::endl;
+#endif
 
     const double Tmin     = 1300.;
     const double Tmax     = 1500.;

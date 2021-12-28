@@ -98,6 +98,7 @@ TEST_CASE("Loop CALPHADSpeciesPhaseGibbsEnergy",
         CHECK(e == Approx(energy[i]).margin(1.e-6));
     }
 
+#ifdef HAVE_OPENMP_OFFLOAD
     double* xdev = new double[nTintervals + 1];
 
     std::cout << "=========================\n";
@@ -124,4 +125,5 @@ TEST_CASE("Loop CALPHADSpeciesPhaseGibbsEnergy",
     }
 
     delete[] xdev;
+#endif
 }
