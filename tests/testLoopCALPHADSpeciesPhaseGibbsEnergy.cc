@@ -65,14 +65,6 @@ TEST_CASE("Loop CALPHADSpeciesPhaseGibbsEnergy",
     const int nTintervals = 10;
     const double deltaT   = (Tmax - Tmin) / (double)nTintervals;
 
-    // initial guesses
-    double c_init0 = 0.5;
-    double c_init1 = 0.5;
-
-    // solve KKS equations
-    double nominalc = 0.05;
-    double phi      = 0.5;
-
     std::vector<double> energy(nTintervals + 1);
 
     {

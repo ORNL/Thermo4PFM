@@ -40,9 +40,6 @@ TEST_CASE("Loop dilute binary KKS", "[loop dilute binary kks]")
         = new Thermo4PFM::KKSFreeEnergyFunctionDiluteBinary(
             conc_db, energy_interp_func_type, conc_interp_func_type);
 
-    const Thermo4PFM::PhaseIndex pi0 = Thermo4PFM::PhaseIndex::phaseL;
-    const Thermo4PFM::PhaseIndex pi1 = Thermo4PFM::PhaseIndex::phaseA;
-
     // initial guesses
     double c_init0 = 0.5;
     double c_init1 = 0.5;

@@ -45,10 +45,6 @@ TEST_CASE("CALPHAD binary equilibrium", "[binary equilibrium]")
 
     boost::optional<pt::ptree&> newton_db;
 
-    // choose pair of phases: phaseL, phaseA, phaseB
-    const Thermo4PFM::PhaseIndex pi0 = Thermo4PFM::PhaseIndex::phaseL;
-    const Thermo4PFM::PhaseIndex pi1 = Thermo4PFM::PhaseIndex::phaseA;
-
     // initial guesses
     const double init_guess[2] = { 0.2, 0.1 };
 

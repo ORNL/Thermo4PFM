@@ -45,10 +45,6 @@ TEST_CASE("CALPHAD ternary kks in a loop", "[ternary kks loop]")
 
     boost::optional<pt::ptree&> newton_db;
 
-    // choose pair of phases: phaseL, phaseA, phaseB
-    const Thermo4PFM::PhaseIndex pi0 = Thermo4PFM::PhaseIndex::phaseL;
-    const Thermo4PFM::PhaseIndex pi1 = Thermo4PFM::PhaseIndex::phaseA;
-
     // initial guesses
     const double init_guess[4] = { 0.33, 0.38, 0.32, 0.33 };
     double nominalc[2]         = { 0.33, 0.33 };

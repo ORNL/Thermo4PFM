@@ -235,8 +235,6 @@ int KKSFreeEnergyFunctionDiluteBinary::computePhaseConcentrations(
     assert(maxiters_ > 1);
 #endif
 
-    const double conc0 = conc[0];
-
     const double hphi = interp_func(conc_interp_func_type_, phi[0]);
 
     const double fB = computeFB(temperature);
