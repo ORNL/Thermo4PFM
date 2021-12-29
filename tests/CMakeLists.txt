@@ -42,7 +42,7 @@ add_executable(testCALPHADternaryKKS
 add_executable(testCALPHADConcSolverTernary
                ${TEST_DIR}/testCALPHADConcSolverTernary.cc )
 add_executable(testCALPHADternaryTieLine
-               ${TEST_DIR}/testCALPHADternaryTieLine.cc )
+               ${TEST_DIR}/testCALPHADternaryTieLine.cc ${SOURCES})
 
 if(${WITH_OPENMP_OFFLOAD})
   add_executable(testOpenMPoffload
@@ -74,7 +74,7 @@ target_link_libraries(testCALPHADConcSolverBinaryThreePhase thermo4pfm)
 target_link_libraries(testCALPHADConcSolverBinary3Ph2Sl thermo4pfm)
 target_link_libraries(testCALPHADternaryKKS thermo4pfm)
 target_link_libraries(testCALPHADConcSolverTernary thermo4pfm)
-target_link_libraries(testCALPHADternaryTieLine thermo4pfm)
+#target_link_libraries(testCALPHADternaryTieLine thermo4pfm)
 target_link_libraries(testKKSdiluteBinaryKKS thermo4pfm)
 target_link_libraries(testKKSdiluteBinaryEquilibrium thermo4pfm)
 

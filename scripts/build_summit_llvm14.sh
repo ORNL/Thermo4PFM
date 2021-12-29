@@ -19,7 +19,7 @@ cd ${BUILD_DIR}
 
 # call cmake
 cmake -DCMAKE_CXX_COMPILER=clang++ \
-      -DCMAKE_BUILD_TYPE=Debug \
+      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
       -DWITH_OPENMP_OFFLOAD=ON \
       -DCMAKE_CXX_FLAGS="-fopenmp -fopenmp-targets=nvptx64 -Rpass=openmp-opt -Rpass-missed=openmp-opt" \
       -DWITH_OPENMP_OFFLOAD=ON \
