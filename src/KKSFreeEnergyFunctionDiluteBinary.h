@@ -63,7 +63,7 @@ private:
 
     double computeFB(const double temperature) const;
 
-    char fenergy_diag_filename_[11];
+    char* fenergy_diag_filename_;
 
     ///
     /// model parameters independent of T, c, ...
