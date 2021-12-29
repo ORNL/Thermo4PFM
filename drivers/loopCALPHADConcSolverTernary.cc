@@ -62,6 +62,30 @@ int main(int argc, char* argv[])
             pt::ptree& Lmix0_db = calphad_db.get_child(dbnamemixL);
             Thermo4PFM::readLmixTernaryParameters(Lmix0_db, LmixABCPhaseL);
         }
+        else
+        {
+            for (int j = 0; j < 3; j++)
+                for (int i = 0; i < 2; i++)
+                {
+                    LmixABCPhaseL[j][i] = 0.;
+                }
+        }
+    }
+    {
+        std::string dbnamemixL("LmixABCPhaseA");
+        if (calphad_db.get_child_optional(dbnamemixL))
+        {
+            pt::ptree& Lmix0_db = calphad_db.get_child(dbnamemixL);
+            Thermo4PFM::readLmixTernaryParameters(Lmix0_db, LmixABCPhaseA);
+        }
+        else
+        {
+            for (int j = 0; j < 3; j++)
+                for (int i = 0; i < 2; i++)
+                {
+                    LmixABCPhaseA[j][i] = 0.;
+                }
+        }
     }
 
     {
