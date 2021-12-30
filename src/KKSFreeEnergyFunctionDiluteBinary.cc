@@ -22,7 +22,7 @@ KKSFreeEnergyFunctionDiluteBinary::KKSFreeEnergyFunctionDiluteBinary(
       alpha_(1.)
 {
     std::string fenergy_diag_filename("energy.vtk");
-    //fenergy_diag_filename_ = new char[fenergy_diag_filename.length() + 1];
+    fenergy_diag_filename_ = new char[fenergy_diag_filename.length() + 1];
     strcpy(fenergy_diag_filename_, fenergy_diag_filename.c_str());
 
     readParameters(conc_db);
