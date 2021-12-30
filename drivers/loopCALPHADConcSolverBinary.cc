@@ -93,7 +93,7 @@ int main(int argc, char* argv[])
     // for(int i=0;i<4;i++)std::cout<<"Lmix_A["<<i<<"]="<<Lmix_A[i]<<std::endl;
 
     const double RTinv
-        = 1.0 / (Thermo4PFM::gas_constant_R_JpKpmol * temperature);
+        = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     double sol[2] = { 0.5, 0.5 };
 

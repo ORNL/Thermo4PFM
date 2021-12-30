@@ -1,17 +1,11 @@
-// C2 extension of x(log(x)) function for x<=smallx
+// C2 extension of x(log(x)) function for x<=SMALLX
 //
 #include <math.h>
 
-#ifdef HAVE_OPENMP_OFFLOAD
-#pragma omp declare target
-#endif
-static const double smallx            = 1.0e-5;
-static const double inv_smallx        = 1. / smallx;
-static const double log_smallx        = log(smallx);
-static const double smallx_log_smallx = smallx * log_smallx;
-#ifdef HAVE_OPENMP_OFFLOAD
-#pragma omp end declare target
-#endif
+#define SMALLX 1.0e-5
+#define INVSMALLX 1.e5
+#define LOGSMALLX -11.512925464970229
+#define SMALLXLOGSMALLX -11.512925464970229e-5
 
 namespace Thermo4PFM
 {
@@ -21,39 +15,39 @@ namespace Thermo4PFM
 #endif
 double xlogx(const double x)
 {
-    if (x > smallx)
+    if (x > SMALLX)
     {
         return x * log(x);
     }
     else
     {
-        return smallx_log_smallx + (x - smallx) * log_smallx
-               + 0.5 * (x * x * inv_smallx - smallx);
+        return SMALLXLOGSMALLX + (x - SMALLX) * LOGSMALLX
+               + 0.5 * (x * x * INVSMALLX - SMALLX);
     }
 }
 
 double xlogx_deriv(const double x)
 {
-    if (x > smallx)
+    if (x > SMALLX)
     {
         return log(x) + 1.0;
     }
     else
     {
-        return log_smallx + x * inv_smallx;
+        return LOGSMALLX + x * INVSMALLX;
     }
 }
 
 template <typename DataType>
 DataType xlogx_deriv2(const DataType x)
 {
-    if (x > smallx)
+    if (x > SMALLX)
     {
         return 1. / x;
     }
     else
     {
-        return inv_smallx;
+        return INVSMALLX;
     }
 }
 

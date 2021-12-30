@@ -22,7 +22,7 @@ typedef std::chrono::high_resolution_clock Clock;
 
 int main(int argc, char* argv[])
 {
-    const int N = 10000000;
+    const int N = 1000000;
 
 #ifdef _OPENMP
     std::cout << "Compiled by an OpenMP-compliant implementation.\n";
@@ -186,13 +186,13 @@ int main(int argc, char* argv[])
         L_ABC_S[i] = LmixABCPhaseA[i][0] + temperature * LmixABCPhaseA[i][1];
 
     const double RTinv
-        = 1.0 / (Thermo4PFM::gas_constant_R_JpKpmol * temperature);
+        = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     double sol[4] = { 0.33, 0.38, 0.32, 0.33 };
 
     const double deviation = 1.e-4;
 
-#ifndef HAVE_OPENMP_OFFLOAD
+//#ifndef HAVE_OPENMP_OFFLOAD
 
     double* xhost = new double[4 * N];
     for (int i = 0; i < 4 * N; i++)
@@ -242,7 +242,7 @@ int main(int argc, char* argv[])
         delete[] nits;
     }
     delete[] xhost;
-#else
+//#else
     double* xdev = new double[4 * N];
     short* nits  = new short[N];
 
@@ -331,5 +331,5 @@ int main(int argc, char* argv[])
 
     delete[] xdev;
     delete[] nits;
-#endif
+//#endif
 }
