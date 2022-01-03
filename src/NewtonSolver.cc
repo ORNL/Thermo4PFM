@@ -15,13 +15,14 @@
 #endif
 #include <cmath>
 
-//#define DEBUG_CONVERGENCE
+#define DEBUG_CONVERGENCE
 #ifdef DEBUG_CONVERGENCE
 #include <iomanip>
 #include <iostream>
 #include <vector>
 #endif
 
+#include <iostream>
 namespace Thermo4PFM
 {
 
@@ -103,9 +104,16 @@ void NewtonSolver<Dimension, SolverType, JacobianDataType>::UpdateSolution(
         // std::cout << "del_c[" << jj << "] = " << del_c[jj] << std::endl;
     }
 
+    // TESTING
+    std::vector<double> alpha_array(3);
+    alpha_array[0] = 1.0;
+    alpha_array[1] = 1.0;
+    alpha_array[2] = 1.0;
+    // END TESTING
     for (int ii = 0; ii < Dimension; ii++)
     {
         c[ii] = c[ii] - alpha * del_c[ii];
+        //c[ii] = c[ii] - alpha_array[ii] * del_c[ii];
     }
 }
 
@@ -146,7 +154,6 @@ int NewtonSolver<Dimension, SolverType,
 
     while (1)
     {
-
 #ifdef DEBUG_CONVERGENCE
         // for ( int ii = 0; ii < Dimension ; ii++ )cout<<conc[ii]<<endl;
         // std::cout<<endl;
@@ -170,7 +177,10 @@ int NewtonSolver<Dimension, SolverType,
             break;
         }
 
-        if (iterations == max_iters) break;
+        if (iterations == max_iters){
+	    //std::cout << "Max iters reached: " << iterations << std::endl;
+            break;
+	}
 
         internalJacobian(conc, fjac);
         UpdateSolution(conc, fvec, fjac, alpha);
@@ -208,8 +218,14 @@ int NewtonSolver<Dimension, SolverType,
         std::cerr << "Error: too many iterations in NewtonSolver" << std::endl;
     }
 #endif
-
-    if (!converged) return -1;
+    if (!converged)
+    {
+        //for (int ii = 0; ii < Dimension; ii++)
+        //{
+        //    std::cout << "  conc[" << ii << "] = " << conc[ii] << std::endl;
+        //}
+        return -1;
+    }
     return iterations;
 }
 

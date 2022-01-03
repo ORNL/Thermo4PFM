@@ -96,6 +96,7 @@ TEST_CASE("Loop dilute binary KKS", "[loop dilute binary kks]")
         CHECK(conc[1] == Approx(cs[i]).margin(1.e-6));
     }
 
+#ifdef HAVE_OPENMP_OFFLOAD
     short* nits          = new short[nTintervals + 1];
     double* xdev         = new double[2 * (nTintervals + 1)];
     double init_guess[2] = { c_init0, c_init1 };
@@ -137,6 +138,6 @@ TEST_CASE("Loop dilute binary KKS", "[loop dilute binary kks]")
     }
     delete[] nits;
     delete[] xdev;
-
+#endif
     delete cafe;
 }

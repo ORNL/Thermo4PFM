@@ -96,7 +96,7 @@ TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
         CHECK(conc[0] == Approx(cl[i]).margin(1.e-6));
         CHECK(conc[1] == Approx(cs[i]).margin(1.e-6));
     }
-
+#ifdef HAVE_OPENMP_OFFLOAD
     short* nits  = new short[nTintervals + 1];
     double* xdev = new double[2 * (nTintervals + 1)];
 
@@ -133,4 +133,5 @@ TEST_CASE("CALPHAD binary kks in a loop", "[binary kks loop]")
     }
     delete[] nits;
     delete[] xdev;
+#endif
 }
