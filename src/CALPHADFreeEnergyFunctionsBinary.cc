@@ -449,7 +449,6 @@ double CALPHADFreeEnergyFunctionsBinary::fchem(
     const double tol = 1.e-8;
     double fl        = 0.;
     double fa        = 0.;
-    double fb        = 0.;
     if ((phi[0] > tol) & (phi[0] < (1. - tol)))
     {
         computePhasesFreeEnergies(temperature, &hcphi, conc[0], fl, fa);

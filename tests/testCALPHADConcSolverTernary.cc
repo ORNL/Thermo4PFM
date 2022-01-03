@@ -1,35 +1,23 @@
+#define CATCH_CONFIG_MAIN
+
 #include "CALPHADConcSolverTernary.h"
 #include "CALPHADFreeEnergyFunctionsTernary.h"
 #include "CALPHADFunctions.h"
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 #include "PhysicalConstants.h"
 
-#include <chrono>
+#include "catch.hpp"
 
 #include <boost/optional/optional.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-#include <iomanip>
 #include <iostream>
-#include <string>
-
-#include <omp.h>
 
 namespace pt = boost::property_tree;
 
-typedef std::chrono::high_resolution_clock Clock;
-
-int main(int argc, char* argv[])
+TEST_CASE("CALPHAD ternary solver", "[ternary solver]")
 {
-    const int N = 10000000;
-
-#ifdef _OPENMP
-    std::cout << "Compiled by an OpenMP-compliant implementation.\n";
-    std::cout << "Run test with " << omp_get_max_threads() << " threads"
-              << std::endl;
-#endif
-
     std::cout << " Read CALPHAD database..." << std::endl;
     pt::ptree calphad_db;
     try
@@ -121,7 +109,6 @@ int main(int argc, char* argv[])
 
     Thermo4PFM::CALPHADSpeciesPhaseGibbsEnergy g_species_phaseL[3];
     Thermo4PFM::CALPHADSpeciesPhaseGibbsEnergy g_species_phaseA[3];
-
     {
         std::string dbnameL("PhaseL");
         std::string dbnameA("PhaseA");
@@ -156,7 +143,6 @@ int main(int argc, char* argv[])
     CalphadDataType L_AB_L[4];
     for (int i = 0; i < 4; i++)
         L_AB_L[i] = LmixABPhaseL[i][0] + temperature * LmixABPhaseL[i][1];
-
     CalphadDataType L_AB_S[4];
     for (int i = 0; i < 4; i++)
         L_AB_S[i] = LmixABPhaseA[i][0] + temperature * LmixABPhaseA[i][1];
@@ -189,147 +175,24 @@ int main(int argc, char* argv[])
         = 1.0 / (Thermo4PFM::gas_constant_R_JpKpmol * temperature);
 
     double sol[4] = { 0.33, 0.38, 0.32, 0.33 };
+    double hphi   = 0.5;
+    double c0     = 0.33;
+    double c1     = 0.33;
 
-    const double deviation = 1.e-4;
+    Thermo4PFM::CALPHADConcSolverTernary solver;
+    solver.setup(c0, c1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S,
+        L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
 
-#ifndef HAVE_OPENMP_OFFLOAD
+    int nits = solver.ComputeConcentration(sol, 1.e-8, 50);
 
-    double* xhost = new double[4 * N];
-    for (int i = 0; i < 4 * N; i++)
-    {
-        xhost[i] = -1.;
-    }
+    std::cout << "Solution = " << sol[0] << "," << sol[1] << "," << sol[2]
+              << "," << sol[3] << std::endl;
+    double ref_sol[4] = { 0.339215, 0.356739, 0.320785, 0.303261 };
 
-    // Host solve
-    {
-        short* nits = new short[N];
-        auto t1     = Clock::now();
+    CHECK(sol[0] == Approx(ref_sol[0]).margin(1.e-6));
+    CHECK(sol[1] == Approx(ref_sol[1]).margin(1.e-6));
+    CHECK(sol[2] == Approx(ref_sol[2]).margin(1.e-6));
+    CHECK(sol[3] == Approx(ref_sol[3]).margin(1.e-6));
 
-#pragma omp parallel for
-        for (int i = 0; i < N; i++)
-        {
-#ifdef _OPENMP
-            if (!omp_is_initial_device()) abort();
-#endif
-            xhost[4 * i]     = sol[0];
-            xhost[4 * i + 1] = sol[1];
-            xhost[4 * i + 2] = sol[2];
-            xhost[4 * i + 3] = sol[3];
-            double hphi      = 0.5 + (i % 100) * deviation;
-            double c0        = 0.33;
-            double c1        = 0.33;
-            Thermo4PFM::CALPHADConcSolverTernary solver;
-            solver.setup(c0, c1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S,
-                L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
-            nits[i] = solver.ComputeConcentration(&xhost[4 * i], 1.e-8, 50);
-        }
-        auto t2 = Clock::now();
-        long int usec
-            = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
-                  .count();
-        std::cout << "Host time/us/solve:   " << (double)usec / (double)N
-                  << std::endl;
-
-        std::cout << std::setprecision(12);
-        int n = N > 20 ? 20 : N;
-        for (int i = 0; i < n; i++)
-        {
-            std::cout << "Host: x=" << xhost[4 * i] << "," << xhost[4 * i + 1]
-                      << "," << xhost[4 * i + 2] << "," << xhost[4 * i + 3]
-                      << std::endl;
-            std::cout << "nits=" << nits[i] << std::endl;
-        }
-        delete[] nits;
-    }
-    delete[] xhost;
-#else
-    double* xdev = new double[4 * N];
-    short* nits  = new short[N];
-
-    // Device solve
-    {
-        for (int i = 0; i < 4 * N; i++)
-        {
-            xdev[i] = -1;
-        }
-
-        // warm-up GPU with a dummy allocation
-        double dummy[N];
-#pragma omp target enter data map(alloc : dummy[:N])
-
-        auto t1 = Clock::now();
-
-// clang-format off
-#pragma omp target map(from : xdev[:4*N]) \
-                   map(from : nits[:N])
-{
-#pragma omp teams distribute parallel for
-            // clang-format on
-            for (int i = 0; i < N; i++)
-            {
-                // if( omp_is_initial_device() ) abort();
-                xdev[4 * i]     = sol[0];
-                xdev[4 * i + 1] = sol[1];
-                xdev[4 * i + 2] = sol[2];
-                xdev[4 * i + 3] = sol[3];
-
-                double hphi = 0.5 + (i % 100) * deviation;
-                double c0   = 0.33;
-                double c1   = 0.33;
-                class Thermo4PFM::CALPHADConcSolverTernary solver;
-                solver.setup(c0, c1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L,
-                    L_AB_S, L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
-                nits[i] = solver.ComputeConcentration(&xdev[4 * i], 1.e-8, 50);
-            }
-        }
-
-        auto t2 = Clock::now();
-
-        long int usec
-            = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
-                  .count();
-        std::cout << "Device time/us/solve: " << (double)usec / (double)N
-                  << std::endl;
-
-#pragma omp target exit data map(delete : dummy[:N])
-
-        // print out some results
-        std::cout << std::setprecision(12);
-        int n = N > 20 ? 20 : N;
-        for (int i = 0; i < n; i++)
-        {
-            std::cout << "Dev: x=" << xdev[4 * i] << "," << xdev[4 * i + 1]
-                      << "," << xdev[4 * i + 2] << "," << xdev[4 * i + 3]
-                      << std::endl;
-            std::cout << "nits=" << nits[i] << std::endl;
-        }
-
-        // verify results
-        double tol = 0.03;
-        int count  = 0;
-        for (int i = 0; i < N; i++)
-        {
-            if ((xdev[4 * i + 1] != xdev[4 * i + 1])
-                || std::abs(xdev[4 * i] - 0.33) > tol
-                || std::abs(xdev[4 * i + 1] - 0.33) > tol
-                || std::abs(xdev[4 * i + 2] - 0.33) > tol
-                || std::abs(xdev[4 * i + 3] - 0.33) > tol)
-            {
-                std::cout << "Device: x=" << xdev[4 * i] << ","
-                          << xdev[4 * i + 1] << "," << xdev[4 * i + 2] << ","
-                          << xdev[4 * i + 3] << std::endl;
-                std::cout << "Difference: " << xdev[4 * i] - 0.33 << ", "
-                          << xdev[4 * i + 1] - 0.33 << ", "
-                          << xdev[4 * i + 2] - 0.33 << ", "
-                          << xdev[4 * i + 3] - 0.33 << std::endl;
-                std::cout << "nits[" << i << "]=" << nits[i] << std::endl;
-                count++;
-            }
-            if (count > 20) break;
-        }
-    }
-
-    delete[] xdev;
-    delete[] nits;
-#endif
+    std::cout << "nits=" << nits << std::endl;
 }

@@ -82,6 +82,8 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
                 x[j] -= epsilon;
             }
         }
+        for (int i = 0; i < 2; i++)
+            delete[] fjac[i];
     }
 
     // CALPHADConcSolverBinaryThreePhase
@@ -142,6 +144,8 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
 
             x[j] -= epsilon;
         }
+        for (int i = 0; i < 3; i++)
+            delete[] fjac[i];
     }
 
     // CALPHADConcSolverBinary3Ph2Sl
@@ -209,6 +213,8 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
 
             x[j] -= epsilon;
         }
+        for (int i = 0; i < 3; i++)
+            delete[] fjac[i];
     }
 
     // CALPHADConcSolverBinary3Ph2Sl #2

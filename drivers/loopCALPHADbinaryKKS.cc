@@ -14,8 +14,10 @@ namespace pt = boost::property_tree;
 
 int main(int argc, char* argv[])
 {
+#ifdef _OPENMP
     std::cout << "Run test with " << omp_get_max_threads() << " threads"
               << std::endl;
+#endif
 
     Thermo4PFM::EnergyInterpolationType energy_interp_func_type
         = Thermo4PFM::EnergyInterpolationType::PBG;

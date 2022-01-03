@@ -118,4 +118,6 @@ TEST_CASE("CALPHAD Jacobian ternary", "[CALPHAD Jacobian ternary]")
             x[j] -= epsilon;
         }
     }
+    for (int i = 0; i < 5; i++)
+        delete[] fjac[i];
 }

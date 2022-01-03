@@ -24,11 +24,10 @@ int main(int argc, char* argv[])
     const int N = 10000000;
 
 #ifdef _OPENMP
-    printf("Compiled by an OpenMP-compliant implementation.\n");
-#endif
-
-    std::cout << "Run test with " << omp_get_max_threads() << " threads"
+    std::cout << "Compiled by an OpenMP-compliant implementation.\n";
+    std::cout << "Run with " << omp_get_max_threads() << " threads"
               << std::endl;
+#endif
 
     std::cout << " Read CALPHAD database..." << std::endl;
     pt::ptree calphad_db;
@@ -114,8 +113,9 @@ int main(int argc, char* argv[])
 #pragma omp parallel for
         for (int i = 0; i < N; i++)
         {
+#ifdef _OPENMP
             if (!omp_is_initial_device()) abort();
-
+#endif
             xhost[2 * i]     = sol[0];
             xhost[2 * i + 1] = sol[1];
             double hphi      = 0.5 + (i % 100) * deviation;

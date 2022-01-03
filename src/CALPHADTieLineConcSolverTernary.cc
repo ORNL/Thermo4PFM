@@ -143,13 +143,6 @@ void CALPHADTieLineConcSolverTernary::Jacobian(
         L_AB_S_, L_AC_S_, L_BC_S_, L_ABC_S_, cS[0], cS[1], deriv2FMixS);
     // assert(fabs(deriv2FMixS[2] - deriv2FMixS[1]) < 1.e-6);
 
-    double dfSdciS[2];
-    // 1st species
-    dfSdciS[0] = fA_[1] - fC_[1] + derivFMixS[0] + derivIdealMixS[0];
-
-    // 2nd species
-    dfSdciS[1] = fB_[1] - fC_[1] + derivFMixS[1] + derivIdealMixS[1];
-
     double d2fSdciS2[3];
     d2fSdciS2[0] = deriv2FMixS[0] + deriv2IdealMixS[0];
     d2fSdciS2[1] = deriv2FMixS[1] + deriv2IdealMixS[1];

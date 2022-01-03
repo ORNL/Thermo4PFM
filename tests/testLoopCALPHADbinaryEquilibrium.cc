@@ -17,8 +17,10 @@ namespace pt = boost::property_tree;
 
 TEST_CASE("CALPHAD binary equilibrium", "[binary equilibrium]")
 {
+#ifdef _OPENMP
     std::cout << "Run test with " << omp_get_max_threads() << " threads"
               << std::endl;
+#endif
 
     Thermo4PFM::EnergyInterpolationType energy_interp_func_type
         = Thermo4PFM::EnergyInterpolationType::PBG;
@@ -42,10 +44,6 @@ TEST_CASE("CALPHAD binary equilibrium", "[binary equilibrium]")
     }
 
     boost::optional<pt::ptree&> newton_db;
-
-    // choose pair of phases: phaseL, phaseA, phaseB
-    const Thermo4PFM::PhaseIndex pi0 = Thermo4PFM::PhaseIndex::phaseL;
-    const Thermo4PFM::PhaseIndex pi1 = Thermo4PFM::PhaseIndex::phaseA;
 
     // initial guesses
     const double init_guess[2] = { 0.2, 0.1 };

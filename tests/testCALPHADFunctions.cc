@@ -14,7 +14,6 @@ TEST_CASE("CALPHAD functions", "[calphad functions]")
 
     const double epsilon = 1.e-8;
     const double tol     = 1.e-6;
-    int nfailures        = 0;
 
     std::cout << std::setprecision(12);
     std::cerr << std::setprecision(12);
