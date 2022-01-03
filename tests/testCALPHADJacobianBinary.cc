@@ -11,7 +11,6 @@
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 
-
 #include "catch.hpp"
 
 #include <cmath>
@@ -19,7 +18,6 @@
 #include <iostream>
 
 namespace pt = boost::property_tree;
-
 
 TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
 {
@@ -224,7 +222,7 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
         double c0    = 0.795001;
         double hphi0 = 0.999069;
         double hphi1 = 0.000930938;
-	double hphi2 = 1.45003e-21;
+        double hphi2 = 1.45003e-21;
 
         // Calculate the inputs and the reference solution
         Thermo4PFM::EnergyInterpolationType energy_interp_func_type
@@ -250,8 +248,8 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
 
         // First calculate the reference solution
 
-        Thermo4PFM::CALPHADFreeEnergyFunctionsBinary3Ph2Sl cafe(
-            calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
+        Thermo4PFM::CALPHADFreeEnergyFunctionsBinary3Ph2Sl cafe(calphad_db,
+            newton_db, energy_interp_func_type, conc_interp_func_type);
 
         // Get the CALPHAD parameters
         CalphadDataType fA[3];
@@ -267,8 +265,8 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
         int q[3];
         for (int i = 0; i < 3; ++i)
         {
-           p[i] = 0;
-           q[i] = 1;
+            p[i] = 0;
+            q[i] = 1;
         }
 
         p[2] = 2;
@@ -283,16 +281,16 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
         double x[3] = { 0.795257, 0.838497, 0.67 };
 
         Thermo4PFM::CALPHADConcSolverBinary3Ph2Sl solver;
-        solver.setup(c0, hphi0, hphi1, hphi2, RTinv, Lmix_L,
-            Lmix_A, Lmix_B, fA, fB, p, q);
+        solver.setup(c0, hphi0, hphi1, hphi2, RTinv, Lmix_L, Lmix_A, Lmix_B, fA,
+            fB, p, q);
 
         solver.RHS(x, fvec1);
 
         solver.Jacobian(x, fjac);
 
-	std::cout << std::setprecision(12);
-        
-	// loop over variables
+        std::cout << std::setprecision(12);
+
+        // loop over variables
         for (int j = 0; j < 3; j++)
         {
             std::cout << "----------------------------" << std::endl;

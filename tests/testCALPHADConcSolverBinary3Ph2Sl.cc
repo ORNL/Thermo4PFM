@@ -209,15 +209,14 @@ TEST_CASE("CALPHAD conc solver binary 3 phase, 2 sublattice KKS, "
 
     REQUIRE(ret >= 0);
 
-
     // Test 2
     max_iters = 20000;
-    alpha = 1.0;
-	    
+    alpha     = 1.0;
+
     sol_test[0] = 0.79267;
     sol_test[1] = 0.79267;
     sol_test[2] = 0.79267;
-    
+
     hphi0 = 0.989276;
     hphi1 = 1.03871e-28;
     hphi2 = 0.0107243;
@@ -239,10 +238,9 @@ TEST_CASE("CALPHAD conc solver binary 3 phase, 2 sublattice KKS, "
     std::cout << "Newton iterations = " << ret << std::endl;
     REQUIRE(ret >= 0);
 
-
     // Test 3
     max_iters = 2000;
-    alpha = 1.0;
+    alpha     = 1.0;
 
     sol_test[0] = 0.7;
     sol_test[1] = 0.9;
@@ -268,6 +266,4 @@ TEST_CASE("CALPHAD conc solver binary 3 phase, 2 sublattice KKS, "
     std::cout << "   cB = " << sol_test[2] << std::endl;
     std::cout << "Newton iterations = " << ret << std::endl;
     REQUIRE(ret >= 0);
-
-
 }

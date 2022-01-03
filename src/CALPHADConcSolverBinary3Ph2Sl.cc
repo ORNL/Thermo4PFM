@@ -63,73 +63,94 @@ void CALPHADConcSolverBinary3Ph2Sl::RHS(
     double xi[3] = { 0., 0., 0. };
     computeXi(ypp_A, xi);
 
-    // This parameter controls a cutoff for when we don't consider the contribution 
-    // to the residual for when hphi for a phase is below it
+    // This parameter controls a cutoff for when we don't consider the
+    // contribution to the residual for when hphi for a phase is below it
     double eps = -1.0e-10;
 
     fvec[0] = -c0_ + hphi0_ * c[0] + hphi1_ * c[1] + hphi2_ * c[2];
 
     // We can choose to enforce two of the three chemical potential equilities.
     // Which two are chosen can impact the convergence rate.
-    if (hphi1_ > 0.4){
-	if (hphi0_ < eps){
+    if (hphi1_ > 0.4)
+    {
+        if (hphi0_ < eps)
+        {
             fvec[1] = 0.0;
-	}
-	else {
-            fvec[1] = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
-              - q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
-              + (xi[0] - xi[1]);
-	}
-	if (hphi2_ < eps){
-            fvec[2] = 0.0;
-	}
-	else {
-	    fvec[2] = q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
-              - q_[2] * (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
-              + (xi[1] - xi[2]);
-	}
-    }
-    else if (hphi2_ > 0.4){
-	if (hphi0_ < eps){
-	    fvec[1] = 0.0;
         }
-        else {	
-	    fvec[1] = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
-              - q_[2] * (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
-              + (xi[0] - xi[2]);
-	}
-	if (hphi1_ < eps){
-	    fvec[2] = 0.0;
-	}
-	else {
-            fvec[2] = q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
-              - q_[2] * (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
-              + (xi[1] - xi[2]);
-	}
-    }
-    else {
-	if (hphi1_ < eps){
-	   fvec[1] = 0.0;
-	}
-	else {	   
-	    fvec[1] = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
-              - q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
-              + (xi[0] - xi[1]);
-	}
-	if (hphi2_ < eps){
+        else
+        {
+            fvec[1]
+                = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
+                  - q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
+                  + (xi[0] - xi[1]);
+        }
+        if (hphi2_ < eps)
+        {
             fvec[2] = 0.0;
-	}
-	else {
-            fvec[2] = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
-              - q_[2] * (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
-              + (xi[0] - xi[2]);
+        }
+        else
+        {
+            fvec[2]
+                = q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
+                  - q_[2] * (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
+                  + (xi[1] - xi[2]);
+        }
+    }
+    else if (hphi2_ > 0.4)
+    {
+        if (hphi0_ < eps)
+        {
+            fvec[1] = 0.0;
+        }
+        else
+        {
+            fvec[1]
+                = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
+                  - q_[2] * (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
+                  + (xi[0] - xi[2]);
+        }
+        if (hphi1_ < eps)
+        {
+            fvec[2] = 0.0;
+        }
+        else
+        {
+            fvec[2]
+                = q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
+                  - q_[2] * (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
+                  + (xi[1] - xi[2]);
+        }
+    }
+    else
+    {
+        if (hphi1_ < eps)
+        {
+            fvec[1] = 0.0;
+        }
+        else
+        {
+            fvec[1]
+                = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
+                  - q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
+                  + (xi[0] - xi[1]);
+        }
+        if (hphi2_ < eps)
+        {
+            fvec[2] = 0.0;
+        }
+        else
+        {
+            fvec[2]
+                = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
+                  - q_[2] * (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
+                  + (xi[0] - xi[2]);
         }
     }
 
     // Debugging output
-    
-    //std::cout << "compositions: ";
-    //std::cout << c[0] << " " << c[1] << " " << c[2] << std::endl;
+
+    // std::cout << "compositions: ";
+    // std::cout << c[0] << " " << c[1] << " " << c[2] << std::endl;
     /*
     std::cout << "p: " << p_[0] << " " << p_[1] << " " << p_[2] << std::endl;
 
@@ -196,59 +217,59 @@ void CALPHADConcSolverBinary3Ph2Sl::Jacobian(
     fjac[0][1] = hphi1_;
     fjac[0][2] = hphi2_;
 
-    if (hphi1_ > 0.4){
+    if (hphi1_ > 0.4)
+    {
         fjac[1][0] = (p_[0] + q_[0])
-                 * (dxidc[0] + q_[0] * xlogx_deriv2(ypp_A[0])
-                       + q_[0] * xlogx_deriv2(1. - ypp_A[0]));
+                     * (dxidc[0] + q_[0] * xlogx_deriv2(ypp_A[0])
+                           + q_[0] * xlogx_deriv2(1. - ypp_A[0]));
         fjac[1][1] = (p_[1] + q_[1])
-                 * (-dxidc[1] - q_[1] * xlogx_deriv2(ypp_A[1])
-                       - q_[1] * xlogx_deriv2(1. - ypp_A[1]));
+                     * (-dxidc[1] - q_[1] * xlogx_deriv2(ypp_A[1])
+                           - q_[1] * xlogx_deriv2(1. - ypp_A[1]));
         fjac[1][2] = 0.;
-    
 
         fjac[2][0] = 0.;
         fjac[2][1] = (p_[1] + q_[1])
-                 * (dxidc[1] + q_[1] * xlogx_deriv2(ypp_A[1])
-                       + q_[1] * xlogx_deriv2(1. - ypp_A[1]));
+                     * (dxidc[1] + q_[1] * xlogx_deriv2(ypp_A[1])
+                           + q_[1] * xlogx_deriv2(1. - ypp_A[1]));
         fjac[2][2] = (p_[2] + q_[2])
-                 * (-dxidc[2] - q_[2] * xlogx_deriv2(ypp_A[2])
-                       - q_[2] * xlogx_deriv2(1. - ypp_A[2]));
+                     * (-dxidc[2] - q_[2] * xlogx_deriv2(ypp_A[2])
+                           - q_[2] * xlogx_deriv2(1. - ypp_A[2]));
     }
-    if (hphi2_ > 0.4){
+    if (hphi2_ > 0.4)
+    {
         fjac[1][0] = (p_[0] + q_[0])
-                 * (dxidc[0] + q_[0] * xlogx_deriv2(ypp_A[0])
-                       + q_[0] * xlogx_deriv2(1. - ypp_A[0]));
+                     * (dxidc[0] + q_[0] * xlogx_deriv2(ypp_A[0])
+                           + q_[0] * xlogx_deriv2(1. - ypp_A[0]));
         fjac[1][1] = 0.;
         fjac[1][2] = (p_[2] + q_[2])
-                 * (-dxidc[2] - q_[2] * xlogx_deriv2(ypp_A[2])
-                       - q_[2] * xlogx_deriv2(1. - ypp_A[2]));
-
+                     * (-dxidc[2] - q_[2] * xlogx_deriv2(ypp_A[2])
+                           - q_[2] * xlogx_deriv2(1. - ypp_A[2]));
 
         fjac[2][0] = 0.;
         fjac[2][1] = (p_[1] + q_[1])
-                 * (dxidc[1] + q_[1] * xlogx_deriv2(ypp_A[1])
-                       + q_[1] * xlogx_deriv2(1. - ypp_A[1]));
+                     * (dxidc[1] + q_[1] * xlogx_deriv2(ypp_A[1])
+                           + q_[1] * xlogx_deriv2(1. - ypp_A[1]));
         fjac[2][2] = (p_[2] + q_[2])
-                 * (-dxidc[2] - q_[2] * xlogx_deriv2(ypp_A[2])
-                       - q_[2] * xlogx_deriv2(1. - ypp_A[2]));
+                     * (-dxidc[2] - q_[2] * xlogx_deriv2(ypp_A[2])
+                           - q_[2] * xlogx_deriv2(1. - ypp_A[2]));
     }
-    else {
-	fjac[1][0] = (p_[0] + q_[0])
-                 * (dxidc[0] + q_[0] * xlogx_deriv2(ypp_A[0])
-                       + q_[0] * xlogx_deriv2(1. - ypp_A[0]));
+    else
+    {
+        fjac[1][0] = (p_[0] + q_[0])
+                     * (dxidc[0] + q_[0] * xlogx_deriv2(ypp_A[0])
+                           + q_[0] * xlogx_deriv2(1. - ypp_A[0]));
         fjac[1][1] = (p_[1] + q_[1])
-                 * (-dxidc[1] - q_[1] * xlogx_deriv2(ypp_A[1])
-                       - q_[1] * xlogx_deriv2(1. - ypp_A[1]));
+                     * (-dxidc[1] - q_[1] * xlogx_deriv2(ypp_A[1])
+                           - q_[1] * xlogx_deriv2(1. - ypp_A[1]));
         fjac[1][2] = 0.;
 
-
         fjac[2][0] = (p_[0] + q_[0])
-                 * (dxidc[0] + q_[0] * xlogx_deriv2(ypp_A[0])
-                       + q_[0] * xlogx_deriv2(1. - ypp_A[0]));
+                     * (dxidc[0] + q_[0] * xlogx_deriv2(ypp_A[0])
+                           + q_[0] * xlogx_deriv2(1. - ypp_A[0]));
         fjac[2][1] = 0.;
         fjac[2][2] = (p_[2] + q_[2])
-                 * (-dxidc[2] - q_[2] * xlogx_deriv2(ypp_A[2])
-                       - q_[2] * xlogx_deriv2(1. - ypp_A[2]));
+                     * (-dxidc[2] - q_[2] * xlogx_deriv2(ypp_A[2])
+                           - q_[2] * xlogx_deriv2(1. - ypp_A[2]));
     }
 }
 
@@ -279,7 +300,8 @@ void CALPHADConcSolverBinary3Ph2Sl::setup(const double c0, const double hphi0,
         p_[ii]  = static_cast<double>(p[ii]);
         q_[ii]  = static_cast<double>(q[ii]);
     }
-    //std::cout << c0_ << " " << hphi0_ << " " << hphi1_ << " " << hphi2_ << std::endl;
+    // std::cout << c0_ << " " << hphi0_ << " " << hphi1_ << " " << hphi2_ <<
+    // std::endl;
 }
 
 #ifdef HAVE_OPENMP_OFFLOAD

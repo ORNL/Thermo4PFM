@@ -113,7 +113,7 @@ void NewtonSolver<Dimension, SolverType, JacobianDataType>::UpdateSolution(
     for (int ii = 0; ii < Dimension; ii++)
     {
         c[ii] = c[ii] - alpha * del_c[ii];
-        //c[ii] = c[ii] - alpha_array[ii] * del_c[ii];
+        // c[ii] = c[ii] - alpha_array[ii] * del_c[ii];
     }
 }
 
@@ -177,10 +177,11 @@ int NewtonSolver<Dimension, SolverType,
             break;
         }
 
-        if (iterations == max_iters){
-	    //std::cout << "Max iters reached: " << iterations << std::endl;
+        if (iterations == max_iters)
+        {
+            // std::cout << "Max iters reached: " << iterations << std::endl;
             break;
-	}
+        }
 
         internalJacobian(conc, fjac);
         UpdateSolution(conc, fvec, fjac, alpha);
@@ -220,7 +221,7 @@ int NewtonSolver<Dimension, SolverType,
 #endif
     if (!converged)
     {
-        //for (int ii = 0; ii < Dimension; ii++)
+        // for (int ii = 0; ii < Dimension; ii++)
         //{
         //    std::cout << "  conc[" << ii << "] = " << conc[ii] << std::endl;
         //}

@@ -158,7 +158,7 @@ TEST_CASE("CALPHAD binary three phase, two sublattice KKS #2",
     cafe.computeDerivFreeEnergy(temperature, &sol[1], pi1, &derivS1);
     std::cout << "   dfS1/dcS1 = " << derivS1 << std::endl;
 
-    //REQUIRE(derivS1 == Approx(derivL).margin(1.e-5));
+    // REQUIRE(derivS1 == Approx(derivL).margin(1.e-5));
 
     double derivS2;
     cafe.computeDerivFreeEnergy(temperature, &sol[2], pi2, &derivS2);

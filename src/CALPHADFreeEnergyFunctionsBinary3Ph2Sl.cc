@@ -26,18 +26,21 @@ CALPHADFreeEnergyFunctionsBinary3Ph2Sl::CALPHADFreeEnergyFunctionsBinary3Ph2Sl(
       newton_maxits_(20),
       newton_verbose_(false)
 {
-    std::cout << "Creating CALPHADFreeEnergyFunctionsBinary3Ph2Sl..." << std::endl;
+    std::cout << "Creating CALPHADFreeEnergyFunctionsBinary3Ph2Sl..."
+              << std::endl;
     std::string fenergy_diag_filename("energy.vtk");
     fenergy_diag_filename_ = new char[fenergy_diag_filename.length() + 1];
     strcpy(fenergy_diag_filename_, fenergy_diag_filename.c_str());
 
     readParameters(calphad_db);
 
-    if (newton_db) { 
-	readNewtonparameters(newton_db.get());
+    if (newton_db)
+    {
+        readNewtonparameters(newton_db.get());
     }
-    else {
-    	std::cout << "No Newton database given to Thermo4PFM..." << std::endl;
+    else
+    {
+        std::cout << "No Newton database given to Thermo4PFM..." << std::endl;
     }
 }
 
@@ -50,7 +53,8 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::readNewtonparameters(
     newton_maxits_  = newton_db.get<int>("max_its", newton_maxits_);
     newton_verbose_ = newton_db.get<bool>("verbose", newton_verbose_);
 
-    std::cout << "Thermo4PFM Newton Solver Parameters (Binary3Ph2Sl):" << std::endl;
+    std::cout << "Thermo4PFM Newton Solver Parameters (Binary3Ph2Sl):"
+              << std::endl;
     std::cout << "Tolerance: " << newton_tol_ << std::endl;
     std::cout << "Alpha: " << newton_alpha_ << std::endl;
     std::cout << "Max interations: " << newton_maxits_ << std::endl;
@@ -347,8 +351,10 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhasesFreeEnergies(
                      "CALPHADFreeEnergyFunctionsBinary3Ph2Sl::"
                      "computePhasesFreeEnergies()"
                      " ---"
-                  << conc << ", hphi0=" << hphi[0] << ", hphi1=" << hphi[1] << ", hphi2=" << hphi[2] << "x="<< c[0] << ", " << c[1] << ", " << c[2] << std::endl;
-        //abort();
+                  << conc << ", hphi0=" << hphi[0] << ", hphi1=" << hphi[1]
+                  << ", hphi2=" << hphi[2] << "x=" << c[0] << ", " << c[1]
+                  << ", " << c[2] << std::endl;
+        // abort();
 #endif
     }
 
@@ -372,7 +378,7 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
     // assert(x[1] >= 0.);
     // assert(x[0] <= 1.);
     // assert(x[1] <= 1.);
-    
+
     // FOR TESTING PURPOSES
     x[0] = *conc;
     x[1] = *conc;
@@ -413,7 +419,7 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
         c0, hphi0, hphi1, hphi2, RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB, p, q);
     int ret = solver.ComputeConcentration(
         x, newton_tol_, newton_maxits_, newton_alpha_);
-    
+
 #if 1
     if (ret == -1)
     {
@@ -421,8 +427,10 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
                      "CALPHADFreeEnergyFunctionsBinary::"
                      "computePhaseConcentrations() "
                      "failed for conc="
-                  << conc[0] << ", hphi0=" << hphi0 << ", hphi1=" << hphi1 << ", hphi2=" << hphi2 << "x="<< x[0] << ", " << x[1] << ", " << x[2] << std::endl;
-        //abort();
+                  << conc[0] << ", hphi0=" << hphi0 << ", hphi1=" << hphi1
+                  << ", hphi2=" << hphi2 << "x=" << x[0] << ", " << x[1] << ", "
+                  << x[2] << std::endl;
+        // abort();
     }
 #endif
 
