@@ -64,7 +64,8 @@ void CALPHADConcSolverBinary3Ph2Sl::RHS(
     computeXi(ypp_A, xi);
 
     // This parameter controls a cutoff for when we don't consider the
-    // contribution to the residual for when hphi for a phase is below it
+    // contribution to the residual for when hphi for a phase is below it.
+    // Negative values correspond to no cutoff.
     double eps = -1.0e-10;
 
     fvec[0] = -c0_ + hphi0_ * c[0] + hphi1_ * c[1] + hphi2_ * c[2];
@@ -300,8 +301,6 @@ void CALPHADConcSolverBinary3Ph2Sl::setup(const double c0, const double hphi0,
         p_[ii]  = static_cast<double>(p[ii]);
         q_[ii]  = static_cast<double>(q[ii]);
     }
-    // std::cout << c0_ << " " << hphi0_ << " " << hphi1_ << " " << hphi2_ <<
-    // std::endl;
 }
 
 #ifdef HAVE_OPENMP_OFFLOAD

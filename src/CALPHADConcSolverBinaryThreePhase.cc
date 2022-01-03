@@ -59,7 +59,7 @@ void CALPHADConcSolverBinaryThreePhase::RHS(
     fvec[0] = -c0_ + hphi0_ * c[0] + hphi1_ * c[1] + hphi2_ * c[2];
 
     // We can choose to enforce two of the three chemical potential equilities.
-    // Which two are chosen can impact the convergence rate.i
+    // Which two are chosen can impact the convergence rate.
     if (hphi1_ > 0.4)
     {
         fvec[1] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[1])

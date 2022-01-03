@@ -84,8 +84,6 @@ void NewtonSolver<Dimension, SolverType, JacobianDataType>::UpdateSolution(
     const double D     = evalDeterminant<Dimension, JacobianDataType>(fjac);
     const double D_inv = 1.0 / D;
 
-    // std::cout << "D = " << D << std::endl;
-
     // use Cramer's rule to solve linear system
     for (int jj = 0; jj < Dimension; jj++)
     {
@@ -104,16 +102,9 @@ void NewtonSolver<Dimension, SolverType, JacobianDataType>::UpdateSolution(
         // std::cout << "del_c[" << jj << "] = " << del_c[jj] << std::endl;
     }
 
-    // TESTING
-    std::vector<double> alpha_array(3);
-    alpha_array[0] = 1.0;
-    alpha_array[1] = 1.0;
-    alpha_array[2] = 1.0;
-    // END TESTING
     for (int ii = 0; ii < Dimension; ii++)
     {
         c[ii] = c[ii] - alpha * del_c[ii];
-        // c[ii] = c[ii] - alpha_array[ii] * del_c[ii];
     }
 }
 
@@ -177,11 +168,7 @@ int NewtonSolver<Dimension, SolverType,
             break;
         }
 
-        if (iterations == max_iters)
-        {
-            // std::cout << "Max iters reached: " << iterations << std::endl;
-            break;
-        }
+        if (iterations == max_iters) break;
 
         internalJacobian(conc, fjac);
         UpdateSolution(conc, fvec, fjac, alpha);

@@ -26,8 +26,7 @@ CALPHADFreeEnergyFunctionsBinary3Ph2Sl::CALPHADFreeEnergyFunctionsBinary3Ph2Sl(
       newton_maxits_(20),
       newton_verbose_(false)
 {
-    std::cout << "Creating CALPHADFreeEnergyFunctionsBinary3Ph2Sl..."
-              << std::endl;
+
     std::string fenergy_diag_filename("energy.vtk");
     fenergy_diag_filename_ = new char[fenergy_diag_filename.length() + 1];
     strcpy(fenergy_diag_filename_, fenergy_diag_filename.c_str());
