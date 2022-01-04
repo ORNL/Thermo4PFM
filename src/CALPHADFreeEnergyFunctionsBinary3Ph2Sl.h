@@ -75,6 +75,7 @@ private:
     double newton_tol_;
     double newton_alpha_;
     int newton_maxits_;
+    int newton_max_resets_;
     bool newton_verbose_;
 
     // Single species energies in each phase
@@ -94,7 +95,7 @@ private:
     int sublattice_stoichiometry_phaseA_[2];
     int sublattice_stoichiometry_phaseB_[2];
 
-    double (*fun_ptr_arr_[3])(const double){ linear_interp_func,
+    double (*fun_ptr_arr_[3])(const double) { linear_interp_func,
         pbg_interp_func, harmonic_interp_func };
 
     void readParameters(boost::property_tree::ptree& calphad_db);

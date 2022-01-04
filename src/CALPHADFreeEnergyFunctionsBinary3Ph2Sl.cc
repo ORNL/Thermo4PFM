@@ -25,6 +25,7 @@ CALPHADFreeEnergyFunctionsBinary3Ph2Sl::CALPHADFreeEnergyFunctionsBinary3Ph2Sl(
       newton_tol_(1.e-8),
       newton_alpha_(1.),
       newton_maxits_(20),
+      newton_max_resets_(10),
       newton_verbose_(false)
 {
 
@@ -45,16 +46,18 @@ CALPHADFreeEnergyFunctionsBinary3Ph2Sl::CALPHADFreeEnergyFunctionsBinary3Ph2Sl(
 void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::readNewtonparameters(
     pt::ptree& newton_db)
 {
-    newton_tol_     = newton_db.get<double>("tol", newton_tol_);
-    newton_alpha_   = newton_db.get<double>("alpha", newton_alpha_);
-    newton_maxits_  = newton_db.get<int>("max_its", newton_maxits_);
-    newton_verbose_ = newton_db.get<bool>("verbose", newton_verbose_);
+    newton_tol_        = newton_db.get<double>("tol", newton_tol_);
+    newton_alpha_      = newton_db.get<double>("alpha", newton_alpha_);
+    newton_maxits_     = newton_db.get<int>("max_its", newton_maxits_);
+    newton_max_resets_ = newton_db.get<int>("max_its", newton_max_resets_);
+    newton_verbose_    = newton_db.get<bool>("verbose", newton_verbose_);
 
     std::cout << "Thermo4PFM Newton Solver Parameters (Binary3Ph2Sl):"
               << std::endl;
     std::cout << "Tolerance: " << newton_tol_ << std::endl;
     std::cout << "Alpha: " << newton_alpha_ << std::endl;
     std::cout << "Max interations: " << newton_maxits_ << std::endl;
+    std::cout << "Max resets: " << newton_maxits_ << std::endl;
     std::cout << "Verbose: " << newton_verbose_ << std::endl;
 }
 
@@ -342,7 +345,6 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhasesFreeEnergies(
 
     // Loop that changes the initial conditions if the solver doesn't converge
     int ret         = -1;
-    int max_resets  = 5;
     int reset_index = 0;
 
     std::random_device rd;
@@ -356,10 +358,10 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhasesFreeEnergies(
 
         if (ret == -1)
         {
-            if (reset_index >= max_resets)
+            if (reset_index >= newton_max_resets_)
             {
                 std::cout << "WARNING: Maximum number of restarts ("
-                          << max_resets
+                          << newton_max_resets_
                           << ") reached in "
                              "Newton solve without convergence."
                           << std::endl;
@@ -376,8 +378,9 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhasesFreeEnergies(
                 c[1] = (y1 + p[1]) / (p[1] + q[1]);
                 c[2] = (y0 + p[2]) / (p[2] + q[2]);
 
-                std::cout << "New initial conditions: " << c[0] << " " << c[1]
-                          << " " << c[2] << std::endl;
+                // std::cout << "New initial conditions: " << c[0] << " " <<
+                // c[1]
+                //          << " " << c[2] << std::endl;
             }
         }
 
@@ -420,9 +423,9 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
     // assert(x[1] <= 1.);
 
     // FOR TESTING PURPOSES
-    x[0] = *conc;
-    x[1] = *conc;
-    x[2] = *conc;
+    // x[0] = *conc;
+    // x[1] = *conc;
+    // x[2] = *conc;
     // END TESTING
 
     const double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
@@ -460,7 +463,6 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
 
     // Loop that changes the initial conditions if the solver doesn't converge
     int ret         = -1;
-    int max_resets  = 5;
     int reset_index = 0;
 
     std::random_device rd;
@@ -474,10 +476,10 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
 
         if (ret == -1)
         {
-            if (reset_index >= max_resets)
+            if (reset_index >= newton_max_resets_)
             {
                 std::cout << "WARNING: Maximum number of restarts ("
-                          << max_resets
+                          << newton_max_resets_
                           << ") reached in "
                              "Newton solve without convergence."
                           << std::endl;
@@ -494,8 +496,9 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
                 x[1] = (y1 + p[1]) / (p[1] + q[1]);
                 x[2] = (y0 + p[2]) / (p[2] + q[2]);
 
-                std::cout << "New initial conditions: " << x[0] << " " << x[1]
-                          << " " << x[2] << std::endl;
+                // std::cout << "New initial conditions: " << x[0] << " " <<
+                // x[1]
+                //          << " " << x[2] << std::endl;
             }
         }
 
