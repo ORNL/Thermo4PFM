@@ -57,7 +57,7 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::readNewtonparameters(
     std::cout << "Tolerance: " << newton_tol_ << std::endl;
     std::cout << "Alpha: " << newton_alpha_ << std::endl;
     std::cout << "Max interations: " << newton_maxits_ << std::endl;
-    std::cout << "Max resets: " << newton_maxits_ << std::endl;
+    std::cout << "Max resets: " << newton_max_resets_ << std::endl;
     std::cout << "Verbose: " << newton_verbose_ << std::endl;
 }
 
