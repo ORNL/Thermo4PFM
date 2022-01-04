@@ -15,7 +15,7 @@
 #endif
 #include <cmath>
 
-#define DEBUG_CONVERGENCE
+//#define DEBUG_CONVERGENCE
 #ifdef DEBUG_CONVERGENCE
 #include <iomanip>
 #include <iostream>

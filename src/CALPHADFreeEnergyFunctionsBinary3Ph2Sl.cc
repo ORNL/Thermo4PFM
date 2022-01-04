@@ -355,7 +355,15 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhasesFreeEnergies(
 
         if (ret == -1)
         {
-            if (reset_index >= max_resets) { break; }
+            if (reset_index >= max_resets)
+            {
+                std::cout << "WARNING: Maximum number of restarts ("
+                          << max_resets
+                          << ") reached in "
+                             "Newton solve without convergence."
+                          << std::endl;
+                break;
+            }
             else
             {
                 // Randomly pick sublattice occupations
