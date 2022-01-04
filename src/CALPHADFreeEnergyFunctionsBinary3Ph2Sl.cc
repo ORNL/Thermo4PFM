@@ -420,9 +420,9 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
     // assert(x[1] <= 1.);
 
     // FOR TESTING PURPOSES
-    // x[0] = *conc;
-    // x[1] = *conc;
-    // x[2] = *conc;
+    x[0] = *conc;
+    x[1] = *conc;
+    x[2] = *conc;
     // END TESTING
 
     const double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
@@ -474,7 +474,15 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
 
         if (ret == -1)
         {
-            if (reset_index >= max_resets) { break; }
+            if (reset_index >= max_resets)
+            {
+                std::cout << "WARNING: Maximum number of restarts ("
+                          << max_resets
+                          << ") reached in "
+                             "Newton solve without convergence."
+                          << std::endl;
+                break;
+            }
             else
             {
                 // Randomly pick sublattice occupations
