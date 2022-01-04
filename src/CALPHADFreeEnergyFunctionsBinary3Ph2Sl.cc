@@ -345,7 +345,8 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhasesFreeEnergies(
     int max_resets  = 5;
     int reset_index = 0;
 
-    std::mt19937 prng;
+    std::random_device rd;
+    std::mt19937 prng(rd());
     std::uniform_real_distribution<double> dist_generator(0.0, 1.0);
 
     while (ret == -1)
@@ -462,7 +463,8 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
     int max_resets  = 5;
     int reset_index = 0;
 
-    std::mt19937 prng;
+    std::random_device rd;
+    std::mt19937 prng(rd());
     std::uniform_real_distribution<double> dist_generator(0.0, 1.0);
 
     while (ret == -1)
