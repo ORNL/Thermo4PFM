@@ -49,7 +49,7 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::readNewtonparameters(
     newton_tol_        = newton_db.get<double>("tol", newton_tol_);
     newton_alpha_      = newton_db.get<double>("alpha", newton_alpha_);
     newton_maxits_     = newton_db.get<int>("max_its", newton_maxits_);
-    newton_max_resets_ = newton_db.get<int>("max_its", newton_max_resets_);
+    newton_max_resets_ = newton_db.get<int>("max_restarts", newton_max_resets_);
     newton_verbose_    = newton_db.get<bool>("verbose", newton_verbose_);
 
     std::cout << "Thermo4PFM Newton Solver Parameters (Binary3Ph2Sl):"
