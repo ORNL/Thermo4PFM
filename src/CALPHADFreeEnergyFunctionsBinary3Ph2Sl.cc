@@ -8,6 +8,7 @@
 #include <boost/property_tree/json_parser.hpp>
 
 #include <iomanip>
+#include <random>
 #include <string>
 
 namespace pt = boost::property_tree;
@@ -33,10 +34,7 @@ CALPHADFreeEnergyFunctionsBinary3Ph2Sl::CALPHADFreeEnergyFunctionsBinary3Ph2Sl(
 
     readParameters(calphad_db);
 
-    if (newton_db)
-    {
-        readNewtonparameters(newton_db.get());
-    }
+    if (newton_db) { readNewtonparameters(newton_db.get()); }
     else
     {
         std::cout << "No Newton database given to Thermo4PFM..." << std::endl;
@@ -154,7 +152,7 @@ double CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeFreeEnergy(
                     + (1. - ypp_A) * g_species[1].fenergy(temperature)
                     + CALPHADcomputeFMixBinary(l0, l1, l2, l3, ypp_A)
                     + CALPHADcomputeFIdealMixBinary(
-                          gas_constant_R_JpKpmol * temperature * q, ypp_A))
+                        gas_constant_R_JpKpmol * temperature * q, ypp_A))
                 / (p + q);
 
     // subtract -mu*c to get grand potential
@@ -214,7 +212,7 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeDerivFreeEnergy(
                     - g_species[1].fenergy(temperature))
                 + CALPHADcomputeFMix_derivBinary(l0, l1, l2, l3, ypp_A)
                 + CALPHADcomputeFIdealMix_derivBinary(
-                      gas_constant_R_JpKpmol * temperature * q, ypp_A);
+                    gas_constant_R_JpKpmol * temperature * q, ypp_A);
 
     deriv[0] = mu;
 }
@@ -263,7 +261,7 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeSecondDerivativeFreeEnergy(
 
     d2fdc2[0] = (p + q)
                 * (CALPHADcomputeFMix_deriv2Binary(l0, l1, l2, l3, ypp_A)
-                      + CALPHADcomputeFIdealMix_deriv2Binary(rt, ypp_A));
+                    + CALPHADcomputeFIdealMix_deriv2Binary(rt, ypp_A));
 }
 
 //=======================================================================
@@ -341,8 +339,42 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhasesFreeEnergies(
     CALPHADConcSolverBinary3Ph2Sl solver;
     solver.setup(conc, hphi[0], hphi[1], hphi[2], RTinv, Lmix_L, Lmix_A, Lmix_B,
         fA, fB, p, q);
-    int ret = solver.ComputeConcentration(
-        c, newton_tol_, newton_maxits_, newton_alpha_);
+
+    // Loop that changes the initial conditions if the solver doesn't converge
+    int ret         = -1;
+    int max_resets  = 5;
+    int reset_index = 0;
+
+    std::mt19937 prng;
+    std::uniform_real_distribution<double> dist_generator(0.0, 1.0);
+
+    while (ret == -1)
+    {
+        ret = solver.ComputeConcentration(
+            c, newton_tol_, newton_maxits_, newton_alpha_);
+
+        if (ret == -1)
+        {
+            if (reset_index >= max_resets) { break; }
+            else
+            {
+                // Randomly pick sublattice occupations
+                double y0 = dist_generator(prng);
+                double y1 = dist_generator(prng);
+                double y2 = dist_generator(prng);
+
+                c[0] = (y0 + p[0]) / (p[0] + q[0]);
+                c[1] = (y1 + p[1]) / (p[1] + q[1]);
+                c[2] = (y0 + p[2]) / (p[2] + q[2]);
+
+                std::cout << "New initial conditions: " << c[0] << " " << c[1]
+                          << " " << c[2] << std::endl;
+            }
+        }
+
+        reset_index++;
+    }
+
     if (ret < 0)
     {
 #if 1
@@ -379,9 +411,9 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
     // assert(x[1] <= 1.);
 
     // FOR TESTING PURPOSES
-    x[0] = *conc;
-    x[1] = *conc;
-    x[2] = *conc;
+    // x[0] = *conc;
+    // x[1] = *conc;
+    // x[2] = *conc;
     // END TESTING
 
     const double RTinv = 1.0 / (gas_constant_R_JpKpmol * temperature);
@@ -416,8 +448,41 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
     CALPHADConcSolverBinary3Ph2Sl solver;
     solver.setup(
         c0, hphi0, hphi1, hphi2, RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB, p, q);
-    int ret = solver.ComputeConcentration(
-        x, newton_tol_, newton_maxits_, newton_alpha_);
+
+    // Loop that changes the initial conditions if the solver doesn't converge
+    int ret         = -1;
+    int max_resets  = 5;
+    int reset_index = 0;
+
+    std::mt19937 prng;
+    std::uniform_real_distribution<double> dist_generator(0.0, 1.0);
+
+    while (ret == -1)
+    {
+        ret = solver.ComputeConcentration(
+            x, newton_tol_, newton_maxits_, newton_alpha_);
+
+        if (ret == -1)
+        {
+            if (reset_index >= max_resets) { break; }
+            else
+            {
+                // Randomly pick sublattice occupations
+                double y0 = dist_generator(prng);
+                double y1 = dist_generator(prng);
+                double y2 = dist_generator(prng);
+
+                x[0] = (y0 + p[0]) / (p[0] + q[0]);
+                x[1] = (y1 + p[1]) / (p[1] + q[1]);
+                x[2] = (y0 + p[2]) / (p[2] + q[2]);
+
+                std::cout << "New initial conditions: " << x[0] << " " << x[1]
+                          << " " << x[2] << std::endl;
+            }
+        }
+
+        reset_index++;
+    }
 
 #if 1
     if (ret == -1)
@@ -427,8 +492,9 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
                      "computePhaseConcentrations() "
                      "failed for conc="
                   << conc[0] << ", hphi0=" << hphi0 << ", hphi1=" << hphi1
-                  << ", hphi2=" << hphi2 << "x=" << x[0] << ", " << x[1] << ", "
-                  << x[2] << std::endl;
+                  << ", hphi2=" << hphi2 << ", phi0=" << phi[0]
+                  << ", phi1=" << phi[1] << ", phi2=" << phi[2] << " x=" << x[0]
+                  << ", " << x[1] << ", " << x[2] << std::endl;
         // abort();
     }
 #endif
@@ -487,15 +553,11 @@ double CALPHADFreeEnergyFunctionsBinary3Ph2Sl::fchem(
     bool pure_phase_2 = phi[2] > tol;
 
     if ((1.0 - phi[0] > tol) && (1.0 - phi[1] > tol) && (1.0 - phi[2] > tol))
-    {
-        computePhasesFreeEnergies(temperature, hcphi, conc[0], fl, fa, fb);
-    }
+    { computePhasesFreeEnergies(temperature, hcphi, conc[0], fl, fa, fb); }
     else
     {
         if (1.0 - phi[0] <= tol)
-        {
-            fl = computeFreeEnergy(temperature, conc, PhaseIndex::phaseL);
-        }
+        { fl = computeFreeEnergy(temperature, conc, PhaseIndex::phaseL); }
         else if (1.0 - phi[1] <= tol)
         {
             fa = computeFreeEnergy(temperature, conc, PhaseIndex::phaseA);

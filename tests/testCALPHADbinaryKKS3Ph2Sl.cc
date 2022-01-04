@@ -194,24 +194,26 @@ TEST_CASE("CALPHAD binary three phase, two sublattice KKS #3",
 
     pt::ptree newton_db;
     newton_db.put("alpha", 1.0);
-    newton_db.put("max_its", 2000);
+    newton_db.put("max_its", 30);
 
     Thermo4PFM::CALPHADFreeEnergyFunctionsBinary3Ph2Sl cafe(
         calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
 
     // initial guesses
-    double c_init0 = 0.8;
-    double c_init1 = 0.6;
-    double c_init2 = 0.8;
+    double c_init0 = 0.800000011921;
+    double c_init1 = 0.800000011921;
+    double c_init2 = 0.800000011921;
 
     double sol[3] = { c_init0, c_init1, c_init2 };
 
     // compute concentrations satisfying KKS equations
     // I think the system at 820K is best behaved in the conc = 0.67-0.8 range
-    double conc = 0.79267;
+    double conc = 0.800000011921;
 
     // Want phi that corresponds to hphi = [0.982551, 0.0174491, 4.79499e-25]
-    double phi[3] = { 0.87121, 0.12879, 1.0e-8 };
+    // Want phi that corresponds to hphi = [1.0, 6.18271e-09, 3.69779e-32]
+    // double phi[3] = { 0.998, 8.5e-4, 1.5e-11 };
+    double phi[3] = { 0.998, 8.5e-4, 1.5e-11 };
 
     cafe.computePhaseConcentrations(temperature, &conc, phi, sol);
 
@@ -237,7 +239,7 @@ TEST_CASE("CALPHAD binary three phase, two sublattice KKS #3",
     cafe.computeDerivFreeEnergy(temperature, &sol[1], pi1, &derivS1);
     std::cout << "   dfS1/dcS1 = " << derivS1 << std::endl;
 
-    // REQUIRE(derivS1 == Approx(derivL).margin(1.e-5));
+    REQUIRE(derivS1 == Approx(derivL).margin(1.e-5));
 
     double derivS2;
     cafe.computeDerivFreeEnergy(temperature, &sol[2], pi2, &derivS2);

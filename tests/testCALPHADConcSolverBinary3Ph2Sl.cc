@@ -239,6 +239,7 @@ TEST_CASE("CALPHAD conc solver binary 3 phase, 2 sublattice KKS, "
     REQUIRE(ret >= 0);
 
     // Test 3
+
     max_iters = 2000;
     alpha     = 1.0;
 
