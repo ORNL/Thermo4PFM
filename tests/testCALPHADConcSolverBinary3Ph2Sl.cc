@@ -143,7 +143,7 @@ TEST_CASE("CALPHAD conc solver binary 3 phase, 2 sublattice KKS, "
 
     boost::optional<pt::ptree&> newton_db;
 
-    // First calculate the reference solution
+    // Test 1
 
     Thermo4PFM::CALPHADFreeEnergyFunctionsBinary3Ph2Sl cafe(
         calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
@@ -166,7 +166,7 @@ TEST_CASE("CALPHAD conc solver binary 3 phase, 2 sublattice KKS, "
     // compute concentrations satisfying KKS equations
 
     // I think the system at 820K is best behaved in the conc = 0.67-0.8 range
-    const double conc = 0.7;
+    double conc = 0.7;
 
     // Inputs to the solver
     const double RTinv
@@ -178,9 +178,9 @@ TEST_CASE("CALPHAD conc solver binary 3 phase, 2 sublattice KKS, "
     double hphi1 = 0.4;
     double hphi2 = 0.5;
 
-    const double tol    = 1.e-8;
-    const double alpha  = 0.5; // Using alpha=1 can lead to convergence issues
-    const int max_iters = 100;
+    double tol    = 1.e-8;
+    double alpha  = 0.5; // Using alpha=1 can lead to convergence issues
+    int max_iters = 100;
 
     int p[3];
     int q[3];
@@ -209,8 +209,62 @@ TEST_CASE("CALPHAD conc solver binary 3 phase, 2 sublattice KKS, "
 
     REQUIRE(ret >= 0);
 
-    // Check consistency
-    // REQUIRE((sol_test[0] >= 0.0 && sol_test[0] <= 1.0));
-    // REQUIRE((sol_test[1] >= 0.0 && sol_test[1] <= 1.0));
-    // REQUIRE((sol_test[2] >= 0.0 && sol_test[2] <= 1.0));
+    // Test 2
+    max_iters = 20000;
+    alpha     = 1.0;
+
+    sol_test[0] = 0.79267;
+    sol_test[1] = 0.79267;
+    sol_test[2] = 0.79267;
+
+    hphi0 = 0.989276;
+    hphi1 = 1.03871e-28;
+    hphi2 = 0.0107243;
+
+    conc = 0.79267;
+
+    solver.setup(
+        conc, hphi0, hphi1, hphi2, RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB, p, q);
+
+    // Run the solver
+    ret = solver.ComputeConcentration(sol_test, tol, max_iters, alpha);
+
+    std::cout << "-------------------------------" << std::endl;
+    std::cout << "Temperature = " << temperature << std::endl;
+    std::cout << "Result for c = " << conc << std::endl;
+    std::cout << "   cL = " << sol_test[0] << std::endl;
+    std::cout << "   cA = " << sol_test[1] << std::endl;
+    std::cout << "   cB = " << sol_test[2] << std::endl;
+    std::cout << "Newton iterations = " << ret << std::endl;
+    REQUIRE(ret >= 0);
+
+    // Test 3
+
+    max_iters = 2000;
+    alpha     = 1.0;
+
+    sol_test[0] = 0.7;
+    sol_test[1] = 0.9;
+    sol_test[2] = 0.794081;
+
+    hphi0 = 0.982551;
+    hphi1 = 0.0174491;
+    hphi2 = 4.79499e-25;
+
+    conc = 0.794081;
+
+    solver.setup(
+        conc, hphi0, hphi1, hphi2, RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB, p, q);
+
+    // Run the solver
+    ret = solver.ComputeConcentration(sol_test, tol, max_iters, alpha);
+
+    std::cout << "-------------------------------" << std::endl;
+    std::cout << "Temperature = " << temperature << std::endl;
+    std::cout << "Result for c = " << conc << std::endl;
+    std::cout << "   cL = " << sol_test[0] << std::endl;
+    std::cout << "   cA = " << sol_test[1] << std::endl;
+    std::cout << "   cB = " << sol_test[2] << std::endl;
+    std::cout << "Newton iterations = " << ret << std::endl;
+    REQUIRE(ret >= 0);
 }

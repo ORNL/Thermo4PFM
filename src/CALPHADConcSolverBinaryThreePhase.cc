@@ -60,10 +60,27 @@ void CALPHADConcSolverBinaryThreePhase::RHS(
 
     // We can choose to enforce two of the three chemical potential equilities.
     // Which two are chosen can impact the convergence rate.
-    fvec[1] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[1])
-              + xlogx_deriv(1. - c[1]) + (xi[0] - xi[1]);
-    fvec[2] = xlogx_deriv(c[1]) - xlogx_deriv(1. - c[1]) - xlogx_deriv(c[2])
-              + xlogx_deriv(1. - c[2]) + (xi[1] - xi[2]);
+    if (hphi1_ > 0.4)
+    {
+        fvec[1] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[1])
+                  + xlogx_deriv(1. - c[1]) + (xi[0] - xi[1]);
+        fvec[2] = xlogx_deriv(c[1]) - xlogx_deriv(1. - c[1]) - xlogx_deriv(c[2])
+                  + xlogx_deriv(1. - c[2]) + (xi[1] - xi[2]);
+    }
+    else if (hphi2_ > 0.4)
+    {
+        fvec[1] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[2])
+                  + xlogx_deriv(1. - c[2]) + (xi[0] - xi[2]);
+        fvec[2] = xlogx_deriv(c[1]) - xlogx_deriv(1. - c[1]) - xlogx_deriv(c[2])
+                  + xlogx_deriv(1. - c[2]) + (xi[1] - xi[2]);
+    }
+    else
+    {
+        fvec[1] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[1])
+                  + xlogx_deriv(1. - c[1]) + (xi[0] - xi[1]);
+        fvec[2] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[2])
+                  + xlogx_deriv(1. - c[2]) + (xi[0] - xi[2]);
+    }
 
     /*
     std::cout << "chemical potentials: ";
@@ -109,13 +126,36 @@ void CALPHADConcSolverBinaryThreePhase::Jacobian(
     fjac[0][1] = hphi1_;
     fjac[0][2] = hphi2_;
 
-    fjac[1][0] = dxidc[0] + xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]);
-    fjac[1][1] = -dxidc[1] - xlogx_deriv2(c[1]) - xlogx_deriv2(1. - c[1]);
-    fjac[1][2] = 0.;
+    if (hphi1_ > 0.4)
+    {
+        fjac[1][0] = dxidc[0] + xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]);
+        fjac[1][1] = -dxidc[1] - xlogx_deriv2(c[1]) - xlogx_deriv2(1. - c[1]);
+        fjac[1][2] = 0.;
 
-    fjac[2][0] = 0.;
-    fjac[2][1] = dxidc[1] + xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]);
-    fjac[2][2] = -dxidc[2] - xlogx_deriv2(c[2]) - xlogx_deriv2(1. - c[2]);
+        fjac[2][0] = 0.;
+        fjac[2][1] = dxidc[1] + xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]);
+        fjac[2][2] = -dxidc[2] - xlogx_deriv2(c[2]) - xlogx_deriv2(1. - c[2]);
+    }
+    else if (hphi2_ > 0.4)
+    {
+        fjac[1][0] = dxidc[0] + xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]);
+        fjac[1][1] = 0.;
+        fjac[1][2] = -dxidc[2] - xlogx_deriv2(c[2]) - xlogx_deriv2(1. - c[2]);
+
+        fjac[2][0] = 0.;
+        fjac[2][1] = dxidc[1] + xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]);
+        fjac[2][2] = -dxidc[2] - xlogx_deriv2(c[2]) - xlogx_deriv2(1. - c[2]);
+    }
+    else
+    {
+        fjac[1][0] = dxidc[0] + xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]);
+        fjac[1][1] = -dxidc[1] - xlogx_deriv2(c[1]) - xlogx_deriv2(1. - c[1]);
+        fjac[1][2] = 0.;
+
+        fjac[2][0] = dxidc[0] + xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]);
+        fjac[2][1] = 0.;
+        fjac[2][2] = -dxidc[2] - xlogx_deriv2(c[2]) - xlogx_deriv2(1. - c[2]);
+    }
 }
 
 // set values of internal variables used to evaluate

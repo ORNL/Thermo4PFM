@@ -46,6 +46,7 @@ int main(int argc, char* argv[])
         }
     }
 
+#ifdef HAVE_OPENMP_OFFLOAD
 // parallel loop
 #pragma omp target
 #pragma omp parallel for
@@ -63,4 +64,5 @@ int main(int argc, char* argv[])
         //        REQUIRE(conc[0] == Approx(cl[i]).margin(1.e-1));
         //        REQUIRE(conc[1] == Approx(cs[i]).margin(1.e-1));
     }
+#endif
 }

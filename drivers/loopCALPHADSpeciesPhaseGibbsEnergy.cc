@@ -76,7 +76,7 @@ int main(int argc, char* argv[])
             el[i] = energy;
         }
     }
-
+#ifdef HAVE_OPENMP_OFFLOAD
     double* vel = new double[nTintervals];
 #pragma omp target map(to : Tmin, deltaT) map(tofrom : vel)
     {
@@ -93,4 +93,5 @@ int main(int argc, char* argv[])
         std::cout << "Energy liquid = " << vel[i] << std::endl;
 
     delete[] vel;
+#endif
 }

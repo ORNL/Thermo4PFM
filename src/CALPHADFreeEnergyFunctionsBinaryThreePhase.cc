@@ -44,6 +44,12 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::readNewtonparameters(
     newton_alpha_   = newton_db.get<double>("alpha", newton_alpha_);
     newton_maxits_  = newton_db.get<int>("max_its", newton_maxits_);
     newton_verbose_ = newton_db.get<bool>("verbose", newton_verbose_);
+
+    std::cout << "Thermo4PFM Newton Solver Parameters:" << std::endl;
+    std::cout << "Tolerance: " << newton_tol_ << std::endl;
+    std::cout << "Alpha: " << newton_alpha_ << std::endl;
+    std::cout << "Max interations: " << newton_maxits_ << std::endl;
+    std::cout << "Verbose: " << newton_verbose_ << std::endl;
 }
 
 //=======================================================================

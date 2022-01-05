@@ -22,6 +22,7 @@
 #include <vector>
 #endif
 
+#include <iostream>
 namespace Thermo4PFM
 {
 
@@ -82,8 +83,6 @@ void NewtonSolver<Dimension, SolverType, JacobianDataType>::UpdateSolution(
 
     const double D     = evalDeterminant<Dimension, JacobianDataType>(fjac);
     const double D_inv = 1.0 / D;
-
-    // std::cout << "D = " << D << std::endl;
 
     // use Cramer's rule to solve linear system
     for (int jj = 0; jj < Dimension; jj++)
@@ -146,7 +145,6 @@ int NewtonSolver<Dimension, SolverType,
 
     while (1)
     {
-
 #ifdef DEBUG_CONVERGENCE
         // for ( int ii = 0; ii < Dimension ; ii++ )cout<<conc[ii]<<endl;
         // std::cout<<endl;
@@ -208,8 +206,14 @@ int NewtonSolver<Dimension, SolverType,
         std::cerr << "Error: too many iterations in NewtonSolver" << std::endl;
     }
 #endif
-
-    if (!converged) return -1;
+    if (!converged)
+    {
+        // for (int ii = 0; ii < Dimension; ii++)
+        //{
+        //    std::cout << "  conc[" << ii << "] = " << conc[ii] << std::endl;
+        //}
+        return -1;
+    }
     return iterations;
 }
 

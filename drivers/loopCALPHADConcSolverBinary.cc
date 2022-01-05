@@ -143,7 +143,7 @@ int main(int argc, char* argv[])
         }
         delete[] nits;
     }
-
+#ifdef HAVE_OPENMP_OFFLOAD
     // Device solve
     {
         double* xdev = new double[2 * N];
@@ -203,6 +203,6 @@ int main(int argc, char* argv[])
         delete[] nits;
         delete[] xdev;
     }
-
+#endif
     delete[] xhost;
 }
