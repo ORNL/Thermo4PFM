@@ -594,7 +594,7 @@ double CALPHADFreeEnergyFunctionsBinary3Ph2Sl::fchem(
     hfphi[1] = interp_func(energy_interp_func_type_, phi[1]);
     hfphi[2] = interp_func(energy_interp_func_type_, phi[2]);
 
-    double e = hfphi[0] * fl + hfphi[1] * fa + hfphi[2];
+    double e = hfphi[0] * fl + hfphi[1] * fa + hfphi[2] * fb;
 
     return e;
 }
@@ -633,7 +633,7 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::printEnergyVsComposition(
     {
         const double conc = i * dc;
 
-        const double phi[3] = { 0., 0., 0. };
+        const double phi[3] = { 0., 0., 1. };
         double e            = fchem(phi, &conc, temperature);
         os << conc << "\t" << e << std::endl;
     }
