@@ -67,8 +67,7 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, two-phase consistancy",
         temperature, &conc, &phi, &sol_reference[0]);
 
     // Inputs to the solver
-    const double RTinv
-        = 1.0 / (Thermo4PFM::gas_constant_R_JpKpmol * temperature);
+    const double RT = Thermo4PFM::gas_constant_R_JpKpmol * temperature;
 
     double hphi0 = interp_func(conc_interp_func_type, 1.0 - phi);
     double hphi1 = interp_func(conc_interp_func_type, phi);
@@ -97,7 +96,7 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, two-phase consistancy",
     fB_threePhase[2] = fB[1];
 
     Thermo4PFM::CALPHADConcSolverBinaryThreePhase solver;
-    solver.setup(conc, hphi0, hphi1, hphi2, RTinv, Lmix_L, Lmix_S0, Lmix_S1,
+    solver.setup(conc, hphi0, hphi1, hphi2, RT, Lmix_L, Lmix_S0, Lmix_S1,
         fA_threePhase, fB_threePhase);
 
     // Run the solver
@@ -126,7 +125,7 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, two-phase consistancy",
     hphi2 = interp_func(conc_interp_func_type, phi);
 
     Thermo4PFM::CALPHADConcSolverBinaryThreePhase solver2;
-    solver2.setup(conc, hphi0, hphi1, hphi2, RTinv, Lmix_L, Lmix_S0, Lmix_S1,
+    solver2.setup(conc, hphi0, hphi1, hphi2, RT, Lmix_L, Lmix_S0, Lmix_S1,
         fA_threePhase, fB_threePhase);
 
     // Run the solver
@@ -202,8 +201,7 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, three-phase convergence",
     const double conc = 0.9;
 
     // Inputs to the solver
-    const double RTinv
-        = 1.0 / (Thermo4PFM::gas_constant_R_JpKpmol * temperature);
+    const double RT = Thermo4PFM::gas_constant_R_JpKpmol * temperature;
 
     double hphi0 = interp_func(conc_interp_func_type, 0.5);
     double hphi1 = interp_func(conc_interp_func_type, 0.4);
@@ -216,8 +214,7 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, three-phase convergence",
     // Create and set up the solver
 
     Thermo4PFM::CALPHADConcSolverBinaryThreePhase solver;
-    solver.setup(
-        conc, hphi0, hphi1, hphi2, RTinv, Lmix_L, Lmix_A, Lmix_B, fA, fB);
+    solver.setup(conc, hphi0, hphi1, hphi2, RT, Lmix_L, Lmix_A, Lmix_B, fA, fB);
 
     // Run the solver
     double sol_test[3] = { c_init0, c_init1, c_init2 };
