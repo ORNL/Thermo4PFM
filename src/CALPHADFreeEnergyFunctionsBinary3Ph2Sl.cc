@@ -35,7 +35,10 @@ CALPHADFreeEnergyFunctionsBinary3Ph2Sl::CALPHADFreeEnergyFunctionsBinary3Ph2Sl(
 
     readParameters(calphad_db);
 
-    if (newton_db) { readNewtonparameters(newton_db.get()); }
+    if (newton_db)
+    {
+        readNewtonparameters(newton_db.get());
+    }
     else
     {
         std::cout << "No Newton database given to Thermo4PFM..." << std::endl;
@@ -155,7 +158,7 @@ double CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeFreeEnergy(
                     + (1. - ypp_A) * g_species[1].fenergy(temperature)
                     + CALPHADcomputeFMixBinary(l0, l1, l2, l3, ypp_A)
                     + CALPHADcomputeFIdealMixBinary(
-                        gas_constant_R_JpKpmol * temperature * q, ypp_A))
+                          gas_constant_R_JpKpmol * temperature * q, ypp_A))
                 / (p + q);
 
     // subtract -mu*c to get grand potential
@@ -215,7 +218,7 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeDerivFreeEnergy(
                     - g_species[1].fenergy(temperature))
                 + CALPHADcomputeFMix_derivBinary(l0, l1, l2, l3, ypp_A)
                 + CALPHADcomputeFIdealMix_derivBinary(
-                    gas_constant_R_JpKpmol * temperature * q, ypp_A);
+                      gas_constant_R_JpKpmol * temperature * q, ypp_A);
 
     deriv[0] = mu;
 }
@@ -264,7 +267,7 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeSecondDerivativeFreeEnergy(
 
     d2fdc2[0] = (p + q)
                 * (CALPHADcomputeFMix_deriv2Binary(l0, l1, l2, l3, ypp_A)
-                    + CALPHADcomputeFIdealMix_deriv2Binary(rt, ypp_A));
+                      + CALPHADcomputeFIdealMix_deriv2Binary(rt, ypp_A));
 }
 
 //=======================================================================
@@ -574,11 +577,15 @@ double CALPHADFreeEnergyFunctionsBinary3Ph2Sl::fchem(
     bool pure_phase_2 = phi[2] > tol;
 
     if ((1.0 - phi[0] > tol) && (1.0 - phi[1] > tol) && (1.0 - phi[2] > tol))
-    { computePhasesFreeEnergies(temperature, hcphi, conc[0], fl, fa, fb); }
+    {
+        computePhasesFreeEnergies(temperature, hcphi, conc[0], fl, fa, fb);
+    }
     else
     {
         if (1.0 - phi[0] <= tol)
-        { fl = computeFreeEnergy(temperature, conc, PhaseIndex::phaseL); }
+        {
+            fl = computeFreeEnergy(temperature, conc, PhaseIndex::phaseL);
+        }
         else if (1.0 - phi[1] <= tol)
         {
             fa = computeFreeEnergy(temperature, conc, PhaseIndex::phaseA);
