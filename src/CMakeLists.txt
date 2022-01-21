@@ -61,6 +61,7 @@ set(THERMODATA
     ${CMAKE_SOURCE_DIR}/thermodynamic_data/calphadAlCuLFccTheta.json
     ${CMAKE_SOURCE_DIR}/thermodynamic_data/calphadAuNi.json
     ${CMAKE_SOURCE_DIR}/thermodynamic_data/calphadMoNbTa.json
+    ${CMAKE_SOURCE_DIR}/thermodynamic_data/calphad3phases.json
     )
 
 install(FILES ${PUBLIC_HEADERS}
