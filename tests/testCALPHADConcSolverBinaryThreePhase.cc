@@ -82,8 +82,8 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, two-phase consistancy",
     }
 
     const double tol    = 1.e-8;
-    const double alpha  = 0.5; // Using alpha=1 can lead to convergence issues
-    const int max_iters = 100;
+    const double alpha  = 1.;
+    const int max_iters = 15;
 
     // Create and set up the solver
     CalphadDataType fA_threePhase[3];
@@ -103,7 +103,7 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, two-phase consistancy",
     double sol_test[3] = { c_init0, c_init1, 1.0e-8 };
     std::cout << "First test..." << std::endl;
     int ret = solver.ComputeConcentration(sol_test, tol, max_iters, alpha);
-    std::cout << "...completed" << std::endl;
+    std::cout << "...completed in " << ret << " iterations" << std::endl;
     REQUIRE(ret >= 0);
 
     // Plug the solution back into the RHS
@@ -139,7 +139,7 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, two-phase consistancy",
 
     std::cout << "Second test..." << std::endl;
     ret = solver2.ComputeConcentration(sol_test, tol, max_iters, alpha);
-    std::cout << "...completed" << std::endl;
+    std::cout << "...completed in " << ret << " iterations" << std::endl;
     REQUIRE(ret >= 0);
 
     // Plug the solution back into the RHS
@@ -163,14 +163,16 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, three-phase convergence",
     Thermo4PFM::ConcInterpolationType conc_interp_func_type
         = Thermo4PFM::ConcInterpolationType::PBG;
 
-    double temperature = 900.;
+    // very small temperature to have a very small contribution of
+    // pure mixing term
+    // Cannot be 0 as it would trigger nans in f(T) evaluations
+    double temperature = 1.e-8;
 
     std::cout << " Read CALPHAD database..." << std::endl;
     pt::ptree calphad_db;
     try
     {
-        pt::read_json(
-            "../thermodynamic_data/calphadAlCuLFccBcc.json", calphad_db);
+        pt::read_json("../thermodynamic_data/calphad3phases.json", calphad_db);
     }
     catch (std::exception& e)
     {
@@ -193,12 +195,12 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, three-phase convergence",
         temperature, Lmix_L, Lmix_A, Lmix_B, fA, fB);
 
     // initial guesses
-    double c_init0 = 0.9;
-    double c_init1 = 0.9;
-    double c_init2 = 0.9;
+    double c_init0 = 0.5;
+    double c_init1 = 0.5;
+    double c_init2 = 0.5;
 
     // compute concentrations satisfying KKS equations
-    const double conc = 0.9;
+    const double conc = 0.5;
 
     // Inputs to the solver
     const double RT = Thermo4PFM::gas_constant_R_JpKpmol * temperature;
@@ -208,11 +210,10 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, three-phase convergence",
     double hphi2 = interp_func(conc_interp_func_type, 0.1);
 
     const double tol    = 1.e-8;
-    const double alpha  = 0.1; // Using alpha=1 can lead to convergence issues
-    const int max_iters = 10000;
+    const double alpha  = 1.0;
+    const int max_iters = 10;
 
     // Create and set up the solver
-
     Thermo4PFM::CALPHADConcSolverBinaryThreePhase solver;
     solver.setup(conc, hphi0, hphi1, hphi2, RT, Lmix_L, Lmix_A, Lmix_B, fA, fB);
 
@@ -220,7 +221,7 @@ TEST_CASE("CALPHAD conc solver binary three phase KKS, three-phase convergence",
     double sol_test[3] = { c_init0, c_init1, c_init2 };
     std::cout << "Third test..." << std::endl;
     int ret = solver.ComputeConcentration(sol_test, tol, max_iters, alpha);
-    std::cout << "...completed" << std::endl;
+    std::cout << "...completed in " << ret << " iterations" << std::endl;
     std::cout << sol_test[0] << " " << sol_test[1] << " " << sol_test[2]
               << std::endl;
     REQUIRE(ret >= 0);

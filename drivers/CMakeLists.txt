@@ -23,12 +23,15 @@ add_executable(loopCALPHADbinaryKKS
 
 add_executable(plotEnergyVsComposition
                ${CMAKE_SOURCE_DIR}/drivers/plotEnergyVsComposition.cc )
+add_executable(plotEnergyVsCompositionThreePhase
+               ${CMAKE_SOURCE_DIR}/drivers/plotEnergyVsCompositionThreePhase.cc )
 add_executable(computeKKSTernary
                ${CMAKE_SOURCE_DIR}/drivers/computeKKSTernary.cc)
 add_executable(computeTieLineTernary
                ${CMAKE_SOURCE_DIR}/drivers/computeTieLineTernary.cc)
 
 target_link_libraries(plotEnergyVsComposition thermo4pfm)
+target_link_libraries(plotEnergyVsCompositionThreePhase thermo4pfm)
 target_link_libraries(computeKKSTernary thermo4pfm)
 target_link_libraries(computeTieLineTernary thermo4pfm)
 target_link_libraries(loopxlogx thermo4pfm)
