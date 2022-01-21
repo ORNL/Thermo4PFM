@@ -27,7 +27,7 @@ public:
     /// including composition "c0" and phase fraction "hphi"
     /// to solve for
     void setup(const double c0, const double hphi0, const double hphi1,
-        const double hphi2, const double RTinv,
+        const double hphi2, const double RT,
         const CalphadDataType* const Lmix_L_,
         const CalphadDataType* const Lmix_S0_,
         const CalphadDataType* const Lmix_S1_, const CalphadDataType* const fA,
@@ -57,7 +57,7 @@ private:
     double hphi1_;
     double hphi2_;
 
-    double RTinv_;
+    double scaledRT_;
 
     ///
     /// 4 L coefficients for 3 possible phases (L, S0, S1)

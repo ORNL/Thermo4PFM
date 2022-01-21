@@ -3,6 +3,8 @@
 #include "xlogx.h"
 #include <iostream>
 
+#define EQSCALING 1.e-4
+
 namespace Thermo4PFM
 {
 //=======================================================================
@@ -21,7 +23,7 @@ void CALPHADConcSolverBinaryThreePhase::computeXi(
 
         double eps = fA_[0] - fB_[0];
 
-        xi[0] = RTinv_ * (eps + omega);
+        xi[0] = EQSCALING * (eps + omega);
         // std::cout << "L2_["<<ii<<"] = " << L2_[ii] << std::endl;
     }
 
@@ -31,7 +33,7 @@ void CALPHADConcSolverBinaryThreePhase::computeXi(
 
         double eps = fA_[1] - fB_[1];
 
-        xi[1] = RTinv_ * (eps + omega);
+        xi[1] = EQSCALING * (eps + omega);
         // std::cout << "L2_["<<ii<<"] = " << L2_[ii] << std::endl;
     }
 
@@ -41,7 +43,7 @@ void CALPHADConcSolverBinaryThreePhase::computeXi(
 
         double eps = fA_[2] - fB_[2];
 
-        xi[2] = RTinv_ * (eps + omega);
+        xi[2] = EQSCALING * (eps + omega);
         // std::cout << "L2_["<<ii<<"] = " << L2_[ii] << std::endl;
     }
 }
@@ -62,24 +64,36 @@ void CALPHADConcSolverBinaryThreePhase::RHS(
     // Which two are chosen can impact the convergence rate.
     if (hphi1_ > 0.4)
     {
-        fvec[1] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[1])
-                  + xlogx_deriv(1. - c[1]) + (xi[0] - xi[1]);
-        fvec[2] = xlogx_deriv(c[1]) - xlogx_deriv(1. - c[1]) - xlogx_deriv(c[2])
-                  + xlogx_deriv(1. - c[2]) + (xi[1] - xi[2]);
+        fvec[1] = scaledRT_
+                      * (xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0])
+                            - xlogx_deriv(c[1]) + xlogx_deriv(1. - c[1]))
+                  + (xi[0] - xi[1]);
+        fvec[2] = scaledRT_
+                      * (xlogx_deriv(c[1]) - xlogx_deriv(1. - c[1])
+                            - xlogx_deriv(c[2]) + xlogx_deriv(1. - c[2]))
+                  + (xi[1] - xi[2]);
     }
     else if (hphi2_ > 0.4)
     {
-        fvec[1] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[2])
-                  + xlogx_deriv(1. - c[2]) + (xi[0] - xi[2]);
-        fvec[2] = xlogx_deriv(c[1]) - xlogx_deriv(1. - c[1]) - xlogx_deriv(c[2])
-                  + xlogx_deriv(1. - c[2]) + (xi[1] - xi[2]);
+        fvec[1] = scaledRT_
+                      * (xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0])
+                            - xlogx_deriv(c[2]) + xlogx_deriv(1. - c[2]))
+                  + (xi[0] - xi[2]);
+        fvec[2] = scaledRT_
+                      * (xlogx_deriv(c[1]) - xlogx_deriv(1. - c[1])
+                            - xlogx_deriv(c[2]) + xlogx_deriv(1. - c[2]))
+                  + (xi[1] - xi[2]);
     }
     else
     {
-        fvec[1] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[1])
-                  + xlogx_deriv(1. - c[1]) + (xi[0] - xi[1]);
-        fvec[2] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[2])
-                  + xlogx_deriv(1. - c[2]) + (xi[0] - xi[2]);
+        fvec[1] = scaledRT_
+                      * (xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0])
+                            - xlogx_deriv(c[1]) + xlogx_deriv(1. - c[1]))
+                  + (xi[0] - xi[1]);
+        fvec[2] = scaledRT_
+                      * (xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0])
+                            - xlogx_deriv(c[2]) + xlogx_deriv(1. - c[2]))
+                  + (xi[0] - xi[2]);
     }
 
     /*
@@ -100,15 +114,15 @@ void CALPHADConcSolverBinaryThreePhase::computeDxiDc(
 {
     // std::cout<<"CALPHADConcSolverBinary::computeDxiDc()"<<endl;
     // loop over phases
-    dxidc[0] = RTinv_
+    dxidc[0] = EQSCALING
                * CALPHADcomputeFMix_deriv2Binary(
                      Lmix_L_[0], Lmix_L_[1], Lmix_L_[2], Lmix_L_[3], c[0]);
 
-    dxidc[1] = RTinv_
+    dxidc[1] = EQSCALING
                * CALPHADcomputeFMix_deriv2Binary(
                      Lmix_S0_[0], Lmix_S0_[1], Lmix_S0_[2], Lmix_S0_[3], c[1]);
 
-    dxidc[2] = RTinv_
+    dxidc[2] = EQSCALING
                * CALPHADcomputeFMix_deriv2Binary(
                      Lmix_S1_[0], Lmix_S1_[1], Lmix_S1_[2], Lmix_S1_[3], c[2]);
 }
@@ -128,49 +142,73 @@ void CALPHADConcSolverBinaryThreePhase::Jacobian(
 
     if (hphi1_ > 0.4)
     {
-        fjac[1][0] = dxidc[0] + xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]);
-        fjac[1][1] = -dxidc[1] - xlogx_deriv2(c[1]) - xlogx_deriv2(1. - c[1]);
+        fjac[1][0]
+            = dxidc[0]
+              + scaledRT_ * (xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]));
+        fjac[1][1]
+            = -dxidc[1]
+              - scaledRT_ * (xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]));
         fjac[1][2] = 0.;
 
         fjac[2][0] = 0.;
-        fjac[2][1] = dxidc[1] + xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]);
-        fjac[2][2] = -dxidc[2] - xlogx_deriv2(c[2]) - xlogx_deriv2(1. - c[2]);
+        fjac[2][1]
+            = dxidc[1]
+              + scaledRT_ * (xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]));
+        fjac[2][2]
+            = -dxidc[2]
+              - scaledRT_ * (xlogx_deriv2(c[2]) + xlogx_deriv2(1. - c[2]));
     }
     else if (hphi2_ > 0.4)
     {
-        fjac[1][0] = dxidc[0] + xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]);
+        fjac[1][0]
+            = dxidc[0]
+              + scaledRT_ * (xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]));
         fjac[1][1] = 0.;
-        fjac[1][2] = -dxidc[2] - xlogx_deriv2(c[2]) - xlogx_deriv2(1. - c[2]);
+        fjac[1][2]
+            = -dxidc[2]
+              - scaledRT_ * (xlogx_deriv2(c[2]) + xlogx_deriv2(1. - c[2]));
 
         fjac[2][0] = 0.;
-        fjac[2][1] = dxidc[1] + xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]);
-        fjac[2][2] = -dxidc[2] - xlogx_deriv2(c[2]) - xlogx_deriv2(1. - c[2]);
+        fjac[2][1]
+            = dxidc[1]
+              + scaledRT_ * (xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]));
+        fjac[2][2]
+            = -dxidc[2]
+              - scaledRT_ * (xlogx_deriv2(c[2]) + xlogx_deriv2(1. - c[2]));
     }
     else
     {
-        fjac[1][0] = dxidc[0] + xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]);
-        fjac[1][1] = -dxidc[1] - xlogx_deriv2(c[1]) - xlogx_deriv2(1. - c[1]);
+        fjac[1][0]
+            = dxidc[0]
+              + scaledRT_ * (xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]));
+        fjac[1][1]
+            = -dxidc[1]
+              - scaledRT_ * (xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]));
         fjac[1][2] = 0.;
 
-        fjac[2][0] = dxidc[0] + xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]);
+        fjac[2][0]
+            = dxidc[0]
+              + scaledRT_ * (xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]));
         fjac[2][1] = 0.;
-        fjac[2][2] = -dxidc[2] - xlogx_deriv2(c[2]) - xlogx_deriv2(1. - c[2]);
+        fjac[2][2]
+            = -dxidc[2]
+              - scaledRT_ * (xlogx_deriv2(c[2]) + xlogx_deriv2(1. - c[2]));
     }
 }
 
 // set values of internal variables used to evaluate
 // terms in Newton iterations
 void CALPHADConcSolverBinaryThreePhase::setup(const double c0,
-    const double hphi0, const double hphi1, const double hphi2,
-    const double RTinv, const CalphadDataType* const Lmix_L,
-    const CalphadDataType* const Lmix_S0, const CalphadDataType* const Lmix_S1,
-    const CalphadDataType* const fA, const CalphadDataType* const fB)
+    const double hphi0, const double hphi1, const double hphi2, const double RT,
+    const CalphadDataType* const Lmix_L, const CalphadDataType* const Lmix_S0,
+    const CalphadDataType* const Lmix_S1, const CalphadDataType* const fA,
+    const CalphadDataType* const fB)
 {
-    c0_    = c0;
-    hphi0_ = hphi0;
-    hphi1_ = hphi1;
-    hphi2_ = hphi2;
-    RTinv_ = RTinv;
+    c0_       = c0;
+    hphi0_    = hphi0;
+    hphi1_    = hphi1;
+    hphi2_    = hphi2;
+    scaledRT_ = EQSCALING * RT;
 
     for (int ii = 0; ii < 4; ii++)
     {

@@ -24,7 +24,8 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
     // for finite differences
     double epsilon = 1.e-8;
     double tol     = 1.e-6;
-    double RTinv   = 10.;
+    double RT      = 0.1;
+    double RTinv   = 1. / RT;
 
     std::cout << "Test CALPHADConcSolverBinary...\n";
     {
@@ -111,8 +112,8 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
         double x[3] = { 0.1, 0.4, 0.3 };
 
         Thermo4PFM::CALPHADConcSolverBinaryThreePhase solver;
-        solver.setup(c0, hphi0, hphi1, 1. - hphi0 - hphi1, RTinv, Lmix_L,
-            Lmix_S0, Lmix_S1, fA, fB);
+        solver.setup(c0, hphi0, hphi1, 1. - hphi0 - hphi1, RT, Lmix_L, Lmix_S0,
+            Lmix_S1, fA, fB);
 
         solver.RHS(x, fvec1);
 
