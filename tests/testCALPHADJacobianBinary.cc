@@ -89,9 +89,7 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
     std::cout << "-----------------------------------------" << std::endl;
     std::cout << "Test CALPHADConcSolverBinaryThreePhase...\n";
     {
-        double c0    = 0.3;
-        double hphi0 = 0.2;
-        double hphi1 = 0.3;
+        double c0 = 0.3;
 
         // energies of 2 species, in two phase each
         CalphadDataType fA[2] = { 2.3, 4.5 };
@@ -108,41 +106,54 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
         for (int i = 0; i < 3; i++)
             fjac[i] = new JacobianDataType[3];
 
-        // concentrations in 3 phases we are solving for
-        double x[3] = { 0.1, 0.4, 0.3 };
-
-        Thermo4PFM::CALPHADConcSolverBinaryThreePhase solver;
-        solver.setup(c0, hphi0, hphi1, 1. - hphi0 - hphi1, RT, Lmix_L, Lmix_S0,
-            Lmix_S1, fA, fB);
-
-        solver.RHS(x, fvec1);
-
-        solver.Jacobian(x, fjac);
-
-        std::cout << std::setprecision(12);
-
-        // loop over variables
-        for (int j = 0; j < 3; j++)
+        // test all 3 cases in class CALPHADConcSolverBinaryThreePhase
+        // depending on value of hphi1 and hphi2
+        for (int i = 0; i < 3; i++)
         {
+            double hphi0 = 0.53 - i * 0.1;
+            double hphi1 = 0.43 - i * 0.1;
+
             std::cout << "----------------------------" << std::endl;
-            std::cout << "Test variations of variable " << j << std::endl;
-            x[j] += epsilon;
-            solver.RHS(x, fvec2);
+            std::cout << "hphi0 = " << hphi0 << ", hphi1 = " << hphi1
+                      << ", hphi2 = " << 1. - hphi0 - hphi1 << std::endl;
 
-            double fd[3];
-            // loop over equations
-            for (int i = 0; i < 3; i++)
-                fd[i] = (fvec2[i] - fvec1[i]) / epsilon;
+            // concentrations in 3 phases we are solving for
+            double x[3] = { 0.1, 0.4, 0.3 };
 
-            for (int i = 0; i < 3; i++)
+            Thermo4PFM::CALPHADConcSolverBinaryThreePhase solver;
+            solver.setup(c0, hphi0, hphi1, 1. - hphi0 - hphi1, RT, Lmix_L,
+                Lmix_S0, Lmix_S1, fA, fB);
+
+            solver.RHS(x, fvec1);
+
+            solver.Jacobian(x, fjac);
+
+            std::cout << std::setprecision(12);
+
+            // loop over variables
+            for (int j = 0; j < 3; j++)
             {
-                std::cout << "Equation " << i << ", FD=" << fd[i]
-                          << ", fjac=" << fjac[i][j] << std::endl;
-                CHECK(fd[i] == Approx(fjac[i][j]).margin(tol));
-            }
+                std::cout << "----------------------------" << std::endl;
+                std::cout << "Test variations of variable " << j << std::endl;
+                x[j] += epsilon;
+                solver.RHS(x, fvec2);
 
-            x[j] -= epsilon;
+                double fd[3];
+                // loop over equations
+                for (int i = 0; i < 3; i++)
+                    fd[i] = (fvec2[i] - fvec1[i]) / epsilon;
+
+                for (int i = 0; i < 3; i++)
+                {
+                    std::cout << "Equation " << i << ", FD=" << fd[i]
+                              << ", fjac=" << fjac[i][j] << std::endl;
+                    CHECK(fd[i] == Approx(fjac[i][j]).margin(tol));
+                }
+
+                x[j] -= epsilon;
+            }
         }
+
         for (int i = 0; i < 3; i++)
             delete[] fjac[i];
     }
