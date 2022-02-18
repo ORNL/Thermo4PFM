@@ -5,7 +5,9 @@
 namespace Thermo4PFM
 {
 
+#ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
+#endif
 static double (*fun_ptr_arr[3])(
     const double){ linear_interp_func, pbg_interp_func, harmonic_interp_func };
 
@@ -66,5 +68,7 @@ double second_deriv_harmonic_interp_func(const double phi)
 }
 
 double second_deriv_linear_interp_func(const double phi) { return 0.; }
+#ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
+#endif
 }

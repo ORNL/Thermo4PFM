@@ -42,9 +42,11 @@ int main(int argc, char* argv[])
     double* values = new double[nDet];
 // parallel loop
 // clang-format off
+#ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp target data map(to : matrix0 [0:N]) \
                         map(to : matrix1 [0:N]) \
                         map(from : values [0:nDet])
+#endif
 // clang-format on
 #pragma omp parallel for
     for (int i = 0; i < nDet + 1; i++)
