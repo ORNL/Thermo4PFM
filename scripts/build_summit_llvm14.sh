@@ -19,8 +19,9 @@ cd ${BUILD_DIR}
 
 # call cmake
 cmake -DCMAKE_CXX_COMPILER=clang++ \
-      -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+      -DCMAKE_BUILD_TYPE=Release \
       -DWITH_OPENMP_OFFLOAD=ON \
+      -DCMAKE_CXX_FLAGS_RELEASE="-foffload-lto -fopenmp-new-driver -DNDEBUG" \
       -DCMAKE_CXX_FLAGS="-fopenmp -fopenmp-targets=nvptx64 -Rpass=openmp-opt -Rpass-missed=openmp-opt" \
       -DWITH_OPENMP_OFFLOAD=ON \
       -DMPIEXEC_EXECUTABLE="/sw/summit/xalt/1.2.1/bin/jsrun" \
