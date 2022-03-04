@@ -22,7 +22,7 @@ typedef std::chrono::high_resolution_clock Clock;
 
 int main(int argc, char* argv[])
 {
-    const int N = 1000000;
+    const int N = 1000;
 
 #ifdef _OPENMP
     std::cout << "Compiled by an OpenMP-compliant implementation.\n";
@@ -192,7 +192,7 @@ int main(int argc, char* argv[])
 
     const double deviation = 1.e-4;
 
-//#ifndef HAVE_OPENMP_OFFLOAD
+#ifndef HAVE_OPENMP_OFFLOAD
 
     double* xhost = new double[4 * N];
     for (int i = 0; i < 4 * N; i++)
@@ -242,9 +242,10 @@ int main(int argc, char* argv[])
         delete[] nits;
     }
     delete[] xhost;
-//#else
+#else
     double* xdev = new double[4 * N];
     short* nits  = new short[N];
+    for (int i = 0; i < N; i++)nits[i]=-1;
 
     // Device solve
     {
@@ -253,9 +254,10 @@ int main(int argc, char* argv[])
             xdev[i] = -1;
         }
 
-        // warm-up GPU with a dummy allocation
-        double dummy[N];
-#pragma omp target enter data map(alloc : dummy[:N])
+        // warm-up GPU with an empty target region
+#pragma omp target
+{
+}
 
         auto t1 = Clock::now();
 
@@ -276,10 +278,10 @@ int main(int argc, char* argv[])
                 double hphi = 0.5 + (i % 100) * deviation;
                 double c0   = 0.33;
                 double c1   = 0.33;
-                class Thermo4PFM::CALPHADConcSolverTernary solver;
+                Thermo4PFM::CALPHADConcSolverTernary solver;
                 solver.setup(c0, c1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L,
                     L_AB_S, L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
-                nits[i] = solver.ComputeConcentration(&xdev[4 * i], 1.e-8, 50);
+                nits[i] = solver.ComputeConcentration(&xdev[4 * i], 1.e-8, 10);
             }
         }
 
@@ -290,8 +292,6 @@ int main(int argc, char* argv[])
                   .count();
         std::cout << "Device time/us/solve: " << (double)usec / (double)N
                   << std::endl;
-
-#pragma omp target exit data map(delete : dummy[:N])
 
         // print out some results
         std::cout << std::setprecision(12);
@@ -331,5 +331,5 @@ int main(int argc, char* argv[])
 
     delete[] xdev;
     delete[] nits;
-//#endif
+#endif
 }
