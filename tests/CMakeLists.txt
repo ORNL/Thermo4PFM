@@ -52,8 +52,8 @@ add_executable(testLoopCALPHADbinaryKKS
                ${TEST_DIR}/testLoopCALPHADbinaryKKS.cc ${SOURCES})
 add_executable(testLoopCALPHADternaryKKS
                ${TEST_DIR}/testLoopCALPHADternaryKKS.cc ${SOURCES})
-add_executable(testLoopCALPHADternaryTieLine
-               ${TEST_DIR}/testLoopCALPHADternaryTieLine.cc ${SOURCES})
+#add_executable(testLoopCALPHADternaryTieLine
+#               ${TEST_DIR}/testLoopCALPHADternaryTieLine.cc ${SOURCES})
 add_executable(testLoopKKSdiluteBinaryKKS
                ${TEST_DIR}/testLoopKKSdiluteBinaryKKS.cc ${SOURCES})
 
@@ -88,7 +88,7 @@ if (${OPENMP_CXX_FOUND})
   target_link_libraries(testLoopCALPHADSpeciesPhaseGibbsEnergy OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADbinaryEquilibrium OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADbinaryKKS OpenMP::OpenMP_CXX)
-  target_link_libraries(testLoopCALPHADternaryTieLine OpenMP::OpenMP_CXX)
+  #target_link_libraries(testLoopCALPHADternaryTieLine OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADternaryKKS OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopKKSdiluteBinaryKKS OpenMP::OpenMP_CXX)
 endif()
@@ -207,11 +207,11 @@ add_test(NAME testLoopCALPHADternaryKKS
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
          ${CMAKE_CURRENT_BINARY_DIR}/testLoopCALPHADternaryKKS
          WORKING_DIRECTORY ${TEST_DIR})
-add_test(NAME testLoopCALPHADternaryTieLine
-         COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
-         ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
-         ${CMAKE_CURRENT_BINARY_DIR}/testLoopCALPHADternaryTieLine
-         WORKING_DIRECTORY ${TEST_DIR})
+#add_test(NAME testLoopCALPHADternaryTieLine
+#         COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
+#         ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
+#         ${CMAKE_CURRENT_BINARY_DIR}/testLoopCALPHADternaryTieLine
+#         WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testLoopKKSdiluteBinaryKKS
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
