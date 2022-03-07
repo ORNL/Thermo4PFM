@@ -22,7 +22,7 @@ typedef std::chrono::high_resolution_clock Clock;
 
 int main(int argc, char* argv[])
 {
-    const int N = 1000;
+    const int N = 10000;
 
 #ifdef _OPENMP
     std::cout << "Compiled by an OpenMP-compliant implementation.\n";
