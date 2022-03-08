@@ -13,6 +13,8 @@
 #include <iomanip>
 #include <iostream>
 #include <string>
+#include <sys/time.h>
+#include <time.h>
 
 #include <omp.h>
 
@@ -20,9 +22,16 @@ namespace pt = boost::property_tree;
 
 typedef std::chrono::high_resolution_clock Clock;
 
+double gtod(void)
+{
+    struct timeval tv;
+    gettimeofday(&tv, (struct timezone*)nullptr);
+    return 1.e6*tv.tv_sec + tv.tv_usec;
+}
+
 int main(int argc, char* argv[])
 {
-    const int N = 10000;
+    const int N = 100000;
 
 #ifdef _OPENMP
     std::cout << "Compiled by an OpenMP-compliant implementation.\n";
@@ -192,8 +201,6 @@ int main(int argc, char* argv[])
 
     const double deviation = 1.e-4;
 
-#ifndef HAVE_OPENMP_OFFLOAD
-
     double* xhost = new double[4 * N];
     for (int i = 0; i < 4 * N; i++)
     {
@@ -203,14 +210,11 @@ int main(int argc, char* argv[])
     // Host solve
     {
         short* nits = new short[N];
-        auto t1     = Clock::now();
+        auto t1     = gtod(); //Clock::now();
 
 #pragma omp parallel for
         for (int i = 0; i < N; i++)
         {
-#ifdef _OPENMP
-            if (!omp_is_initial_device()) abort();
-#endif
             xhost[4 * i]     = sol[0];
             xhost[4 * i + 1] = sol[1];
             xhost[4 * i + 2] = sol[2];
@@ -221,12 +225,12 @@ int main(int argc, char* argv[])
             Thermo4PFM::CALPHADConcSolverTernary solver;
             solver.setup(c0, c1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S,
                 L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
-            nits[i] = solver.ComputeConcentration(&xhost[4 * i], 1.e-8, 50);
+            nits[i] = solver.ComputeConcentration(&xhost[4 * i], 1.e-8, 10);
         }
-        auto t2 = Clock::now();
+        auto t2 = gtod(); //Clock::now();
         long int usec
-            = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
-                  .count();
+            = t2-t1; //std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                  //.count();
         std::cout << "Host time/us/solve:   " << (double)usec / (double)N
                   << std::endl;
 
@@ -242,24 +246,25 @@ int main(int argc, char* argv[])
         delete[] nits;
     }
     delete[] xhost;
-#else
+
     double* xdev = new double[4 * N];
     short* nits  = new short[N];
     for (int i = 0; i < N; i++)nits[i]=-1;
-
-    // Device solve
-    {
-        for (int i = 0; i < 4 * N; i++)
-        {
-            xdev[i] = -1;
-        }
 
         // warm-up GPU with an empty target region
 #pragma omp target
 {
 }
 
-        auto t1 = Clock::now();
+    // Device solve
+    for(int rep = 0; rep < 10; rep++)
+    {
+        for (int i = 0; i < 4 * N; i++)
+        {
+            xdev[i] = -1;
+        }
+
+        auto t1 = gtod(); //Clock::now();
 
 // clang-format off
 #pragma omp target map(from : xdev[:4*N]) \
@@ -285,12 +290,12 @@ int main(int argc, char* argv[])
             }
         }
 
-        auto t2 = Clock::now();
+        auto t2 = gtod(); // Clock::now();
 
         long int usec
-            = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
-                  .count();
-        std::cout << "Device time/us/solve: " << (double)usec / (double)N
+            = t2-t1; //std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
+                  //.count();
+        std::cout << "Repetition "<<rep<<": Device time/us/solve = " << (double)usec / (double)N
                   << std::endl;
 
         // print out some results
@@ -331,5 +336,4 @@ int main(int argc, char* argv[])
 
     delete[] xdev;
     delete[] nits;
-#endif
 }
