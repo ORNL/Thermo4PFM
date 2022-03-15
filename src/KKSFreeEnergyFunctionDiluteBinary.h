@@ -33,15 +33,9 @@ public:
         const int maxits = 20, const bool verbose = false);
 
     void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.) {}
-#ifdef HAVE_OPENMP_OFFLOAD
-#pragma omp declare target
-#endif
+
     int computePhaseConcentrations(const double temperature, const double* conc,
         const double* const phi, double* x);
-#ifdef HAVE_OPENMP_OFFLOAD
-#pragma omp end declare target
-#endif
-
     void energyVsPhiAndC(const double temperature, const double* const ceq,
         const bool found_ceq, const double phi_well_scale,
         const int npts_phi = 51,
@@ -60,6 +54,8 @@ public:
 private:
     EnergyInterpolationType energy_interp_func_type_;
     ConcInterpolationType conc_interp_func_type_;
+
+    void readNewtonparameters(boost::property_tree::ptree& newton_db);
 
     double computeFB(const double temperature) const;
 
@@ -80,19 +76,10 @@ private:
     int maxiters_;
     double alpha_;
 
-#ifdef HAVE_OPENMP_OFFLOAD
-#pragma omp declare target
-#endif
+    void readParameters(boost::property_tree::ptree& conc_db);
+
     void computePhasesFreeEnergies(const double temperature,
         const double* const hphi, const double conc, double& fl, double& fa);
-
-#ifdef HAVE_OPENMP_OFFLOAD
-#pragma omp end declare target
-#endif
-
-    void readNewtonparameters(boost::property_tree::ptree& newton_db);
-
-    void readParameters(boost::property_tree::ptree& conc_db);
 };
 }
 #endif

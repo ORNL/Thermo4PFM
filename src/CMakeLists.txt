@@ -22,7 +22,6 @@ set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
             ${CMAKE_SOURCE_DIR}/src/KKSdiluteBinaryConcSolver.cc
             ${CMAKE_SOURCE_DIR}/src/KKSFreeEnergyFunctionDiluteBinary.cc
             ${CMAKE_SOURCE_DIR}/src/xlogx.cc)
-set(SOURCES ${SOURCES} PARENT_SCOPE)
 
 if(${SHARED_LIB})
   add_library(thermo4pfm SHARED ${SOURCES})
