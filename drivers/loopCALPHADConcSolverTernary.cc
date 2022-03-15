@@ -26,7 +26,7 @@ double gtod(void)
 {
     struct timeval tv;
     gettimeofday(&tv, (struct timezone*)nullptr);
-    return 1.e6*tv.tv_sec + tv.tv_usec;
+    return 1.e6 * tv.tv_sec + tv.tv_usec;
 }
 
 int main(int argc, char* argv[])
@@ -194,8 +194,7 @@ int main(int argc, char* argv[])
     for (int i = 0; i < 3; i++)
         L_ABC_S[i] = LmixABCPhaseA[i][0] + temperature * LmixABCPhaseA[i][1];
 
-    const double RTinv
-        = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
+    const double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     double sol[4] = { 0.33, 0.38, 0.32, 0.33 };
 
@@ -210,7 +209,7 @@ int main(int argc, char* argv[])
     // Host solve
     {
         short* nits = new short[N];
-        auto t1     = gtod(); //Clock::now();
+        auto t1     = gtod(); // Clock::now();
 
 #pragma omp parallel for
         for (int i = 0; i < N; i++)
@@ -227,10 +226,9 @@ int main(int argc, char* argv[])
                 L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
             nits[i] = solver.ComputeConcentration(&xhost[4 * i], 1.e-8, 10);
         }
-        auto t2 = gtod(); //Clock::now();
-        long int usec
-            = t2-t1; //std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
-                  //.count();
+        auto t2       = gtod(); // Clock::now();
+        long int usec = t2 - t1; // std::chrono::duration_cast<std::chrono::microseconds>(t2
+                                 // - t1) .count();
         std::cout << "Host time/us/solve:   " << (double)usec / (double)N
                   << std::endl;
 
@@ -249,22 +247,23 @@ int main(int argc, char* argv[])
 
     double* xdev = new double[4 * N];
     short* nits  = new short[N];
-    for (int i = 0; i < N; i++)nits[i]=-1;
+    for (int i = 0; i < N; i++)
+        nits[i] = -1;
 
         // warm-up GPU with an empty target region
 #pragma omp target
-{
-}
+    {
+    }
 
     // Device solve
-    for(int rep = 0; rep < 10; rep++)
+    for (int rep = 0; rep < 10; rep++)
     {
         for (int i = 0; i < 4 * N; i++)
         {
             xdev[i] = -1;
         }
 
-        auto t1 = gtod(); //Clock::now();
+        auto t1 = gtod(); // Clock::now();
 
 // clang-format off
 #pragma omp target map(from : xdev[:4*N]) \
@@ -292,10 +291,10 @@ int main(int argc, char* argv[])
 
         auto t2 = gtod(); // Clock::now();
 
-        long int usec
-            = t2-t1; //std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1)
-                  //.count();
-        std::cout << "Repetition "<<rep<<": Device time/us/solve = " << (double)usec / (double)N
+        long int usec = t2 - t1; // std::chrono::duration_cast<std::chrono::microseconds>(t2
+                                 // - t1) .count();
+        std::cout << "Repetition " << rep
+                  << ": Device time/us/solve = " << (double)usec / (double)N
                   << std::endl;
 
         // print out some results

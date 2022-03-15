@@ -169,8 +169,7 @@ TEST_CASE("CALPHAD conc solver binary 3 phase, 2 sublattice KKS, "
     double conc = 0.7;
 
     // Inputs to the solver
-    const double RTinv
-        = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
+    const double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     // NOTE: The sum of hphi should equal one, which is not necessarily true for
     // phi
