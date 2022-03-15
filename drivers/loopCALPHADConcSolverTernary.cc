@@ -4,8 +4,6 @@
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 #include "PhysicalConstants.h"
 
-#include <chrono>
-
 #include <boost/optional/optional.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
@@ -20,8 +18,6 @@
 
 namespace pt = boost::property_tree;
 
-typedef std::chrono::high_resolution_clock Clock;
-
 double gtod(void)
 {
     struct timeval tv;
@@ -31,13 +27,14 @@ double gtod(void)
 
 int main(int argc, char* argv[])
 {
-    const int N = 100000;
+    const int N = 1000000;
 
 #ifdef _OPENMP
     std::cout << "Compiled by an OpenMP-compliant implementation.\n";
     std::cout << "Run test with " << omp_get_max_threads() << " threads"
               << std::endl;
 #endif
+    std::cout << "Number of solver calls: " << N << std::endl;
 
     std::cout << " Read CALPHAD database..." << std::endl;
     pt::ptree calphad_db;
@@ -209,7 +206,7 @@ int main(int argc, char* argv[])
     // Host solve
     {
         short* nits = new short[N];
-        auto t1     = gtod(); // Clock::now();
+        auto t1     = gtod();
 
 #pragma omp parallel for
         for (int i = 0; i < N; i++)
@@ -226,9 +223,9 @@ int main(int argc, char* argv[])
                 L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
             nits[i] = solver.ComputeConcentration(&xhost[4 * i], 1.e-8, 10);
         }
-        auto t2       = gtod(); // Clock::now();
-        long int usec = t2 - t1; // std::chrono::duration_cast<std::chrono::microseconds>(t2
-                                 // - t1) .count();
+        auto t2       = gtod();
+        long int usec = t2 - t1;
+
         std::cout << "Host time/us/solve:   " << (double)usec / (double)N
                   << std::endl;
 
@@ -263,7 +260,7 @@ int main(int argc, char* argv[])
             xdev[i] = -1;
         }
 
-        auto t1 = gtod(); // Clock::now();
+        auto t1 = gtod();
 
 // clang-format off
 #pragma omp target map(from : xdev[:4*N]) \
@@ -289,10 +286,10 @@ int main(int argc, char* argv[])
             }
         }
 
-        auto t2 = gtod(); // Clock::now();
+        auto t2 = gtod();
 
-        long int usec = t2 - t1; // std::chrono::duration_cast<std::chrono::microseconds>(t2
-                                 // - t1) .count();
+        long int usec = t2 - t1;
+
         std::cout << "Repetition " << rep
                   << ": Device time/us/solve = " << (double)usec / (double)N
                   << std::endl;
