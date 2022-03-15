@@ -20,5 +20,5 @@ cd build
 
 ln -fs ../thermodynamic_data/calphadMoNbTa.json
 
-jsrun -n6 -a1 -c7 -g1 -d packed -b packed:7 nvprof ./drivers/loopCALPHADConcSolverTernary
+jsrun -n6 -a1 -c7 -g1 -d packed -b packed:7 nvprof ./drivers/loopCALPHADConcSolverTernary 1000000
 

@@ -27,7 +27,14 @@ double gtod(void)
 
 int main(int argc, char* argv[])
 {
-    const int N = 1000000;
+    if (argc != 2)
+    {
+        std::cerr << "ERROR: program needs 1 argument (problem size)"
+                  << std::endl;
+        return 1;
+    }
+
+    const int N = atoi(argv[1]);
 
 #ifdef _OPENMP
     std::cout << "Compiled by an OpenMP-compliant implementation.\n";
