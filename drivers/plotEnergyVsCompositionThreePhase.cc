@@ -8,6 +8,8 @@ namespace pt = boost::property_tree;
 
 int main(int argc, char* argv[])
 {
+    std::string databasename(argv[1]);
+
     Thermo4PFM::EnergyInterpolationType energy_interp_func_type
         = Thermo4PFM::EnergyInterpolationType::PBG;
     Thermo4PFM::ConcInterpolationType conc_interp_func_type
@@ -18,11 +20,11 @@ int main(int argc, char* argv[])
     // Cannot be 0 as it would trigger nans in f(T) evaluations
     double temperature = 1.e-8;
 
-    std::cout << " Read CALPHAD database..." << std::endl;
+    std::cout << " Read CALPHAD database " << databasename << std::endl;
     pt::ptree calphad_db;
     try
     {
-        pt::read_json("../thermodynamic_data/calphad3phases.json", calphad_db);
+        pt::read_json(databasename, calphad_db);
     }
     catch (std::exception& e)
     {
