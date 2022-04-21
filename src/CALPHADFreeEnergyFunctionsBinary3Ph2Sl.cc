@@ -609,14 +609,15 @@ double CALPHADFreeEnergyFunctionsBinary3Ph2Sl::fchem(
 //=======================================================================
 
 void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::printEnergyVsComposition(
-    const double temperature, std::ostream& os, const int npts)
+    const double temperature, std::ostream& os, const double cmin,
+    const double cmax, const int npts)
 {
-    const double dc = 1.0 / (double)(npts - 1);
+    const double dc = (cmax - cmin) / (double)(npts - 1);
 
     os << "#phi0=1" << std::endl;
     for (int i = 0; i < npts; i++)
     {
-        const double conc = i * dc;
+        const double conc = i * dc + cmin;
 
         const double phi[3] = { 1., 0., 0. };
 
@@ -628,17 +629,18 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::printEnergyVsComposition(
     os << "#phi1=1" << std::endl;
     for (int i = 0; i < npts; i++)
     {
-        const double conc = i * dc;
+        const double conc = i * dc + cmin;
 
         const double phi[3] = { 0., 1., 0. };
         double e            = fchem(phi, &conc, temperature);
         os << conc << "\t" << e << std::endl;
     }
+    os << std::endl << std::endl;
 
     os << "#phi2=1" << std::endl;
     for (int i = 0; i < npts; i++)
     {
-        const double conc = i * dc;
+        const double conc = i * dc + cmin;
 
         const double phi[3] = { 0., 0., 1. };
         double e            = fchem(phi, &conc, temperature);
