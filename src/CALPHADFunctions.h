@@ -44,6 +44,7 @@ void readLmixBinary(boost::property_tree::ptree& db,
 void readSublatticeStoichiometry(
     boost::property_tree::ptree& db, int sublatticeStoichiometryPhase[2]);
 bool checkSingleSublattice(boost::property_tree::ptree& db);
+bool checkSublattice(boost::property_tree::ptree& db);
 }
 
 #endif

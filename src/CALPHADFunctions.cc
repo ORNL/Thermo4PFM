@@ -391,6 +391,33 @@ bool checkSingleSublattice(boost::property_tree::ptree& db)
     }
 }
 
+bool checkSublatticeSpecies(boost::property_tree::ptree& species_db)
+{
+    auto phase_db = species_db.get_child("PhaseL");
+    if (phase_db.get_child_optional("p")) return true;
+    if (phase_db.get_child_optional("q")) return true;
+    phase_db = species_db.get_child("PhaseA");
+    if (phase_db.get_child_optional("p")) return true;
+    if (phase_db.get_child_optional("q")) return true;
+    phase_db = species_db.get_child("PhaseB");
+    if (phase_db.get_child_optional("p")) return true;
+    if (phase_db.get_child_optional("q")) return true;
+
+    return false;
+}
+
+// check if database contains sublattice parameters "p" or "q"
+bool checkSublattice(boost::property_tree::ptree& db)
+{
+    boost::property_tree::ptree& speciesA_db = db.get_child("SpeciesA");
+    if (checkSublatticeSpecies(speciesA_db)) return true;
+
+    boost::property_tree::ptree& speciesB_db = db.get_child("SpeciesB");
+    if (checkSublatticeSpecies(speciesB_db)) return true;
+
+    return false;
+}
+
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
 #endif
