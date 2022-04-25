@@ -350,15 +350,18 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhasesFreeEnergies(
     int ret         = -1;
     int reset_index = 0;
 
+#ifndef HAVE_OPENMP_OFFLOAD
     std::random_device rd;
     std::mt19937 prng(rd());
     std::uniform_real_distribution<double> dist_generator(0.0, 1.0);
+#endif
 
     while (ret == -1)
     {
         ret = solver.ComputeConcentration(
             c, newton_tol_, newton_maxits_, newton_alpha_);
 
+#ifndef HAVE_OPENMP_OFFLOAD
         if (ret == -1)
         {
             if (reset_index >= newton_max_resets_)
@@ -386,13 +389,16 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhasesFreeEnergies(
                 //          << " " << c[2] << std::endl;
             }
         }
+#else
+        break;
+#endif
 
         reset_index++;
     }
 
     if (ret < 0)
     {
-#if 1
+#ifndef HAVE_OPENMP_OFFLOAD
         std::cerr << "ERROR in "
                      "CALPHADFreeEnergyFunctionsBinary3Ph2Sl::"
                      "computePhasesFreeEnergies()"
@@ -468,15 +474,18 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
     int ret         = -1;
     int reset_index = 0;
 
+#ifndef HAVE_OPENMP_OFFLOAD
     std::random_device rd;
     std::mt19937 prng(rd());
     std::uniform_real_distribution<double> dist_generator(0.0, 1.0);
+#endif
 
     while (ret == -1)
     {
         ret = solver.ComputeConcentration(
             x, newton_tol_, newton_maxits_, newton_alpha_);
 
+#ifndef HAVE_OPENMP_OFFLOAD
         if (ret == -1)
         {
             if (reset_index >= newton_max_resets_)
@@ -504,6 +513,9 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
                 //          << " " << x[2] << std::endl;
             }
         }
+#else
+        break;
+#endif
 
         reset_index++;
     }
@@ -511,6 +523,7 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
 #if 1
     if (ret == -1)
     {
+#ifndef HAVE_OPENMP_OFFLOAD
         std::cerr << "ERROR, "
                      "CALPHADFreeEnergyFunctionsBinary::"
                      "computePhaseConcentrations() "
@@ -519,6 +532,7 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
                   << ", hphi2=" << hphi2 << ", phi0=" << phi[0]
                   << ", phi1=" << phi[1] << ", phi2=" << phi[2] << " x=" << x[0]
                   << ", " << x[1] << ", " << x[2] << std::endl;
+#endif
         // abort();
     }
 #endif
