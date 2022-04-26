@@ -43,6 +43,10 @@ add_executable(testCALPHADConcSolverTernary
 add_executable(testCALPHADternaryTieLine
                ${TEST_DIR}/testCALPHADternaryTieLine.cc )
 
+if(${WITH_OPENMP_OFFLOAD})
+  add_executable(testOpenMPoffload
+                 ${TEST_DIR}/testOpenMPoffload.cc )
+endif()
 add_executable(testLoopCALPHADSpeciesPhaseGibbsEnergy
                ${TEST_DIR}/testLoopCALPHADSpeciesPhaseGibbsEnergy.cc )
 add_executable(testLoopCALPHADbinaryEquilibrium
@@ -84,6 +88,9 @@ target_link_libraries(testLoopKKSdiluteBinaryKKS thermo4pfm)
 
 if (${OPENMP_CXX_FOUND})
   target_link_libraries(testCALPHADSpeciesPhaseGibbsEnergyExpansion OpenMP::OpenMP_CXX)
+  if(${WITH_OPENMP_OFFLOAD})
+    target_link_libraries(testOpenMPoffload OpenMP::OpenMP_CXX)
+  endif()
   target_link_libraries(testLoopCALPHADSpeciesPhaseGibbsEnergy OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADbinaryEquilibrium OpenMP::OpenMP_CXX)
   target_link_libraries(testLoopCALPHADbinaryKKS OpenMP::OpenMP_CXX)
@@ -186,6 +193,12 @@ add_test(NAME testCALPHADternaryTieLine
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
          ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADternaryTieLine
          WORKING_DIRECTORY ${TEST_DIR})
+if(${WITH_OPENMP_OFFLOAD})
+  add_test(NAME testOpenMPoffload
+           COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
+           ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
+           ${CMAKE_CURRENT_BINARY_DIR}/testOpenMPoffload)
+endif()
 add_test(NAME testLoopCALPHADSpeciesPhaseGibbsEnergy
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
