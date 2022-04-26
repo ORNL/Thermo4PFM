@@ -90,9 +90,6 @@ private:
     CalphadDataType LmixPhaseA_[4][MAX_POL_T_INDEX];
     CalphadDataType LmixPhaseB_[4][MAX_POL_T_INDEX];
 
-    double (*fun_ptr_arr_[3])(const double){ linear_interp_func,
-        pbg_interp_func, harmonic_interp_func };
-
     void readParameters(boost::property_tree::ptree& calphad_db);
 
 #ifdef HAVE_OPENMP_OFFLOAD
