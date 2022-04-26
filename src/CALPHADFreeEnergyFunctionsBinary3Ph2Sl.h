@@ -95,9 +95,6 @@ private:
     int sublattice_stoichiometry_phaseA_[2];
     int sublattice_stoichiometry_phaseB_[2];
 
-    double (*fun_ptr_arr_[3])(const double){ linear_interp_func,
-        pbg_interp_func, harmonic_interp_func };
-
     void readParameters(boost::property_tree::ptree& calphad_db);
 
 #ifdef HAVE_OPENMP_OFFLOAD
