@@ -13,7 +13,7 @@ add_executable(testInterpolationFunctions
 add_executable(testCALPHADFunctions
                ${TEST_DIR}/testCALPHADFunctions.cc )
 add_executable(testCALPHADSpeciesPhaseGibbsEnergyExpansion
-               ${TEST_DIR}/testCALPHADSpeciesPhaseGibbsEnergyExpansion.cc )
+               ${TEST_DIR}/testCALPHADSpeciesPhaseGibbsEnergyExpansion.cc)
 add_executable(testCALPHADGibbsEnergy
                ${TEST_DIR}/testCALPHADGibbsEnergy.cc )
 add_executable(testCALPHADbinaryKKS
@@ -41,24 +41,24 @@ add_executable(testCALPHADternaryKKS
 add_executable(testCALPHADConcSolverTernary
                ${TEST_DIR}/testCALPHADConcSolverTernary.cc )
 add_executable(testCALPHADternaryTieLine
-               ${TEST_DIR}/testCALPHADternaryTieLine.cc )
+               ${TEST_DIR}/testCALPHADternaryTieLine.cc)
 
 if(${WITH_OPENMP_OFFLOAD})
   add_executable(testOpenMPoffload
                  ${TEST_DIR}/testOpenMPoffload.cc )
 endif()
 add_executable(testLoopCALPHADSpeciesPhaseGibbsEnergy
-               ${TEST_DIR}/testLoopCALPHADSpeciesPhaseGibbsEnergy.cc )
+               ${TEST_DIR}/testLoopCALPHADSpeciesPhaseGibbsEnergy.cc)
 add_executable(testLoopCALPHADbinaryEquilibrium
-               ${TEST_DIR}/testLoopCALPHADbinaryEquilibrium.cc )
+               ${TEST_DIR}/testLoopCALPHADbinaryEquilibrium.cc)
 add_executable(testLoopCALPHADbinaryKKS
-               ${TEST_DIR}/testLoopCALPHADbinaryKKS.cc )
+               ${TEST_DIR}/testLoopCALPHADbinaryKKS.cc)
 add_executable(testLoopCALPHADternaryKKS
-               ${TEST_DIR}/testLoopCALPHADternaryKKS.cc )
+               ${TEST_DIR}/testLoopCALPHADternaryKKS.cc)
 add_executable(testLoopCALPHADternaryTieLine
-               ${TEST_DIR}/testLoopCALPHADternaryTieLine.cc )
+               ${TEST_DIR}/testLoopCALPHADternaryTieLine.cc)
 add_executable(testLoopKKSdiluteBinaryKKS
-               ${TEST_DIR}/testLoopKKSdiluteBinaryKKS.cc )
+               ${TEST_DIR}/testLoopKKSdiluteBinaryKKS.cc)
 
 target_link_libraries(testAlCuDatabases thermo4pfm)
 target_link_libraries(testInterpolationFunctions thermo4pfm)

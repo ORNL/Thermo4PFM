@@ -128,7 +128,7 @@ double CALPHADFreeEnergyFunctionsBinaryThreePhase::computeFreeEnergy(
                 + (1. - conc[0]) * g_species[1].fenergy(temperature)
                 + CALPHADcomputeFMixBinary(l0, l1, l2, l3, conc[0])
                 + CALPHADcomputeFIdealMixBinary(
-                      gas_constant_R_JpKpmol * temperature, conc[0]);
+                      GASCONSTANT_R_JPKPMOL * temperature, conc[0]);
 
     // subtract -mu*c to get grand potential
     if (gp)
@@ -177,7 +177,7 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::computeDerivFreeEnergy(
                     - g_species[1].fenergy(temperature))
                 + CALPHADcomputeFMix_derivBinary(l0, l1, l2, l3, conc[0])
                 + CALPHADcomputeFIdealMix_derivBinary(
-                      gas_constant_R_JpKpmol * temperature, conc[0]);
+                      GASCONSTANT_R_JPKPMOL * temperature, conc[0]);
 
     deriv[0] = mu;
 }
@@ -195,7 +195,7 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::
     const CalphadDataType l1 = lmixPhase(1, pi, temp);
     const CalphadDataType l2 = lmixPhase(2, pi, temp);
     const CalphadDataType l3 = lmixPhase(3, pi, temp);
-    const double rt          = gas_constant_R_JpKpmol * temp;
+    const double rt          = GASCONSTANT_R_JPKPMOL * temp;
 
     d2fdc2[0] = (CALPHADcomputeFMix_deriv2Binary(l0, l1, l2, l3, conc[0])
                  + CALPHADcomputeFIdealMix_deriv2Binary(rt, conc[0]));
@@ -263,7 +263,7 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhasesFreeEnergies(
     assert(fA[0] == fA[0]);
     assert(Lmix_L[0] == Lmix_L[0]);
 
-    double RT = gas_constant_R_JpKpmol * temperature;
+    double RT = GASCONSTANT_R_JPKPMOL * temperature;
 
     CALPHADConcSolverBinaryThreePhase solver;
     solver.setup(
@@ -303,7 +303,7 @@ int CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhaseConcentrations(
     // assert(x[0] <= 1.);
     // assert(x[1] <= 1.);
 
-    const double RT = gas_constant_R_JpKpmol * temperature;
+    const double RT = GASCONSTANT_R_JPKPMOL * temperature;
 
     CalphadDataType fA[3];
     CalphadDataType fB[3];

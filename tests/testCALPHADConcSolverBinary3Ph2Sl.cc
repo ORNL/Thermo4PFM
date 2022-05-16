@@ -72,7 +72,7 @@ TEST_CASE("CALPHAD conc solver binary 3 phase, 2 sublattice KKS, "
     const double conc = 0.9;
 
     // Inputs to the solver
-    const double RT    = Thermo4PFM::gas_constant_R_JpKpmol * temperature;
+    const double RT    = GASCONSTANT_R_JPKPMOL * temperature;
     const double RTinv = 1.0 / RT;
 
     double hphi0 = interp_func(conc_interp_func_type, 0.5);
@@ -169,8 +169,7 @@ TEST_CASE("CALPHAD conc solver binary 3 phase, 2 sublattice KKS, "
     double conc = 0.7;
 
     // Inputs to the solver
-    const double RTinv
-        = 1.0 / (Thermo4PFM::gas_constant_R_JpKpmol * temperature);
+    const double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     // NOTE: The sum of hphi should equal one, which is not necessarily true for
     // phi

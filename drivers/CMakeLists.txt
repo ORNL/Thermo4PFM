@@ -3,23 +3,23 @@ find_package(PythonInterp 3.2 REQUIRED)
 include_directories( ${CMAKE_SOURCE_DIR}/src )
 
 add_executable(loopxlogx
-               ${CMAKE_SOURCE_DIR}/drivers/loopxlogx.cc )
+               ${CMAKE_SOURCE_DIR}/drivers/loopxlogx.cc)
 
 add_executable(loopCALPHADSpeciesPhaseGibbsEnergy
-               ${CMAKE_SOURCE_DIR}/drivers/loopCALPHADSpeciesPhaseGibbsEnergy.cc )
+               ${CMAKE_SOURCE_DIR}/drivers/loopCALPHADSpeciesPhaseGibbsEnergy.cc)
 
 add_executable(loopDeterminant
                ${CMAKE_SOURCE_DIR}/drivers/loopDeterminant.cc
                ${CMAKE_SOURCE_DIR}/src/Determinant.cc )
 
 add_executable(loopCALPHADConcSolverBinary
-               ${CMAKE_SOURCE_DIR}/drivers/loopCALPHADConcSolverBinary.cc )
+               ${CMAKE_SOURCE_DIR}/drivers/loopCALPHADConcSolverBinary.cc)
 
 add_executable(loopCALPHADConcSolverTernary
                ${CMAKE_SOURCE_DIR}/drivers/loopCALPHADConcSolverTernary.cc )
 
 add_executable(loopCALPHADbinaryKKS
-               ${CMAKE_SOURCE_DIR}/drivers/loopCALPHADbinaryKKS.cc )
+               ${CMAKE_SOURCE_DIR}/drivers/loopCALPHADbinaryKKS.cc)
 
 add_executable(plotEnergyVsComposition
                ${CMAKE_SOURCE_DIR}/drivers/plotEnergyVsComposition.cc )
