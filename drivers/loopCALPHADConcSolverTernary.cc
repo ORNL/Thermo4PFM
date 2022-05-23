@@ -27,7 +27,7 @@ double gtod(void)
 
 int main(int argc, char* argv[])
 {
-    if (argc != 2)
+    if (argc < 2)
     {
         std::cerr << "ERROR: program needs 1 argument (problem size)"
                   << std::endl;
@@ -35,6 +35,11 @@ int main(int argc, char* argv[])
     }
 
     const int N = atoi(argv[1]);
+    int nreps   = 10;
+    if (argc > 2)
+    {
+        nreps = atoi(argv[2]);
+    }
 
 #ifdef _OPENMP
     std::cout << "Compiled by an OpenMP-compliant implementation.\n";
@@ -233,7 +238,8 @@ int main(int argc, char* argv[])
         auto t2       = gtod();
         long int usec = t2 - t1;
 
-        std::cout << "Host time/us/solve:   " << (double)usec / (double)N
+        std::cout << "N = " << N
+                  << " , Host time/us/solve:   " << (double)usec / (double)N
                   << std::endl;
 
         std::cout << std::setprecision(12);
@@ -260,7 +266,7 @@ int main(int argc, char* argv[])
     }
 
     // Device solve
-    for (int rep = 0; rep < 10; rep++)
+    for (int rep = 0; rep < nreps; rep++)
     {
         for (int i = 0; i < 4 * N; i++)
         {
@@ -297,8 +303,8 @@ int main(int argc, char* argv[])
 
         long int usec = t2 - t1;
 
-        std::cout << "Repetition " << rep
-                  << ": Device time/us/solve = " << (double)usec / (double)N
+        std::cout << "Repetition " << rep << ": N = " << N
+                  << " , Device time/us/solve = " << (double)usec / (double)N
                   << std::endl;
 
         // print out some results
