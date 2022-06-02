@@ -8,18 +8,19 @@ namespace pt = boost::property_tree;
 
 int main(int argc, char* argv[])
 {
+    std::string databasename(argv[1]);
+    double temperature = atof(argv[2]);
+
     Thermo4PFM::EnergyInterpolationType energy_interp_func_type
         = Thermo4PFM::EnergyInterpolationType::PBG;
     Thermo4PFM::ConcInterpolationType conc_interp_func_type
         = Thermo4PFM::ConcInterpolationType::LINEAR;
 
-    double temperature = 1450.;
-
     std::cout << " Read CALPHAD database..." << std::endl;
     pt::ptree calphad_db;
     try
     {
-        pt::read_json("../thermodynamic_data/calphadAuNi.json", calphad_db);
+        pt::read_json(databasename, calphad_db);
     }
     catch (std::exception& e)
     {
