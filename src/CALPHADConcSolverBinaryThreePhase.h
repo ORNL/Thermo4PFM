@@ -1,5 +1,5 @@
-#ifndef included_CALPHADConcSolverBinaryThreePhase
-#define included_CALPHADConcSolverBinaryThreePhase
+#ifndef Thermo4PFM_included_CALPHADConcSolverBinaryThreePhase
+#define Thermo4PFM_included_CALPHADConcSolverBinaryThreePhase
 
 #include "NewtonSolver.h"
 #include "datatypes.h"

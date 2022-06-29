@@ -1,5 +1,5 @@
-#ifndef included_CALPHADConcSolverTernary
-#define included_CALPHADConcSolverTernary
+#ifndef Thermo4PFM_included_CALPHADConcSolverTernary
+#define Thermo4PFM_included_CALPHADConcSolverTernary
 
 #include "NewtonSolver.h"
 

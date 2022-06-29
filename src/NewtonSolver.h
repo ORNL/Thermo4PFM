@@ -1,5 +1,5 @@
-#ifndef included_NewtonSolver
-#define included_NewtonSolver
+#ifndef Thermo4PFM_included_NewtonSolver
+#define Thermo4PFM_included_NewtonSolver
 
 namespace Thermo4PFM
 {

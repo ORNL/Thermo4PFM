@@ -1,5 +1,5 @@
-#ifndef included_CALPHADEqConcSolverBinary
-#define included_CALPHADEqConcSolverBinary
+#ifndef Thermo4PFM_included_CALPHADEqConcSolverBinary
+#define Thermo4PFM_included_CALPHADEqConcSolverBinary
 
 #include "NewtonSolver.h"
 #include "datatypes.h"

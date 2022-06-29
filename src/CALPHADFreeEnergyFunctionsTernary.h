@@ -1,5 +1,5 @@
-#ifndef included_CALPHADFreeEnergyFunctionsTernary
-#define included_CALPHADFreeEnergyFunctionsTernary
+#ifndef Thermo4PFM_included_CALPHADFreeEnergyFunctionsTernary
+#define Thermo4PFM_included_CALPHADFreeEnergyFunctionsTernary
 
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 #include "InterpolationType.h"

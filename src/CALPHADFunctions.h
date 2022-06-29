@@ -1,5 +1,5 @@
-#ifndef included_CALPHADFunctions
-#define included_CALPHADFunctions
+#ifndef Thermo4PFM_included_CALPHADFunctions
+#define Thermo4PFM_included_CALPHADFunctions
 
 #include "datatypes.h"
 

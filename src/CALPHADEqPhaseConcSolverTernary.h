@@ -1,5 +1,5 @@
-#ifndef included_CALPHADEqPhaseConcSolverTernary
-#define included_CALPHADEqPhaseConcSolverTernary
+#ifndef Thermo4PFM_included_CALPHADEqPhaseConcSolverTernary
+#define Thermo4PFM_included_CALPHADEqPhaseConcSolverTernary
 
 #include "NewtonSolver.h"
 #include "datatypes.h"

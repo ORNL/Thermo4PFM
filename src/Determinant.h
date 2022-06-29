@@ -1,5 +1,5 @@
-#ifndef included_Determinant
-#define included_Determinant
+#ifndef Thermo4PFM_included_Determinant
+#define Thermo4PFM_included_Determinant
 
 namespace Thermo4PFM
 {

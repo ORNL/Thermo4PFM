@@ -1,5 +1,5 @@
-#ifndef included_KKSFreeEnergyFunctionDiluteBinary
-#define included_KKSFreeEnergyFunctionDiluteBinary
+#ifndef Thermo4PFM_included_KKSFreeEnergyFunctionDiluteBinary
+#define Thermo4PFM_included_KKSFreeEnergyFunctionDiluteBinary
 
 #include "InterpolationType.h"
 #include "KKSdiluteBinaryConcSolver.h"

@@ -1,5 +1,5 @@
-#ifndef included_CALPHADFreeEnergyFunctionsBinaryThreePhase
-#define included_CALPHADFreeEnergyFunctionsBinaryThreePhase
+#ifndef Thermo4PFM_included_CALPHADFreeEnergyFunctionsBinaryThreePhase
+#define Thermo4PFM_included_CALPHADFreeEnergyFunctionsBinaryThreePhase
 
 #include "CALPHADSpeciesPhaseGibbsEnergy.h"
 #include "InterpolationType.h"
