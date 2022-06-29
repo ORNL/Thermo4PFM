@@ -1,5 +1,5 @@
-#ifndef InterpolationType_H
-#define InterpolationType_H
+#ifndef Thermo4PFM_InterpolationType_H
+#define Thermo4PFM_InterpolationType_H
 
 namespace Thermo4PFM
 {

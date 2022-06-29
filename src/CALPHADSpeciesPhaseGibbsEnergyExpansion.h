@@ -1,5 +1,5 @@
-#ifndef included_CALPHADSpeciesPhaseGibbsEnergyExpansion
-#define included_CALPHADSpeciesPhaseGibbsEnergyExpansion
+#ifndef Thermo4PFM_included_CALPHADSpeciesPhaseGibbsEnergyExpansion
+#define Thermo4PFM_included_CALPHADSpeciesPhaseGibbsEnergyExpansion
 
 namespace Thermo4PFM
 {

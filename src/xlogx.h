@@ -1,4 +1,5 @@
-#ifndef included_xlogx
+#ifndef Thermo4PFM_included_xlogx
+#define Thermo4PFM_included_xlogx
 
 namespace Thermo4PFM
 {

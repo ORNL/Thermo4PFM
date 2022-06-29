@@ -1,5 +1,5 @@
-#ifndef included_CALPHADSpeciesPhaseGibbsEnergy
-#define included_CALPHADSpeciesPhaseGibbsEnergy
+#ifndef Thermo4PFM_included_CALPHADSpeciesPhaseGibbsEnergy
+#define Thermo4PFM_included_CALPHADSpeciesPhaseGibbsEnergy
 
 #include "CALPHADSpeciesPhaseGibbsEnergyExpansion.h"
 

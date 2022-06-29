@@ -1,5 +1,5 @@
-#ifndef included_KKSdiluteBinaryConcSolver
-#define included_KKSdiluteBinaryConcSolver
+#ifndef Thermo4PFM_included_KKSdiluteBinaryConcSolver
+#define Thermo4PFM_included_KKSdiluteBinaryConcSolver
 
 #include "NewtonSolver.h"
 #include "datatypes.h"
