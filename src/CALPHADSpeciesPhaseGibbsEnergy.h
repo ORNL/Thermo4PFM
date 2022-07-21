@@ -8,6 +8,8 @@
 #include <cassert>
 #include <string>
 
+#define MAXNINTERVALS 5
+
 namespace Thermo4PFM
 {
 typedef double coeffsdatatype;
@@ -17,24 +19,17 @@ class CALPHADSpeciesPhaseGibbsEnergy
 private:
     char* name_;
     int nintervals_;
-    double* tc_;
-    CALPHADSpeciesPhaseGibbsEnergyExpansion<coeffsdatatype>* expansion_;
+
+    double tc_[MAXNINTERVALS + 1];
+    CALPHADSpeciesPhaseGibbsEnergyExpansion<coeffsdatatype>
+        expansion_[MAXNINTERVALS];
 
 public:
-    CALPHADSpeciesPhaseGibbsEnergy()
-    {
-        tc_        = nullptr;
-        expansion_ = nullptr;
-    }
+    CALPHADSpeciesPhaseGibbsEnergy() {}
 
-    ~CALPHADSpeciesPhaseGibbsEnergy()
-    {
-        assert(expansion_ != nullptr);
-        assert(tc_ != nullptr);
-        delete[] name_;
-        delete[] expansion_;
-        delete[] tc_;
-    }
+    ~CALPHADSpeciesPhaseGibbsEnergy() { delete[] name_; }
+
+    int nintervals() const { return nintervals_; }
 
     std::string name() const
     {

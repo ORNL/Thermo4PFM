@@ -44,9 +44,6 @@ void read_optional(pt::ptree& db, const std::string key,
 void CALPHADSpeciesPhaseGibbsEnergy::initialize(
     const std::string& name, pt::ptree& db)
 {
-    assert(tc_ == nullptr);
-    assert(expansion_ == nullptr);
-
     name_ = new char[name.length() + 1];
     strcpy(name_, name.c_str());
 
@@ -58,8 +55,8 @@ void CALPHADSpeciesPhaseGibbsEnergy::initialize(
 
     size_t ntc = tmp.size();
     assert(ntc > 1);
+    assert(ntc < MAXNINTERVALS + 2);
 
-    tc_ = new double[ntc];
     for (int i = 0; i < ntc; i++)
         tc_[i] = tmp[i];
     nintervals_ = ntc - 1;
@@ -133,9 +130,6 @@ void CALPHADSpeciesPhaseGibbsEnergy::initialize(
     double* pd7  = d7.data();
     double* pdm1 = dm1.data();
     double* pdm9 = dm9.data();
-
-    expansion_ = new CALPHADSpeciesPhaseGibbsEnergyExpansion<
-        coeffsdatatype>[nintervals];
 
     for (unsigned i = 0; i < nintervals; i++)
     {
