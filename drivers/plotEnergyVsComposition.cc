@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
     Thermo4PFM::CALPHADFreeEnergyFunctionsBinary cafe(
         calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
 
-    const int npts = 100;
+    const int npts = 101;
     std::ofstream os("FvsC.dat", std::ios::out);
 
     std::cout << " Compute energies..." << std::endl;
