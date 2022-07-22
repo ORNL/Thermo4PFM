@@ -16,6 +16,8 @@ add_executable(testCALPHADSpeciesPhaseGibbsEnergyExpansion
                ${TEST_DIR}/testCALPHADSpeciesPhaseGibbsEnergyExpansion.cc)
 add_executable(testCALPHADGibbsEnergy
                ${TEST_DIR}/testCALPHADGibbsEnergy.cc )
+add_executable(testCALPHADFreeEnergyFunctionsBinary
+               ${TEST_DIR}/testCALPHADFreeEnergyFunctionsBinary.cc )
 add_executable(testCALPHADbinaryKKS
                ${TEST_DIR}/testCALPHADbinaryKKS.cc )
 add_executable(testCALPHADbinaryKKSThreePhase
@@ -65,6 +67,7 @@ target_link_libraries(testInterpolationFunctions thermo4pfm)
 target_link_libraries(testCALPHADFunctions thermo4pfm)
 target_link_libraries(testCALPHADSpeciesPhaseGibbsEnergyExpansion thermo4pfm)
 target_link_libraries(testCALPHADGibbsEnergy thermo4pfm)
+target_link_libraries(testCALPHADFreeEnergyFunctionsBinary thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKS thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKSThreePhase thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKS3Ph2Sl thermo4pfm)
@@ -88,6 +91,7 @@ target_link_libraries(testLoopKKSdiluteBinaryKKS thermo4pfm)
 
 if (${OPENMP_CXX_FOUND})
   target_link_libraries(testCALPHADSpeciesPhaseGibbsEnergyExpansion OpenMP::OpenMP_CXX)
+  target_link_libraries(testCALPHADFreeEnergyFunctionsBinary OpenMP::OpenMP_CXX)
   if(${WITH_OPENMP_OFFLOAD})
     target_link_libraries(testOpenMPoffload OpenMP::OpenMP_CXX)
   endif()
@@ -127,6 +131,11 @@ add_test(NAME testCALPHADGibbsEnergy
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
          ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADGibbsEnergy
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testCALPHADFreeEnergyFunctionsBinary
+         COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
+         ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
+         ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADFreeEnergyFunctionsBinary
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testCALPHADbinaryKKS
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
