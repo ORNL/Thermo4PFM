@@ -12,7 +12,7 @@ SET(CMAKE_INSTALL_PREFIX "$(CMAKE_SOURCE_DIR}/install" CACHE PATH
 
 find_package(Boost)
 if(Boost_FOUND)
-  include_directories(${Boost_INCLUDE_DIRS})
+  include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
 endif()
 
 #OpenMP
