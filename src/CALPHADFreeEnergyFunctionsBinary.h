@@ -60,6 +60,22 @@ public:
         CalphadDataType* Lmix_L, CalphadDataType* Lmix_A, CalphadDataType* fA,
         CalphadDataType* fB);
 
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp declare target
+#endif
+    // energy of species "is" in phase L,A
+    double getFenergyPhaseL(const short is, const double temperature)
+    {
+        return g_species_phaseL_[is].fenergy(temperature);
+    }
+    double getFenergyPhaseA(const short is, const double temperature)
+    {
+        return g_species_phaseA_[is].fenergy(temperature);
+    }
+#ifdef HAVE_OPENMP_OFFLOAD
+#pragma omp end declare target
+#endif
+
 private:
     EnergyInterpolationType energy_interp_func_type_;
     ConcInterpolationType conc_interp_func_type_;
@@ -89,16 +105,6 @@ private:
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
 #endif
-    // energy of species "is" in phase L,A
-    double getFenergyPhaseL(const short is, const double temperature)
-    {
-        return g_species_phaseL_[is].fenergy(temperature);
-    }
-    double getFenergyPhaseA(const short is, const double temperature)
-    {
-        return g_species_phaseA_[is].fenergy(temperature);
-    }
-
     CalphadDataType lmixPhase(
         const unsigned index, const PhaseIndex pi, const double temperature)
     {
