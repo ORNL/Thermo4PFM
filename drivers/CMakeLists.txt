@@ -29,11 +29,14 @@ add_executable(computeKKSTernary
                ${CMAKE_SOURCE_DIR}/drivers/computeKKSTernary.cc)
 add_executable(computeTieLineTernary
                ${CMAKE_SOURCE_DIR}/drivers/computeTieLineTernary.cc)
+add_executable(computeKKS3Ph2Sl
+               ${CMAKE_SOURCE_DIR}/drivers/computeKKS3Ph2Sl.cc)
 
 target_link_libraries(plotEnergyVsComposition thermo4pfm)
 target_link_libraries(plotEnergyVsCompositionThreePhase thermo4pfm)
 target_link_libraries(computeKKSTernary thermo4pfm)
 target_link_libraries(computeTieLineTernary thermo4pfm)
+target_link_libraries(computeKKS3Ph2Sl thermo4pfm)
 target_link_libraries(loopxlogx thermo4pfm)
 target_link_libraries(loopCALPHADSpeciesPhaseGibbsEnergy thermo4pfm)
 target_link_libraries(loopCALPHADConcSolverBinary thermo4pfm)
