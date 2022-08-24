@@ -255,6 +255,7 @@ int main(int argc, char* argv[])
     }
     delete[] xhost;
 
+#ifdef HAVE_OPENMP_OFFLOAD
     double* xdev = new double[4 * N];
     short* nits  = new short[N];
     for (int i = 0; i < N; i++)
@@ -345,4 +346,5 @@ int main(int argc, char* argv[])
 
     delete[] xdev;
     delete[] nits;
+#endif
 }
