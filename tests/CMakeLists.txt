@@ -24,6 +24,8 @@ add_executable(testCALPHADbinaryKKSThreePhase
                ${TEST_DIR}/testCALPHADbinaryKKSThreePhase.cc )
 add_executable(testCALPHADbinaryKKS3Ph2Sl
                 ${TEST_DIR}/testCALPHADbinaryKKS3Ph2Sl.cc )
+add_executable(testCALPHADbinaryKKS2Ph1Sl
+               ${TEST_DIR}/testCALPHADbinaryKKS2Ph1Sl.cc )
 add_executable(testCALPHADbinaryEquilibrium
                ${TEST_DIR}/testCALPHADbinaryEquilibrium.cc )
 add_executable(testCALPHADConcSolverBinaryThreePhase
@@ -71,6 +73,7 @@ target_link_libraries(testCALPHADFreeEnergyFunctionsBinary thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKS thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKSThreePhase thermo4pfm)
 target_link_libraries(testCALPHADbinaryKKS3Ph2Sl thermo4pfm)
+target_link_libraries(testCALPHADbinaryKKS2Ph1Sl thermo4pfm)
 target_link_libraries(testCALPHADbinaryEquilibrium thermo4pfm)
 target_link_libraries(testCALPHADConcSolverBinaryThreePhase thermo4pfm)
 target_link_libraries(testCALPHADConcSolverBinary3Ph2Sl thermo4pfm)
@@ -151,6 +154,11 @@ add_test(NAME testCALPHADbinaryKKS3Ph2Sl
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
          ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADbinaryKKS3Ph2Sl
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testCALPHADbinaryKKS2Ph1Sl
+         COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
+         ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
+         ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADbinaryKKS2Ph1Sl
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testCALPHADbinaryEquilibrium
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
