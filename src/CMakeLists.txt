@@ -10,10 +10,12 @@ set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinaryThreePhase.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary3Ph2Sl.cc
+            ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary2Ph1Sl.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsTernary.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverBinary.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverBinaryThreePhase.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverBinary3Ph2Sl.cc
+            ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverBinary2Ph1Sl.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverTernary.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverTernary.cc
@@ -46,10 +48,12 @@ set(PUBLIC_HEADERS
     CALPHADFreeEnergyFunctionsBinary.h
     CALPHADFreeEnergyFunctionsBinaryThreePhase.h
     CALPHADFreeEnergyFunctionsBinary3Ph2Sl.h
+    CALPHADFreeEnergyFunctionsBinary2Ph1Sl.h
     CALPHADFreeEnergyFunctionsTernary.h
     CALPHADConcSolverBinary.h
     CALPHADConcSolverBinaryThreePhase.h
     CALPHADConcSolverBinary3Ph2Sl.h
+    CALPHADConcSolverBinary2Ph1Sl.h
     CALPHADConcSolverTernary.h
     CALPHADEqConcSolverBinary.h
     CALPHADEqConcSolverTernary.h
