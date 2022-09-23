@@ -13,7 +13,7 @@ public:
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
 #endif
-    /// compute "internal" concentrations cL, cS by solving KKK
+    /// compute "internal" concentrations cL, cS by solving KKS
     /// equations
     /// conc: initial guess and final solution (concentration in each phase)
     int ComputeConcentration(double* const conc, const double tol,
