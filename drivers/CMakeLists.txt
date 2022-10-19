@@ -27,6 +27,9 @@ add_executable(plotEnergyVsCompositionThreePhase
                ${CMAKE_SOURCE_DIR}/drivers/plotEnergyVsCompositionThreePhase.cc )
 add_executable(plotEnergyVsComposition2Ph1Sl
                ${CMAKE_SOURCE_DIR}/drivers/plotEnergyVsComposition2Ph1Sl.cc )
+
+add_executable(computeEqCompBinary
+               ${CMAKE_SOURCE_DIR}/drivers/computeEqCompBinary.cc)
 add_executable(computeKKSTernary
                ${CMAKE_SOURCE_DIR}/drivers/computeKKSTernary.cc)
 add_executable(computeTieLineTernary
@@ -37,6 +40,7 @@ add_executable(computeKKS3Ph2Sl
 target_link_libraries(plotEnergyVsComposition thermo4pfm)
 target_link_libraries(plotEnergyVsCompositionThreePhase thermo4pfm)
 target_link_libraries(plotEnergyVsComposition2Ph1Sl thermo4pfm)
+target_link_libraries(computeEqCompBinary thermo4pfm)
 target_link_libraries(computeKKSTernary thermo4pfm)
 target_link_libraries(computeTieLineTernary thermo4pfm)
 target_link_libraries(computeKKS3Ph2Sl thermo4pfm)
