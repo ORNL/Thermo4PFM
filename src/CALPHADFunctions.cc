@@ -399,9 +399,12 @@ bool checkSublatticeSpecies(boost::property_tree::ptree& species_db)
     phase_db = species_db.get_child("PhaseA");
     if (phase_db.get_child_optional("p")) return true;
     if (phase_db.get_child_optional("q")) return true;
-    phase_db = species_db.get_child("PhaseB");
-    if (phase_db.get_child_optional("p")) return true;
-    if (phase_db.get_child_optional("q")) return true;
+    if (species_db.get_child_optional("PhaseB"))
+    {
+        phase_db = species_db.get_child("PhaseB");
+        if (phase_db.get_child_optional("p")) return true;
+        if (phase_db.get_child_optional("q")) return true;
+    }
 
     return false;
 }
