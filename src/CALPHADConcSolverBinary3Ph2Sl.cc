@@ -188,7 +188,7 @@ void CALPHADConcSolverBinary3Ph2Sl::Jacobian(
                      * (-dxidc[2] - q_[2] * xlogx_deriv2(ypp_A[2])
                          - q_[2] * xlogx_deriv2(1. - ypp_A[2]));
     }
-    if (hphi2_ > 0.4)
+    else if (hphi2_ > 0.4)
     {
         fjac[1][0] = (p_[0] + q_[0])
                      * (dxidc[0] + q_[0] * xlogx_deriv2(ypp_A[0])
