@@ -118,31 +118,25 @@ double CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeFreeEnergy(
     const CalphadDataType l3 = lmixPhase(3, pi, temperature);
 
     CALPHADSpeciesPhaseGibbsEnergy* g_species;
-    CalphadDataType p;
-    CalphadDataType q;
+    double p;
+    double q;
 
     switch (pi)
     {
         case PhaseIndex::phaseL:
             g_species = &g_species_phaseL_[0];
-            p         = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseL_[0]);
-            q = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseL_[1]);
+            p = static_cast<double>(sublattice_stoichiometry_phaseL_[0]);
+            q = static_cast<double>(sublattice_stoichiometry_phaseL_[1]);
             break;
         case PhaseIndex::phaseA:
             g_species = &g_species_phaseA_[0];
-            p         = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseA_[0]);
-            q = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseA_[1]);
+            p = static_cast<double>(sublattice_stoichiometry_phaseA_[0]);
+            q = static_cast<double>(sublattice_stoichiometry_phaseA_[1]);
             break;
         case PhaseIndex::phaseB:
             g_species = &g_species_phaseB_[0];
-            p         = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseB_[0]);
-            q = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseB_[1]);
+            p = static_cast<double>(sublattice_stoichiometry_phaseB_[0]);
+            q = static_cast<double>(sublattice_stoichiometry_phaseB_[1]);
             break;
         default:
             //            std::cerr << "CALPHADFreeEnergyFunctionsBinary::"
@@ -152,7 +146,7 @@ double CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeFreeEnergy(
             return 0.;
     }
 
-    CalphadDataType ypp_A = (p + q) * conc[0] - p;
+    double ypp_A = (p + q) * conc[0] - p;
 
     double fe = (ypp_A * g_species[0].fenergy(temperature)
                     + (1. - ypp_A) * g_species[1].fenergy(temperature)
@@ -184,35 +178,29 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeDerivFreeEnergy(
     const CalphadDataType l3 = lmixPhase(3, pi, temperature);
 
     CALPHADSpeciesPhaseGibbsEnergy* g_species;
-    CalphadDataType p;
-    CalphadDataType q;
+    double p;
+    double q;
 
     switch (pi)
     {
         case PhaseIndex::phaseL:
             g_species = &g_species_phaseL_[0];
-            p         = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseL_[0]);
-            q = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseL_[1]);
+            p = static_cast<double>(sublattice_stoichiometry_phaseL_[0]);
+            q = static_cast<double>(sublattice_stoichiometry_phaseL_[1]);
             break;
         case PhaseIndex::phaseA:
             g_species = &g_species_phaseA_[0];
-            p         = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseA_[0]);
-            q = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseA_[1]);
+            p = static_cast<double>(sublattice_stoichiometry_phaseA_[0]);
+            q = static_cast<double>(sublattice_stoichiometry_phaseA_[1]);
             break;
         case PhaseIndex::phaseB:
             g_species = &g_species_phaseB_[0];
-            p         = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseB_[0]);
-            q = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseB_[1]);
+            p = static_cast<double>(sublattice_stoichiometry_phaseB_[0]);
+            q = static_cast<double>(sublattice_stoichiometry_phaseB_[1]);
             break;
     }
 
-    CalphadDataType ypp_A = (p + q) * conc[0] - p;
+    double ypp_A = (p + q) * conc[0] - p;
 
     double mu = (g_species[0].fenergy(temperature)
                     - g_species[1].fenergy(temperature))
@@ -238,32 +226,26 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeSecondDerivativeFreeEnergy(
     const CalphadDataType l3 = lmixPhase(3, pi, temp);
     const double rt          = GASCONSTANT_R_JPKPMOL * temp;
 
-    CalphadDataType p;
-    CalphadDataType q;
+    double p;
+    double q;
 
     switch (pi)
     {
         case PhaseIndex::phaseL:
-            p = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseL_[0]);
-            q = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseL_[1]);
+            p = static_cast<double>(sublattice_stoichiometry_phaseL_[0]);
+            q = static_cast<double>(sublattice_stoichiometry_phaseL_[1]);
             break;
         case PhaseIndex::phaseA:
-            p = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseA_[0]);
-            q = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseA_[1]);
+            p = static_cast<double>(sublattice_stoichiometry_phaseA_[0]);
+            q = static_cast<double>(sublattice_stoichiometry_phaseA_[1]);
             break;
         case PhaseIndex::phaseB:
-            p = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseB_[0]);
-            q = static_cast<CalphadDataType>(
-                sublattice_stoichiometry_phaseB_[1]);
+            p = static_cast<double>(sublattice_stoichiometry_phaseB_[0]);
+            q = static_cast<double>(sublattice_stoichiometry_phaseB_[1]);
             break;
     }
 
-    CalphadDataType ypp_A = (p + q) * conc[0] - p;
+    double ypp_A = (p + q) * conc[0] - p;
 
     d2fdc2[0] = (p + q)
                 * (CALPHADcomputeFMix_deriv2Binary(l0, l1, l2, l3, ypp_A)
