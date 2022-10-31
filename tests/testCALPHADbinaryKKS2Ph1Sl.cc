@@ -67,9 +67,28 @@ TEST_CASE("CALPHAD binary KKS", "[binary kks]")
     cafe.computeDerivFreeEnergy(temperature, &sol[0], pi0, &derivL);
     std::cout << "   dfL/dcL = " << derivL << std::endl;
 
-    double derivS;
-    cafe.computeDerivFreeEnergy(temperature, &sol[1], pi1, &derivS);
-    std::cout << "   dfS/dcS = " << derivS << std::endl;
+    double derivA;
+    cafe.computeDerivFreeEnergy(temperature, &sol[1], pi1, &derivA);
+    std::cout << "   dfA/dcA = " << derivA << std::endl;
 
-    REQUIRE(derivS == Approx(derivL).margin(1.e-5));
+    REQUIRE(derivA == Approx(derivL).margin(1.e-5));
+
+    // check derivatives are consistent with energy
+    const double epsilon = 1.e-8;
+    {
+        double feL      = cafe.computeFreeEnergy(temperature, &sol[0], pi0);
+        double ceps     = sol[0] + epsilon;
+        double feLeps   = cafe.computeFreeEnergy(temperature, &ceps, pi0);
+        double derivFDL = (feLeps - feL) / epsilon;
+        std::cout << "FD: dfL/dcL = " << derivFDL << std::endl;
+        REQUIRE(derivFDL == Approx(derivL).margin(1.e-5));
+    }
+    {
+        double feA      = cafe.computeFreeEnergy(temperature, &sol[1], pi1);
+        double ceps     = sol[1] + epsilon;
+        double feAeps   = cafe.computeFreeEnergy(temperature, &ceps, pi1);
+        double derivFDA = (feAeps - feA) / epsilon;
+        std::cout << "FD: dfA/dcA = " << derivFDA << std::endl;
+        REQUIRE(derivFDA == Approx(derivA).margin(1.e-5));
+    }
 }

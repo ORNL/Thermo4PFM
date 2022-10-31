@@ -89,6 +89,78 @@ TEST_CASE("CALPHAD binary three phase, two sublattice KKS",
     std::cout << "   dfS2/dcS2 = " << derivS2 << std::endl;
 
     REQUIRE(derivS2 == Approx(derivL).margin(1.e-5));
+
+    // check derivatives are consistent with energy
+    const double epsilon = 1.e-8;
+    {
+        double feL      = cafe.computeFreeEnergy(temperature, &sol[0], pi0);
+        double ceps     = sol[0] + epsilon;
+        double feLeps   = cafe.computeFreeEnergy(temperature, &ceps, pi0);
+        double derivFDL = (feLeps - feL) / epsilon;
+        std::cout << "FD: dfL/dcL = " << derivFDL << std::endl;
+        REQUIRE(derivFDL == Approx(derivL).margin(1.e-5));
+    }
+
+    {
+        double feA      = cafe.computeFreeEnergy(temperature, &sol[1], pi1);
+        double ceps     = sol[1] + epsilon;
+        double feAeps   = cafe.computeFreeEnergy(temperature, &ceps, pi1);
+        double derivFDA = (feAeps - feA) / epsilon;
+        std::cout << "FD: dfA/dcA = " << derivFDA << std::endl;
+        REQUIRE(derivFDA == Approx(derivS1).margin(1.e-5));
+    }
+    {
+        double feB      = cafe.computeFreeEnergy(temperature, &sol[2], pi2);
+        double ceps     = sol[2] + epsilon;
+        double feBeps   = cafe.computeFreeEnergy(temperature, &ceps, pi2);
+        double derivFDB = (feBeps - feB) / epsilon;
+        std::cout << "FD: dfB/dcB = " << derivFDB << std::endl;
+        REQUIRE(derivFDB == Approx(derivS2).margin(1.e-5));
+    }
+
+    // check second derivative
+    {
+        double deriv2L;
+        cafe.computeSecondDerivativeFreeEnergy(
+            temperature, &sol[0], pi0, &deriv2L);
+        std::cout << "d2fL/dcL2 = " << deriv2L << std::endl;
+        double derivL0;
+        cafe.computeDerivFreeEnergy(temperature, &sol[0], pi0, &derivL0);
+        double derivLp;
+        double conc = sol[0] + epsilon;
+        cafe.computeDerivFreeEnergy(temperature, &conc, pi0, &derivLp);
+        double deriv2FD = (derivLp - derivL0) / epsilon;
+        std::cout << "FD: d2fL/dcL2 = " << deriv2FD << std::endl;
+        REQUIRE(deriv2FD == Approx(deriv2L).margin(1.e-5));
+    }
+    {
+        double deriv2A;
+        cafe.computeSecondDerivativeFreeEnergy(
+            temperature, &sol[1], pi1, &deriv2A);
+        std::cout << "d2fA/dcA2 = " << deriv2A << std::endl;
+        double derivA0;
+        cafe.computeDerivFreeEnergy(temperature, &sol[1], pi1, &derivA0);
+        double derivAp;
+        double conc = sol[1] + epsilon;
+        cafe.computeDerivFreeEnergy(temperature, &conc, pi1, &derivAp);
+        double deriv2FD = (derivAp - derivA0) / epsilon;
+        std::cout << "FD: d2fA/dcA2 = " << deriv2FD << std::endl;
+        REQUIRE(deriv2FD == Approx(deriv2A).margin(1.e-5));
+    }
+    {
+        double deriv2B;
+        cafe.computeSecondDerivativeFreeEnergy(
+            temperature, &sol[2], pi2, &deriv2B);
+        std::cout << "d2fB/dcB2 = " << deriv2B << std::endl;
+        double derivB0;
+        cafe.computeDerivFreeEnergy(temperature, &sol[2], pi2, &derivB0);
+        double derivBp;
+        double conc = sol[2] + epsilon;
+        cafe.computeDerivFreeEnergy(temperature, &conc, pi2, &derivBp);
+        double deriv2FD = (derivBp - derivB0) / epsilon;
+        std::cout << "FD: d2fB/dcB2 = " << deriv2FD << std::endl;
+        REQUIRE(deriv2FD == Approx(deriv2B).margin(1.e-5));
+    }
 }
 
 TEST_CASE("CALPHAD binary three phase, two sublattice KKS #2",
