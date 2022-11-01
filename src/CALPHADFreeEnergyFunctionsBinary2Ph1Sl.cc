@@ -262,9 +262,11 @@ void CALPHADFreeEnergyFunctionsBinary2Ph1Sl::computeTdependentParameters(
 bool CALPHADFreeEnergyFunctionsBinary2Ph1Sl::computeCeqT(
     const double temperature, double* ceq, const int maxits, const bool verbose)
 {
+#ifndef HAVE_OPENMP_OFFLOAD
     std::cerr << "CALPHADFreeEnergyFunctionsBinary2Ph1Sl::computeCeqT() not "
                  "implemented"
               << std::endl;
+#endif
     return false;
 }
 
