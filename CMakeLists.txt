@@ -49,6 +49,16 @@ endif(${WITH_TLOGT4L})
 
 set(SHARED_LIB FALSE CACHE BOOL "Whether or not build static lib")
 
+# Build with convergence history
+set(WITH_CONVERGENCE_HISTORY FALSE CACHE BOOL "Print out convergence history")
+if(${WITH_CONVERGENCE_HISTORY})
+  if(${WITH_OPENMP_OFFLOAD})
+    message(SEND_ERROR "Print out convergence history not compatible with OpenMP offload")
+  endif()
+  message(STATUS "Print out convergence history")
+  add_definitions(-DWITH_CONVERGENCE_HISTORY)
+endif()
+
 enable_testing()
 
 add_subdirectory(src)

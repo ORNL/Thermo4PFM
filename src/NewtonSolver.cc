@@ -16,8 +16,7 @@
 #endif
 #include <cmath>
 
-//#define DEBUG_CONVERGENCE
-#ifdef DEBUG_CONVERGENCE
+#ifdef WITH_CONVERGENCE_HISTORY
 #include <iomanip>
 #include <iostream>
 #include <vector>
@@ -123,7 +122,7 @@ int NewtonSolver<Dimension, SolverType,
     // for (int ii = 0; ii < Dimension; ii++)
     //    assert(conc[ii] == conc[ii]);
 
-#ifdef DEBUG_CONVERGENCE
+#ifdef WITH_CONVERGENCE_HISTORY
     std::vector<double> ctmp;
     ctmp.reserve(40);
     std::vector<double> residual;
@@ -146,21 +145,22 @@ int NewtonSolver<Dimension, SolverType,
 
     while (1)
     {
-#ifdef DEBUG_CONVERGENCE
-        // for ( int ii = 0; ii < Dimension ; ii++ )cout<<conc[ii]<<endl;
-        // std::cout<<endl;
-
+#ifndef HAVE_OPENMP_OFFLOAD
         for (int ii = 0; ii < Dimension; ii++)
             assert(conc[ii] == conc[ii]);
+#endif
+#ifdef WITH_CONVERGENCE_HISTORY
         for (int ii = 0; ii < Dimension; ii++)
             ctmp.push_back(conc[ii]);
 #endif
         internalRHS(conc, fvec);
-#ifdef DEBUG_CONVERGENCE
-        for (int ii = 0; ii < Dimension; ii++)
-            residual.push_back(fvec[ii]);
+#ifndef HAVE_OPENMP_OFFLOAD
         for (int ii = 0; ii < Dimension; ii++)
             assert(fvec[ii] == fvec[ii]);
+#endif
+#ifdef WITH_CONVERGENCE_HISTORY
+        for (int ii = 0; ii < Dimension; ii++)
+            residual.push_back(fvec[ii]);
 #endif
 
         if (CheckTolerance(fvec, tol))
@@ -177,42 +177,46 @@ int NewtonSolver<Dimension, SolverType,
         iterations++;
     }
 
-#ifdef DEBUG_CONVERGENCE
+#ifdef WITH_CONVERGENCE_HISTORY
+    std::cout << std::setprecision(12);
+    std::cout << "======================" << std::endl;
+    std::cout << "Convergence history..." << std::endl;
+    for (unsigned j = 0; j < ctmp.size(); j = j + Dimension)
+    {
+        std::cout << "  conc= ";
+        for (int ii = 0; ii < Dimension; ii++)
+        {
+            std::cout << ctmp[j + ii] << "   ";
+        }
+        std::cout << ", rhs = ";
+        for (int ii = 0; ii < Dimension; ii++)
+        {
+            std::cout << residual[j + ii] << "   ";
+        }
+        std::cout << std::endl;
+    }
+    std::cout << "======================" << std::endl;
+    std::cout << "Final solution:" << std::endl;
+    for (int ii = 0; ii < Dimension; ii++)
+    {
+        std::cout << "  conc[" << ii << "] = " << conc[ii] << std::endl;
+    }
+    for (int ii = 0; ii < Dimension; ii++)
+    {
+        std::cout << "  rhs[" << ii << "] = " << fvec[ii] << std::endl;
+    }
+#endif
+
     if (!converged)
     {
-        std::cout << std::setprecision(12);
-        std::cout << "Concentration history..." << std::endl;
-        for (unsigned j = 0; j < ctmp.size(); j = j + Dimension)
-        {
-            std::cout << "  conc= ";
-            for (int ii = 0; ii < Dimension; ii++)
-            {
-                std::cout << ctmp[j + ii] << "   ";
-            }
-            for (int ii = 0; ii < Dimension; ii++)
-            {
-                std::cout << residual[j + ii] << "   ";
-            }
-            std::cout << std::endl;
-        }
+#ifndef HAVE_OPENMP_OFFLOAD
+        std::cerr << "Error: too many iterations in NewtonSolver" << std::endl;
+        std::cerr << iterations << " iterations..." << std::endl;
         for (int ii = 0; ii < Dimension; ii++)
         {
             std::cout << "  conc[" << ii << "] = " << conc[ii] << std::endl;
         }
-        for (int ii = 0; ii < Dimension; ii++)
-        {
-            std::cout << "  rhs[" << ii << "] = " << fvec[ii] << std::endl;
-        }
-        std::cerr << iterations << " iterations..." << std::endl;
-        std::cerr << "Error: too many iterations in NewtonSolver" << std::endl;
-    }
 #endif
-    if (!converged)
-    {
-        // for (int ii = 0; ii < Dimension; ii++)
-        //{
-        //    std::cout << "  conc[" << ii << "] = " << conc[ii] << std::endl;
-        //}
         return -1;
     }
     return iterations;
