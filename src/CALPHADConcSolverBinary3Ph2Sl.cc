@@ -70,33 +70,33 @@ void CALPHADConcSolverBinary3Ph2Sl::RHS(
     if (hphi1_ > 0.4)
     {
 
-        fvec[1] = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
-                  - q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
+        fvec[1] = (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
+                  - (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
                   + (xi[0] - xi[1]);
 
-        fvec[2] = q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
-                  - q_[2] * (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
+        fvec[2] = (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
+                  - (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
                   + (xi[1] - xi[2]);
     }
     else if (hphi2_ > 0.4)
     {
 
-        fvec[1] = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
-                  - q_[2] * (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
+        fvec[1] = (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
+                  - (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
                   + (xi[0] - xi[2]);
 
-        fvec[2] = q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
-                  - q_[2] * (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
+        fvec[2] = (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
+                  - (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
                   + (xi[1] - xi[2]);
     }
     else
     {
-        fvec[1] = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
-                  - q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
+        fvec[1] = (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
+                  - (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
                   + (xi[0] - xi[1]);
 
-        fvec[2] = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
-                  - q_[2] * (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
+        fvec[2] = (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
+                  - (xlogx_deriv(ypp_A[2]) - xlogx_deriv(1. - ypp_A[2]))
                   + (xi[0] - xi[2]);
     }
 

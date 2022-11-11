@@ -200,6 +200,7 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computeDerivFreeEnergy(
             break;
     }
 
+    // see computeFreeEnergy() for energy expression
     double ypp_A = (p + q) * conc[0] - p;
 
     double mu = (g_species[0].fenergy(temperature)
