@@ -40,6 +40,8 @@ add_executable(testCALPHADJacobianBinary
                ${TEST_DIR}/testCALPHADJacobianBinary.cc )
 add_executable(testCALPHADJacobianTernary
                ${TEST_DIR}/testCALPHADJacobianTernary.cc )
+add_executable(testCALPHADJacobianBinary2Ph1Sl
+               ${TEST_DIR}/testCALPHADJacobianBinary2Ph1Sl.cc )
 add_executable(testCALPHADternaryKKS
                ${TEST_DIR}/testCALPHADternaryKKS.cc )
 add_executable(testCALPHADConcSolverTernary
@@ -90,6 +92,7 @@ target_link_libraries(testLoopCALPHADternaryKKS thermo4pfm)
 target_link_libraries(testLoopCALPHADternaryTieLine thermo4pfm)
 target_link_libraries(testCALPHADJacobianBinary thermo4pfm)
 target_link_libraries(testCALPHADJacobianTernary thermo4pfm)
+target_link_libraries(testCALPHADJacobianBinary2Ph1Sl thermo4pfm)
 target_link_libraries(testLoopKKSdiluteBinaryKKS thermo4pfm)
 
 if (${OPENMP_CXX_FOUND})
@@ -194,6 +197,11 @@ add_test(NAME testCALPHADJacobianTernary
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
          ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADJacobianTernary
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testCALPHADJacobianBinary2Ph1Sl
+         COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
+         ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
+         ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADJacobianBinary2Ph1Sl
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testCALPHADternaryKKS
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}

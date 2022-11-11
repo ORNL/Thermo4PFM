@@ -1,5 +1,6 @@
 #include "CALPHADFreeEnergyFunctionsBinary2Ph1Sl.h"
 #include "CALPHADConcSolverBinary2Ph1Sl.h"
+#include "CALPHADEqConcSolverBinary2Ph1Sl.h"
 #include "CALPHADFunctions.h"
 #include "PhysicalConstants.h"
 #include "functions.h"
@@ -264,11 +265,47 @@ bool CALPHADFreeEnergyFunctionsBinary2Ph1Sl::computeCeqT(
     const double temperature, double* ceq, const int maxits, const bool verbose)
 {
 #ifndef HAVE_OPENMP_OFFLOAD
-    std::cerr << "CALPHADFreeEnergyFunctionsBinary2Ph1Sl::computeCeqT() not "
-                 "implemented"
-              << std::endl;
+    if (verbose)
+        std::cout << "CALPHADFreeEnergyFunctionsBinary2Ph1Sl::computeCeqT()"
+                  << std::endl;
 #endif
-    return false;
+    CalphadDataType fA[3];
+    CalphadDataType fB[3];
+
+    CalphadDataType Lmix_L[4];
+    CalphadDataType Lmix_A[4];
+
+    computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
+
+    double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
+
+    CALPHADEqConcSolverBinary2Ph1Sl eq_solver;
+
+    int p[2] = { sublattice_stoichiometry_phaseL_[0],
+        sublattice_stoichiometry_phaseA_[0] };
+    int q[2] = { sublattice_stoichiometry_phaseL_[1],
+        sublattice_stoichiometry_phaseA_[1] };
+    eq_solver.setup(RTinv, Lmix_L, Lmix_A, fA, fB, p, q);
+    int ret = eq_solver.ComputeConcentration(ceq, newton_tol_, maxits);
+
+#ifndef HAVE_OPENMP_OFFLOAD
+    if (ret >= 0)
+    {
+        if (verbose)
+        {
+            std::cout << "CALPHAD, c_eq phase0=" << ceq[0] << std::endl;
+            std::cout << "CALPHAD, c_eq phase1=" << ceq[1] << std::endl;
+        }
+    }
+    else
+    {
+        std::cout << "CALPHADFreeEnergyFunctionsBinary, WARNING: ceq "
+                     "computation did not converge"
+                  << std::endl;
+    }
+#endif
+
+    return (ret >= 0);
 }
 
 //=======================================================================
