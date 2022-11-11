@@ -54,8 +54,8 @@ void CALPHADConcSolverBinary2Ph1Sl::RHS(
     computeXi(ypp_A, xi);
 
     fvec[0] = -c0_ + (1.0 - hphi_) * c[0] + hphi_ * c[1];
-    fvec[1] = q_[0] * (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
-              - q_[1] * (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
+    fvec[1] = (xlogx_deriv(ypp_A[0]) - xlogx_deriv(1. - ypp_A[0]))
+              - (xlogx_deriv(ypp_A[1]) - xlogx_deriv(1. - ypp_A[1]))
               + (xi[0] - xi[1]);
 }
 
