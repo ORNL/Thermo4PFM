@@ -231,8 +231,9 @@ void CALPHADFreeEnergyFunctionsBinary2Ph1Sl::computeSecondDerivativeFreeEnergy(
 
     CalphadDataType ypp_A = (p + q) * conc[0] - p;
 
-    d2fdc2[0] = (CALPHADcomputeFMix_deriv2Binary(l0, l1, l2, l3, ypp_A)
-                 + CALPHADcomputeFIdealMix_deriv2Binary(rt, ypp_A));
+    d2fdc2[0] = (p + q)
+                * (CALPHADcomputeFMix_deriv2Binary(l0, l1, l2, l3, ypp_A)
+                      + CALPHADcomputeFIdealMix_deriv2Binary(rt, ypp_A));
 }
 
 //=======================================================================
