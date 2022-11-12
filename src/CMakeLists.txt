@@ -19,7 +19,7 @@ set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverTernary.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverTernary.cc
-            ${CMAKE_SOURCE_DIR}/src/CALPHADConcSolverTernary.cc
+            ${CMAKE_SOURCE_DIR}/src/CALPHADEqConcSolverBinary2Ph1Sl.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADTieLineConcSolverTernary.cc
             ${CMAKE_SOURCE_DIR}/src/KKSdiluteBinaryConcSolver.cc
             ${CMAKE_SOURCE_DIR}/src/KKSFreeEnergyFunctionDiluteBinary.cc
@@ -57,6 +57,7 @@ set(PUBLIC_HEADERS
     CALPHADConcSolverTernary.h
     CALPHADEqConcSolverBinary.h
     CALPHADEqConcSolverTernary.h
+    CALPHADEqConcSolverBinary2Ph1Sl.h
     CALPHADTieLineConcSolverTernary.h
     KKSdiluteBinaryConcSolver.h
    )

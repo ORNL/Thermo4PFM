@@ -1,3 +1,8 @@
 Compute KKS solution for ternary alloy Fe0.6Nb0.035Ni at T=1570, for phi=0.1:
 ----------------------------------------------------------------------------
 computeKKSTernary calphadFeNbNi_Mathon_et_al.json 1570. 0.6 0.035 0.1
+
+Compute equilibrium compositions for Al-Cu liquid+theta:
+-------------------------------------------------------
+computeEqCompBinary2Ph1Sl ../thermodynamic_data/calphadAlCuLTheta.json 815. 0.85 0.7
+
