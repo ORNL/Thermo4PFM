@@ -3,6 +3,7 @@
 #include "CALPHADConcSolverBinary.h"
 #include "CALPHADConcSolverBinary3Ph2Sl.h"
 #include "CALPHADConcSolverBinaryThreePhase.h"
+#include "CALPHADEqConcSolverBinary.h"
 #include "CALPHADFreeEnergyFunctionsBinary3Ph2Sl.h"
 
 #include "InterpolationType.h"
@@ -27,7 +28,6 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
     double RT      = 0.1;
     double RTinv   = 1. / RT;
 
-    std::cout << "Test CALPHADConcSolverBinary...\n";
     {
         double c0   = 0.1;
         double hphi = 0.3;
@@ -48,6 +48,7 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
 
         double x[2] = { 0.1, 0.4 };
 
+        std::cout << "Test CALPHADConcSolverBinary...\n";
         {
             Thermo4PFM::CALPHADConcSolverBinary solver;
             solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_S, fA, fB);
@@ -81,6 +82,42 @@ TEST_CASE("CALPHAD Jacobian binary", "[CALPHAD Jacobian binary]")
                 x[j] -= epsilon;
             }
         }
+
+        std::cout << "Test CALPHADEqConcSolverBinary...\n";
+        {
+            Thermo4PFM::CALPHADEqConcSolverBinary solver;
+            solver.setup(RTinv, Lmix_L, Lmix_S, fA, fB);
+
+            solver.RHS(x, fvec1);
+
+            solver.Jacobian(x, fjac);
+
+            std::cout << std::setprecision(12);
+
+            // loop over variables
+            for (int j = 0; j < 2; j++)
+            {
+                std::cout << "----------------------------" << std::endl;
+                std::cout << "Test variations of variable " << j << std::endl;
+                x[j] += epsilon;
+                solver.RHS(x, fvec2);
+
+                double fd[2];
+                // loop over equations
+                for (int i = 0; i < 2; i++)
+                    fd[i] = (fvec2[i] - fvec1[i]) / epsilon;
+
+                for (int i = 0; i < 2; i++)
+                {
+                    std::cout << "Equation " << i << ", FD=" << fd[i]
+                              << ", fjac=" << fjac[i][j] << std::endl;
+                    CHECK(fd[i] == Approx(fjac[i][j]).margin(tol));
+                }
+
+                x[j] -= epsilon;
+            }
+        }
+
         for (int i = 0; i < 2; i++)
             delete[] fjac[i];
     }
