@@ -20,7 +20,8 @@ namespace Thermo4PFM
 CALPHADFreeEnergyFunctionsBinary2Ph1Sl::CALPHADFreeEnergyFunctionsBinary2Ph1Sl(
     pt::ptree& calphad_db, boost::optional<pt::ptree&> newton_db,
     const EnergyInterpolationType energy_interp_func_type,
-    const ConcInterpolationType conc_interp_func_type)
+    const ConcInterpolationType conc_interp_func_type, std::string phase0,
+    std::string phase1)
     : energy_interp_func_type_(energy_interp_func_type),
       conc_interp_func_type_(conc_interp_func_type),
       newton_tol_(1.e-8),
@@ -32,7 +33,7 @@ CALPHADFreeEnergyFunctionsBinary2Ph1Sl::CALPHADFreeEnergyFunctionsBinary2Ph1Sl(
     fenergy_diag_filename_ = new char[fenergy_diag_filename.length() + 1];
     strcpy(fenergy_diag_filename_, fenergy_diag_filename.c_str());
 
-    readParameters(calphad_db);
+    readParameters(calphad_db, phase0, phase1);
 
     if (newton_db) readNewtonparameters(newton_db.get());
 }
@@ -51,27 +52,27 @@ void CALPHADFreeEnergyFunctionsBinary2Ph1Sl::readNewtonparameters(
 //=======================================================================
 
 void CALPHADFreeEnergyFunctionsBinary2Ph1Sl::readParameters(
-    pt::ptree& calphad_db)
+    pt::ptree& calphad_db, std::string phase0, std::string phase1)
 {
     pt::ptree& speciesA_db = calphad_db.get_child("SpeciesA");
-    auto phase_db          = speciesA_db.get_child("PhaseL");
+    auto phase_db          = speciesA_db.get_child(phase0);
     g_species_phaseL_[0].initialize("L0", phase_db);
     readSublatticeStoichiometry(phase_db, sublattice_stoichiometry_phaseL_);
 
-    phase_db = speciesA_db.get_child("PhaseA");
+    phase_db = speciesA_db.get_child(phase1);
     g_species_phaseA_[0].initialize("A0", phase_db);
     readSublatticeStoichiometry(phase_db, sublattice_stoichiometry_phaseA_);
 
     pt::ptree& speciesB_db = calphad_db.get_child("SpeciesB");
-    g_species_phaseL_[1].initialize("L1", speciesB_db.get_child("PhaseL"));
-    g_species_phaseA_[1].initialize("A1", speciesB_db.get_child("PhaseA"));
+    g_species_phaseL_[1].initialize("L1", speciesB_db.get_child(phase0));
+    g_species_phaseA_[1].initialize("A1", speciesB_db.get_child(phase1));
 
     // read Lmix coefficients
-    std::string dbnamemixL("LmixPhaseL");
+    std::string dbnamemixL("Lmix" + phase0);
     pt::ptree Lmix0_db = calphad_db.get_child(dbnamemixL);
     readLmixBinary(Lmix0_db, LmixPhaseL_);
 
-    std::string dbnamemixA("LmixPhaseA");
+    std::string dbnamemixA("Lmix" + phase1);
     pt::ptree Lmix1_db = calphad_db.get_child(dbnamemixA);
     readLmixBinary(Lmix1_db, LmixPhaseA_);
 
