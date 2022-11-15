@@ -55,13 +55,13 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::readNewtonparameters(
     newton_max_resets_ = newton_db.get<int>("max_resets", newton_max_resets_);
     newton_verbose_    = newton_db.get<bool>("verbose", newton_verbose_);
 
-    std::cout << "Thermo4PFM Newton Solver Parameters (Binary3Ph2Sl):"
-              << std::endl;
-    std::cout << "Tolerance: " << newton_tol_ << std::endl;
-    std::cout << "Alpha: " << newton_alpha_ << std::endl;
-    std::cout << "Max interations: " << newton_maxits_ << std::endl;
-    std::cout << "Max resets: " << newton_max_resets_ << std::endl;
-    std::cout << "Verbose: " << newton_verbose_ << std::endl;
+    // std::cout << "Thermo4PFM Newton Solver Parameters (Binary3Ph2Sl):"
+    //          << std::endl;
+    // std::cout << "Tolerance: " << newton_tol_ << std::endl;
+    // std::cout << "Alpha: " << newton_alpha_ << std::endl;
+    // std::cout << "Max interations: " << newton_maxits_ << std::endl;
+    // std::cout << "Max resets: " << newton_max_resets_ << std::endl;
+    // std::cout << "Verbose: " << newton_verbose_ << std::endl;
 }
 
 //=======================================================================

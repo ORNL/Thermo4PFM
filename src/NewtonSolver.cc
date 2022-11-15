@@ -215,7 +215,8 @@ int NewtonSolver<Dimension, SolverType,
         std::cerr << iterations << " iterations..." << std::endl;
         for (int ii = 0; ii < Dimension; ii++)
         {
-            std::cout << "  conc[" << ii << "] = " << conc[ii] << std::endl;
+            std::cout << "  conc[" << ii << "] = " << conc[ii] << "  rhs[" << ii
+                      << "] = " << fvec[ii] << std::endl;
         }
 #endif
         return -1;

@@ -24,7 +24,8 @@ public:
         boost::property_tree::ptree& input_db,
         boost::optional<boost::property_tree::ptree&> newton_db,
         const EnergyInterpolationType energy_interp_func_type,
-        const ConcInterpolationType conc_interp_func_type);
+        const ConcInterpolationType conc_interp_func_type,
+        std::string phase0 = "PhaseL", std::string phase1 = "PhaseA");
 
     ~CALPHADFreeEnergyFunctionsBinary2Ph1Sl()
     {
@@ -107,7 +108,8 @@ private:
     int sublattice_stoichiometry_phaseL_[2];
     int sublattice_stoichiometry_phaseA_[2];
 
-    void readParameters(boost::property_tree::ptree& calphad_db);
+    void readParameters(boost::property_tree::ptree& calphad_db,
+        std::string phase0, std::string phase1);
 
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
