@@ -60,40 +60,26 @@ void CALPHADConcSolverBinaryThreePhase::RHS(
 
     fvec[0] = -c0_ + hphi0_ * c[0] + hphi1_ * c[1] + hphi2_ * c[2];
 
+    const double xl0 = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]);
+    const double xl1 = xlogx_deriv(c[1]) - xlogx_deriv(1. - c[1]);
+    const double xl2 = xlogx_deriv(c[2]) - xlogx_deriv(1. - c[2]);
+
     // We can choose to enforce two of the three chemical potential equilities.
     // Which two are chosen can impact the convergence rate.
     if (hphi1_ > 0.4)
     {
-        fvec[1] = scaledRT_
-                      * (xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0])
-                            - xlogx_deriv(c[1]) + xlogx_deriv(1. - c[1]))
-                  + (xi[0] - xi[1]);
-        fvec[2] = scaledRT_
-                      * (xlogx_deriv(c[1]) - xlogx_deriv(1. - c[1])
-                            - xlogx_deriv(c[2]) + xlogx_deriv(1. - c[2]))
-                  + (xi[1] - xi[2]);
+        fvec[1] = scaledRT_ * (xl0 - xl1) + (xi[0] - xi[1]);
+        fvec[2] = scaledRT_ * (xl1 - xl2) + (xi[1] - xi[2]);
     }
     else if (hphi2_ > 0.4)
     {
-        fvec[1] = scaledRT_
-                      * (xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0])
-                            - xlogx_deriv(c[2]) + xlogx_deriv(1. - c[2]))
-                  + (xi[0] - xi[2]);
-        fvec[2] = scaledRT_
-                      * (xlogx_deriv(c[1]) - xlogx_deriv(1. - c[1])
-                            - xlogx_deriv(c[2]) + xlogx_deriv(1. - c[2]))
-                  + (xi[1] - xi[2]);
+        fvec[1] = scaledRT_ * (xl0 - xl2) + (xi[0] - xi[2]);
+        fvec[2] = scaledRT_ * (xl1 - xl2) + (xi[1] - xi[2]);
     }
     else
     {
-        fvec[1] = scaledRT_
-                      * (xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0])
-                            - xlogx_deriv(c[1]) + xlogx_deriv(1. - c[1]))
-                  + (xi[0] - xi[1]);
-        fvec[2] = scaledRT_
-                      * (xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0])
-                            - xlogx_deriv(c[2]) + xlogx_deriv(1. - c[2]))
-                  + (xi[0] - xi[2]);
+        fvec[1] = scaledRT_ * (xl0 - xl1) + (xi[0] - xi[1]);
+        fvec[2] = scaledRT_ * (xl0 - xl2) + (xi[0] - xi[2]);
     }
 
     /*
@@ -140,59 +126,41 @@ void CALPHADConcSolverBinaryThreePhase::Jacobian(
     fjac[0][1] = hphi1_;
     fjac[0][2] = hphi2_;
 
+    const double jac0
+        = dxidc[0] + scaledRT_ * (xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]));
+    const double jac1
+        = dxidc[1] + scaledRT_ * (xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]));
+    const double jac2
+        = dxidc[2] + scaledRT_ * (xlogx_deriv2(c[2]) + xlogx_deriv2(1. - c[2]));
     if (hphi1_ > 0.4)
     {
-        fjac[1][0]
-            = dxidc[0]
-              + scaledRT_ * (xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]));
-        fjac[1][1]
-            = -dxidc[1]
-              - scaledRT_ * (xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]));
+        fjac[1][0] = jac0;
+        fjac[1][1] = -1. * jac1;
         fjac[1][2] = 0.;
 
         fjac[2][0] = 0.;
-        fjac[2][1]
-            = dxidc[1]
-              + scaledRT_ * (xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]));
-        fjac[2][2]
-            = -dxidc[2]
-              - scaledRT_ * (xlogx_deriv2(c[2]) + xlogx_deriv2(1. - c[2]));
+        fjac[2][1] = jac1;
+        fjac[2][2] = -1. * jac2;
     }
     else if (hphi2_ > 0.4)
     {
-        fjac[1][0]
-            = dxidc[0]
-              + scaledRT_ * (xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]));
+        fjac[1][0] = jac0;
         fjac[1][1] = 0.;
-        fjac[1][2]
-            = -dxidc[2]
-              - scaledRT_ * (xlogx_deriv2(c[2]) + xlogx_deriv2(1. - c[2]));
+        fjac[1][2] = -1. * jac2;
 
         fjac[2][0] = 0.;
-        fjac[2][1]
-            = dxidc[1]
-              + scaledRT_ * (xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]));
-        fjac[2][2]
-            = -dxidc[2]
-              - scaledRT_ * (xlogx_deriv2(c[2]) + xlogx_deriv2(1. - c[2]));
+        fjac[2][1] = jac1;
+        fjac[2][2] = -1. * jac2;
     }
     else
     {
-        fjac[1][0]
-            = dxidc[0]
-              + scaledRT_ * (xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]));
-        fjac[1][1]
-            = -dxidc[1]
-              - scaledRT_ * (xlogx_deriv2(c[1]) + xlogx_deriv2(1. - c[1]));
+        fjac[1][0] = jac0;
+        fjac[1][1] = -1. * jac1;
         fjac[1][2] = 0.;
 
-        fjac[2][0]
-            = dxidc[0]
-              + scaledRT_ * (xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]));
+        fjac[2][0] = jac0;
         fjac[2][1] = 0.;
-        fjac[2][2]
-            = -dxidc[2]
-              - scaledRT_ * (xlogx_deriv2(c[2]) + xlogx_deriv2(1. - c[2]));
+        fjac[2][2] = -1. * jac2;
     }
 }
 
