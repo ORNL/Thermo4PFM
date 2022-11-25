@@ -3,19 +3,11 @@
 #include "CALPHADConcSolverBinary.h"
 #include "CALPHADEqConcSolverBinary.h"
 
-#include "InterpolationType.h"
-
-#include <boost/optional/optional.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/property_tree/ptree.hpp>
-
 #include "catch.hpp"
 
 #include <cmath>
 #include <iomanip>
 #include <iostream>
-
-namespace pt = boost::property_tree;
 
 TEST_CASE("Jacobian binary", "[Jacobian binary]")
 {

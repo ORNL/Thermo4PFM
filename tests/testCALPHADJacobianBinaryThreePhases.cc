@@ -17,7 +17,6 @@ TEST_CASE("Jacobian binary 3 phases", "[Jacobian binary 3 phases]")
     double epsilon = 1.e-8;
     double tol     = 1.e-6;
     double RT      = 0.1;
-    double RTinv   = 1. / RT;
 
     // CALPHADConcSolverBinaryThreePhase
     std::cout << "-----------------------------------------" << std::endl;
