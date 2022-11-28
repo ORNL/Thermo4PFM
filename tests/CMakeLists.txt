@@ -38,6 +38,10 @@ add_executable(testKKSdiluteBinaryEquilibrium
                ${TEST_DIR}/testKKSdiluteBinaryEquilibrium.cc )
 add_executable(testCALPHADJacobianBinary
                ${TEST_DIR}/testCALPHADJacobianBinary.cc )
+add_executable(testCALPHADJacobianBinaryThreePhases
+               ${TEST_DIR}/testCALPHADJacobianBinaryThreePhases.cc )
+add_executable(testCALPHADJacobianBinary3Ph2Sl
+               ${TEST_DIR}/testCALPHADJacobianBinary3Ph2Sl.cc )
 add_executable(testCALPHADJacobianTernary
                ${TEST_DIR}/testCALPHADJacobianTernary.cc )
 add_executable(testCALPHADJacobianBinary2Ph1Sl
@@ -91,6 +95,8 @@ target_link_libraries(testLoopCALPHADbinaryEquilibrium thermo4pfm)
 target_link_libraries(testLoopCALPHADternaryKKS thermo4pfm)
 target_link_libraries(testLoopCALPHADternaryTieLine thermo4pfm)
 target_link_libraries(testCALPHADJacobianBinary thermo4pfm)
+target_link_libraries(testCALPHADJacobianBinaryThreePhases thermo4pfm)
+target_link_libraries(testCALPHADJacobianBinary3Ph2Sl thermo4pfm)
 target_link_libraries(testCALPHADJacobianTernary thermo4pfm)
 target_link_libraries(testCALPHADJacobianBinary2Ph1Sl thermo4pfm)
 target_link_libraries(testLoopKKSdiluteBinaryKKS thermo4pfm)
@@ -192,6 +198,16 @@ add_test(NAME testCALPHADJacobianBinary
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
          ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADJacobianBinary
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testCALPHADJacobianBinaryThreePhases
+         COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
+         ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
+         ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADJacobianBinaryThreePhases
+         WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testCALPHADJacobianBinary3Ph2Sl
+         COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
+         ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
+         ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADJacobianBinary3Ph2Sl
          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testCALPHADJacobianTernary
          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
