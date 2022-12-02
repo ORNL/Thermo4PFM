@@ -63,3 +63,17 @@ if (${OPENMP_CXX_FOUND})
   target_link_libraries(loopCALPHADConcSolverTernary OpenMP::OpenMP_CXX)
   target_link_libraries(loopCALPHADbinaryKKS OpenMP::OpenMP_CXX)
 endif()
+
+install(TARGETS plotEnergyVsComposition
+                plotEnergyVsCompositionThreePhase
+                plotEnergyVsComposition2Ph1Sl
+                computeEqCompBinary
+                computeKKSTernary
+                computeTieLineTernary
+                computeKKS3Ph2Sl
+                loopxlogx
+                loopCALPHADSpeciesPhaseGibbsEnergy
+                loopCALPHADConcSolverBinary
+                loopCALPHADConcSolverTernary
+                loopCALPHADbinaryKKS
+        DESTINATION ${CMAKE_INSTALL_PREFIX}/drivers)
