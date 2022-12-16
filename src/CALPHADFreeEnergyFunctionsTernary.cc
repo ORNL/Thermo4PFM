@@ -319,11 +319,6 @@ void CALPHADFreeEnergyFunctionsTernary::computeSecondDerivativeFreeEnergy(
     const double temp, const double* const conc, const PhaseIndex pi,
     double* d2fdc2)
 {
-    // assert(conc[0] >= 0.);
-    // assert(conc[0] <= 1.);
-    // assert(conc[1] >= 0.);
-    // assert(conc[1] <= 1.);
-
     CalphadDataType lAB[4]  = { lmix0ABPhase(pi, temp), lmix1ABPhase(pi, temp),
         lmix2ABPhase(pi, temp), lmix3ABPhase(pi, temp) };
     CalphadDataType lAC[4]  = { lmix0ACPhase(pi, temp), lmix1ACPhase(pi, temp),
@@ -572,13 +567,6 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
 {
     // assert(conc[0] == conc[0]);
     // assert(conc[1] == conc[1]);
-    // assert(x[0] >= 0.);
-    // assert(x[1] >= 0.);
-    // assert(x[0] <= 1.);
-    // assert(x[1] <= 1.);
-
-    const double conc0 = conc[0];
-    const double conc1 = conc[1];
 
     const double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
@@ -604,15 +592,9 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
 
     const double hphi = interp_func(conc_interp_func_type_, phi[0]);
 
-    // conc could be outside of [0.,1.] in a trial step
-    double c0 = conc0 >= 0. ? conc0 : 0.;
-    c0        = c0 <= 1. ? c0 : 1.;
-    double c1 = conc1 >= 0. ? conc1 : 0.;
-    c1        = c1 <= 1. ? c1 : 1.;
-
     CALPHADConcSolverTernary solver;
-    solver.setup(c0, c1, hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S, L_AC_S,
-        L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
+    solver.setup(conc[0], conc[1], hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S,
+        L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
     int ret = solver.ComputeConcentration(x, newton_tol_, newton_maxits_);
 #ifndef HAVE_OPENMP_OFFLOAD
     if (ret == -1)
@@ -621,7 +603,7 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
                      "CALPHADFreeEnergyFunctionsTernary::"
                      "computePhaseConcentrations() "
                      "failed for conc0="
-                  << conc0 << ", conc1=" << conc1 << ", hphi=" << hphi
+                  << conc[0] << ", conc1=" << conc[1] << ", hphi=" << hphi
                   << std::endl;
     }
 #endif
