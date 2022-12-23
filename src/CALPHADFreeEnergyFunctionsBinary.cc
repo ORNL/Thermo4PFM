@@ -168,9 +168,6 @@ void CALPHADFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
     const double temp, const double* const conc, const PhaseIndex pi,
     double* d2fdc2)
 {
-    // assert(conc[0] >= 0.);
-    // assert(conc[0] <= 1.);
-
     const CalphadDataType l0 = lmixPhase(0, pi, temp);
     const CalphadDataType l1 = lmixPhase(1, pi, temp);
     const CalphadDataType l2 = lmixPhase(2, pi, temp);
@@ -300,11 +297,6 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
     const double temperature, const double* const conc, const double* const phi,
     double* x)
 {
-    // assert(x[0] >= 0.);
-    // assert(x[1] >= 0.);
-    // assert(x[0] <= 1.);
-    // assert(x[1] <= 1.);
-
     const double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     CalphadDataType fA[2];
@@ -316,13 +308,10 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
 
     const double hphi = interp_func(conc_interp_func_type_, phi[0]);
 
-    // conc could be outside of [0.,1.] in a trial step
-    double c0 = conc[0] >= 0. ? conc[0] : 0.;
-    c0        = c0 <= 1. ? c0 : 1.;
-    // solve system of equations to find (cl,cs) given c0 and hphi
+    // solve system of equations to find (cl,cs) given conc[0] and hphi
     // x: initial guess and solution
     CALPHADConcSolverBinary solver;
-    solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
+    solver.setup(conc[0], hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
     int ret = solver.ComputeConcentration(
         x, newton_tol_, newton_maxits_, newton_alpha_);
 #if 0
