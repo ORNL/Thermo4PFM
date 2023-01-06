@@ -1,5 +1,5 @@
 #!/bin/csh -f
-module load gcc/10.2.0
+module load gcc/11.1.0
 module load boost
 module load cmake
 module load cuda
