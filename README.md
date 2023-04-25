@@ -51,6 +51,10 @@ extensions of $x \log(x)$ and $(1-x) \log(1-x)$ functions.
 
 ## References
 
+J.-L. Fattebert, S. DeWitt, A. Perron, J. Turner,
+"Thermo4PFM: Facilitating Phase-field simulations of alloys with thermodynamic driving forces",
+_Comput. Phys. Comm._, __288__ (2023), 108739
+
 S.G. Kim, W.T. Kim, T. Suzuki,
 "Phase-field model for binary alloys",
 _Phys. Rev. E_ __60__:6 (1999) 7186.
