@@ -1,4 +1,5 @@
 #include "CALPHADFreeEnergyFunctionsBinary.h"
+#include "Phases.h"
 
 #include <boost/optional/optional.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -46,4 +47,19 @@ int main(int argc, char* argv[])
 
     std::cout << "Equilibrium compositions: cl = " << conc[0]
               << ", cs=" << conc[1] << std::endl;
+
+    double deriv;
+    cafe.computeDerivFreeEnergy(
+        temperature, conc, Thermo4PFM::PhaseIndex::phaseL, &deriv);
+
+    std::cout << "Chemical potential: mu = " << deriv << std::endl;
+
+    double d2fdc2;
+    cafe.computeSecondDerivativeFreeEnergy(
+        temperature, conc, Thermo4PFM::PhaseIndex::phaseL, &d2fdc2);
+    std::cout << "Second derivative for L phase: " << d2fdc2 << std::endl;
+
+    cafe.computeSecondDerivativeFreeEnergy(
+        temperature, conc + 1, Thermo4PFM::PhaseIndex::phaseA, &d2fdc2);
+    std::cout << "Second derivative for A phase: " << d2fdc2 << std::endl;
 }
