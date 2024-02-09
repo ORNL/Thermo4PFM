@@ -1,6 +1,7 @@
 set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
             ${CMAKE_SOURCE_DIR}/src/Determinant.cc
             ${CMAKE_SOURCE_DIR}/src/NewtonSolver.cc
+            ${CMAKE_SOURCE_DIR}/src/LinearSolver.cc
             ${CMAKE_SOURCE_DIR}/src/xlogx.cc
             ${CMAKE_SOURCE_DIR}/src/functions.cc
             ${CMAKE_SOURCE_DIR}/src/well_functions.cc
@@ -23,6 +24,8 @@ set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADTieLineConcSolverTernary.cc
             ${CMAKE_SOURCE_DIR}/src/KKSdiluteBinaryConcSolver.cc
             ${CMAKE_SOURCE_DIR}/src/KKSFreeEnergyFunctionDiluteBinary.cc
+            ${CMAKE_SOURCE_DIR}/src/QuadraticFreeEnergyFunctionsBinaryThreePhase.cc
+            ${CMAKE_SOURCE_DIR}/src/QuadraticConcSolverBinaryThreePhase.cc
             ${CMAKE_SOURCE_DIR}/src/xlogx.cc)
 
 if(${SHARED_LIB})
@@ -60,6 +63,8 @@ set(PUBLIC_HEADERS
     CALPHADEqConcSolverBinary2Ph1Sl.h
     CALPHADTieLineConcSolverTernary.h
     KKSdiluteBinaryConcSolver.h
+    QuadraticFreeEnergyFunctionsBinaryThreePhase.cc
+    QuadraticConcSolverBinaryThreePhase.h
    )
 set(THERMODATA
     ${CMAKE_SOURCE_DIR}/thermodynamic_data/calphadAlCuLFccTheta.json
