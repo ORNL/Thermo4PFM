@@ -26,6 +26,7 @@ set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
             ${CMAKE_SOURCE_DIR}/src/KKSFreeEnergyFunctionDiluteBinary.cc
             ${CMAKE_SOURCE_DIR}/src/QuadraticFreeEnergyFunctionsBinaryThreePhase.cc
             ${CMAKE_SOURCE_DIR}/src/QuadraticConcSolverBinaryThreePhase.cc
+            ${CMAKE_SOURCE_DIR}/src/QuadraticFreeEnergyFunctionsTernaryThreePhase.cc
             ${CMAKE_SOURCE_DIR}/src/xlogx.cc)
 
 if(${SHARED_LIB})
@@ -63,8 +64,8 @@ set(PUBLIC_HEADERS
     CALPHADEqConcSolverBinary2Ph1Sl.h
     CALPHADTieLineConcSolverTernary.h
     KKSdiluteBinaryConcSolver.h
-    QuadraticFreeEnergyFunctionsBinaryThreePhase.cc
-    QuadraticConcSolverBinaryThreePhase.h
+    QuadraticFreeEnergyFunctionsBinaryThreePhase.h
+    QuadraticFreeEnergyFunctionsTernaryThreePhase.h
    )
 set(THERMODATA
     ${CMAKE_SOURCE_DIR}/thermodynamic_data/calphadAlCuLFccTheta.json
