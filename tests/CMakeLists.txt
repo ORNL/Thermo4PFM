@@ -52,6 +52,8 @@ add_executable(testCALPHADConcSolverTernary
                ${TEST_DIR}/testCALPHADConcSolverTernary.cc )
 add_executable(testCALPHADternaryTieLine
                ${TEST_DIR}/testCALPHADternaryTieLine.cc)
+add_executable(testQuadraticBinary
+               ${TEST_DIR}/testQuadraticBinary.cc )
 add_executable(testQuadraticConcSolverBinaryThreePhase
                ${TEST_DIR}/testQuadraticConcSolverBinaryThreePhase.cc )
 add_executable(testQuadraticFreeEnergyBinaryThreePhase
@@ -94,6 +96,7 @@ target_link_libraries(testCALPHADConcSolverTernary thermo4pfm)
 target_link_libraries(testCALPHADternaryTieLine thermo4pfm)
 target_link_libraries(testKKSdiluteBinaryKKS thermo4pfm)
 target_link_libraries(testKKSdiluteBinaryEquilibrium thermo4pfm)
+target_link_libraries(testQuadraticBinary thermo4pfm)
 target_link_libraries(testQuadraticConcSolverBinaryThreePhase thermo4pfm)
 target_link_libraries(testQuadraticFreeEnergyBinaryThreePhase thermo4pfm)
 target_link_libraries(testQuadraticFreeEnergyTernaryThreePhase thermo4pfm)
@@ -243,6 +246,11 @@ add_test(NAME testCALPHADternaryTieLine
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
          ${CMAKE_CURRENT_BINARY_DIR}/testCALPHADternaryTieLine
          WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testQuadraticBinary
+          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
+         ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
+         ${CMAKE_CURRENT_BINARY_DIR}/testQuadraticBinary
+          WORKING_DIRECTORY ${TEST_DIR})
 add_test(NAME testQuadraticConcSolverBinaryThreePhase
           COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROCS_FLAG}
          ${MPIEXEC_NUMPROCS} ${MPIEXEC_PREFLAGS}
