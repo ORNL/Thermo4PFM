@@ -24,6 +24,7 @@ set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADTieLineConcSolverTernary.cc
             ${CMAKE_SOURCE_DIR}/src/KKSdiluteBinaryConcSolver.cc
             ${CMAKE_SOURCE_DIR}/src/KKSFreeEnergyFunctionDiluteBinary.cc
+            ${CMAKE_SOURCE_DIR}/src/QuadraticFreeEnergyFunctionsBinary.cc
             ${CMAKE_SOURCE_DIR}/src/QuadraticFreeEnergyFunctionsBinaryThreePhase.cc
             ${CMAKE_SOURCE_DIR}/src/QuadraticConcSolverBinaryThreePhase.cc
             ${CMAKE_SOURCE_DIR}/src/QuadraticFreeEnergyFunctionsTernaryThreePhase.cc
@@ -64,6 +65,7 @@ set(PUBLIC_HEADERS
     CALPHADEqConcSolverBinary2Ph1Sl.h
     CALPHADTieLineConcSolverTernary.h
     KKSdiluteBinaryConcSolver.h
+    QuadraticFreeEnergyFunctionsBinary.h
     QuadraticFreeEnergyFunctionsBinaryThreePhase.h
     QuadraticFreeEnergyFunctionsTernaryThreePhase.h
    )
