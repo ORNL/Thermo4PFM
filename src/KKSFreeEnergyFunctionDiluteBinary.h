@@ -32,7 +32,11 @@ public:
     bool computeCeqT(const double temperature, double* ceq,
         const int maxits = 20, const bool verbose = false);
 
-    void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.) {}
+    void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.)
+    {
+        (void)T0;
+        (void)T1;
+    }
 
     int computePhaseConcentrations(const double temperature, const double* conc,
         const double* const phi, double* x);

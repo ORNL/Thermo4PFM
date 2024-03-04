@@ -8,6 +8,13 @@ namespace pt = boost::property_tree;
 
 int main(int argc, char* argv[])
 {
+    if (argc < 2)
+    {
+        std::cerr << "Requires two arguments: database name + temperature"
+                  << std::endl;
+        return 1;
+    }
+
     std::string databasename(argv[1]);
     double temperature = atof(argv[2]);
 

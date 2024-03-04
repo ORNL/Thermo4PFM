@@ -21,6 +21,9 @@ typedef std::chrono::high_resolution_clock Clock;
 
 int main(int argc, char* argv[])
 {
+    (void)argc;
+    (void)argv;
+
     const int N = 10000000;
 
 #ifdef _OPENMP

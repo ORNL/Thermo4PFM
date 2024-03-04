@@ -508,33 +508,6 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
 #pragma omp end declare target
 #endif
 
-//-----------------------------------------------------------------------
-void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::energyVsPhiAndC(
-    const double temperature, const double* const ceq, const bool found_ceq,
-    const double phi_well_scale, const int npts_phi, const int npts_c)
-{
-    // Not implemented because it is ill-defined for a three-phase system.
-}
-
-// Print out free energy as a function of phase
-// for given composition and temperature
-// File format: ASCII VTK, readble with Visit
-void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::printEnergyVsPhiHeader(
-    const double temperature, const int nphi, const int nc, const double cmin,
-    const double cmax, const double slopec, std::ostream& os) const
-{
-    // Not implemented because it is ill-defined for a three-phase system
-}
-
-//=======================================================================
-void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::printEnergyVsPhi(
-    const double* const conc, const double temperature,
-    const double phi_well_scale, const int npts, const double slopec,
-    std::ostream& os)
-{
-    // Not implemented because it is ill-defined for a three-phase system
-}
-
 //=======================================================================
 // compute free energy in [J/mol]
 

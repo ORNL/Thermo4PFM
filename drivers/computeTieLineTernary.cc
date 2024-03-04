@@ -8,6 +8,9 @@ namespace pt = boost::property_tree;
 
 int main(int argc, char* argv[])
 {
+    (void)argc;
+    (void)argv;
+
     Thermo4PFM::EnergyInterpolationType energy_interp_func_type
         = Thermo4PFM::EnergyInterpolationType::PBG;
     Thermo4PFM::ConcInterpolationType conc_interp_func_type

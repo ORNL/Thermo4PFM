@@ -75,6 +75,8 @@ void QuadraticFreeEnergyFunctionsBinaryThreePhase::computeDerivFreeEnergy(
     const double temperature, const double* const conc, const PhaseIndex pi,
     double* deriv)
 {
+    (void)temperature;
+
     double A;
     double ceq;
 
@@ -107,6 +109,9 @@ void QuadraticFreeEnergyFunctionsBinaryThreePhase::
     computeSecondDerivativeFreeEnergy(const double temp,
         const double* const conc, const PhaseIndex pi, double* d2fdc2)
 {
+    (void)temp;
+    (void)conc;
+
     double deriv;
     switch (pi)
     {
@@ -124,16 +129,6 @@ void QuadraticFreeEnergyFunctionsBinaryThreePhase::
     }
 
     d2fdc2[0] = deriv;
-}
-
-//=======================================================================
-
-// compute equilibrium concentrations in various phases for given temperature
-
-bool QuadraticFreeEnergyFunctionsBinaryThreePhase::computeCeqT(
-    const double temperature, double* ceq, const int maxits, const bool verbose)
-{
-    return false;
 }
 
 //=======================================================================
@@ -178,6 +173,8 @@ int QuadraticFreeEnergyFunctionsBinaryThreePhase::computePhaseConcentrations(
     const double temperature, const double* const conc, const double* const phi,
     double* x)
 {
+    (void)temperature;
+
     const double hphi0 = interp_func(conc_interp_func_type_, phi[0]);
     const double hphi1 = interp_func(conc_interp_func_type_, phi[1]);
     const double hphi2 = interp_func(conc_interp_func_type_, phi[2]);
@@ -205,33 +202,6 @@ int QuadraticFreeEnergyFunctionsBinaryThreePhase::computePhaseConcentrations(
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif
-
-//-----------------------------------------------------------------------
-void QuadraticFreeEnergyFunctionsBinaryThreePhase::energyVsPhiAndC(
-    const double temperature, const double* const ceq, const bool found_ceq,
-    const double phi_well_scale, const int npts_phi, const int npts_c)
-{
-    // Not implemented because it is ill-defined for a three-phase system.
-}
-
-// Print out free energy as a function of phase
-// for given composition and temperature
-// File format: ASCII VTK, readble with Visit
-void QuadraticFreeEnergyFunctionsBinaryThreePhase::printEnergyVsPhiHeader(
-    const double temperature, const int nphi, const int nc, const double cmin,
-    const double cmax, const double slopec, std::ostream& os) const
-{
-    // Not implemented because it is ill-defined for a three-phase system
-}
-
-//=======================================================================
-void QuadraticFreeEnergyFunctionsBinaryThreePhase::printEnergyVsPhi(
-    const double* const conc, const double temperature,
-    const double phi_well_scale, const int npts, const double slopec,
-    std::ostream& os)
-{
-    // Not implemented because it is ill-defined for a three-phase system
-}
 
 //=======================================================================
 // compute free energy in [J/mol]
@@ -317,12 +287,5 @@ void QuadraticFreeEnergyFunctionsBinaryThreePhase::printEnergyVsComposition(
         double e            = fchem(phi, &conc, temperature);
         os << conc << "\t" << e << std::endl;
     }
-}
-
-//=======================================================================
-
-void QuadraticFreeEnergyFunctionsBinaryThreePhase::preRunDiagnostics(
-    const double T0, const double T1)
-{
 }
 }

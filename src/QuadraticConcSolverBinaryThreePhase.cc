@@ -26,6 +26,8 @@ void QuadraticConcSolverBinaryThreePhase::RHS(
 void QuadraticConcSolverBinaryThreePhase::Jacobian(
     const double* const c, JacobianDataType** const fjac)
 {
+    (void)c;
+
     fjac[0][0] = hphi0_;
     fjac[0][1] = hphi1_;
     fjac[0][2] = hphi2_;

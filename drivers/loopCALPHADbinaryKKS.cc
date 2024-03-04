@@ -14,6 +14,9 @@ namespace pt = boost::property_tree;
 
 int main(int argc, char* argv[])
 {
+    (void)argc;
+    (void)argv;
+
 #ifdef _OPENMP
     std::cout << "Run test with " << omp_get_max_threads() << " threads"
               << std::endl;
