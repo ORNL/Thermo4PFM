@@ -67,7 +67,11 @@ double second_deriv_harmonic_interp_func(const double phi)
     return 6. * (1. - 2. * phit);
 }
 
-double second_deriv_linear_interp_func(const double phi) { return 0.; }
+double second_deriv_linear_interp_func(const double phi)
+{
+    (void)phi;
+    return 0.;
+}
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif

@@ -45,20 +45,10 @@ public:
 
     int computePhaseConcentrations(const double temperature, const double* conc,
         const double* const phi, double* x);
-    void energyVsPhiAndC(const double temperature, const double* const ceq,
-        const bool found_ceq, const double phi_well_scale,
-        const int npts_phi = 51,
-        const int npts_c   = 50); // # of compositions to use (>1)
     void printEnergyVsComposition(const double temperature, std::ostream& os,
         const double cmin, const double cmax, const int npts = 100);
     double fchem(const double* const phi, const double* const conc,
         const double temperature);
-    void printEnergyVsPhiHeader(const double temperature, const int nphi,
-        const int nc, const double cmin, const double cmax, const double slopec,
-        std::ostream& os) const;
-    void printEnergyVsPhi(const double* const conc, const double temperature,
-        const double phi_well_scale, const int npts, const double slopec,
-        std::ostream& os);
 
     void computeTdependentParameters(const double temperature,
         CalphadDataType* Lmix_L, CalphadDataType* Lmix_A,

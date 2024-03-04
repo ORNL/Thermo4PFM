@@ -135,6 +135,8 @@ void KKSFreeEnergyFunctionDiluteBinary::computeSecondDerivativeFreeEnergy(
     const double temp, const double* const conc, const PhaseIndex pi,
     double* d2fdc2)
 {
+    (void)pi;
+
 #ifndef HAVE_OPENMP_OFFLOAD
     assert(conc[0] >= 0.);
     assert(conc[0] <= 1.);
@@ -173,6 +175,8 @@ double KKSFreeEnergyFunctionDiluteBinary::computeFB(
 bool KKSFreeEnergyFunctionDiluteBinary::computeCeqT(
     const double temperature, double* ceq, const int maxits, const bool verbose)
 {
+    (void)maxits;
+
 #ifndef HAVE_OPENMP_OFFLOAD
     if (verbose)
         std::cout << "KKSFreeEnergyFunctionDiluteBinary::computeCeqT()"

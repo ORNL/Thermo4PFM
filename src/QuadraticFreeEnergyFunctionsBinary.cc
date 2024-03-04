@@ -99,6 +99,9 @@ void QuadraticFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
     const double temp, const double* const conc, const PhaseIndex pi,
     double* d2fdc2)
 {
+    (void)temp;
+    (void)conc;
+
     double deriv;
     switch (pi)
     {
@@ -122,6 +125,9 @@ void QuadraticFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
 bool QuadraticFreeEnergyFunctionsBinary::computeCeqT(
     const double temperature, double* ceq, const int maxits, const bool verbose)
 {
+    (void)maxits;
+    (void)verbose;
+
     ceq[0] = ceql_ + (temperature - Tref_) * m_liquid_;
     ceq[1] = ceqa_ + (temperature - Tref_) * m_solid_;
 
@@ -337,12 +343,5 @@ void QuadraticFreeEnergyFunctionsBinary::printEnergyVsComposition(
         os << conc << "\t" << e << std::endl;
     }
     os << std::endl << std::endl;
-}
-
-//=======================================================================
-
-void QuadraticFreeEnergyFunctionsBinary::preRunDiagnostics(
-    const double T0, const double T1)
-{
 }
 }

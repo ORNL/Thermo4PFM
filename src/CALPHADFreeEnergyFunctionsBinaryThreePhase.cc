@@ -228,18 +228,6 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::computeTdependentParameters(
 
 //=======================================================================
 
-// compute equilibrium concentrations in various phases for given temperature
-
-bool CALPHADFreeEnergyFunctionsBinaryThreePhase::computeCeqT(
-    const double temperature, double* ceq, const int maxits, const bool verbose)
-{
-    // Not used since the three phases are only in equilibrium at the eutectic
-    // point
-    return false;
-}
-
-//=======================================================================
-
 void CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhasesFreeEnergies(
     const double temperature, const double* const hphi, const double conc,
     double& fl, double& fa, double& fb)
@@ -333,33 +321,6 @@ int CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhaseConcentrations(
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif
-
-//-----------------------------------------------------------------------
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::energyVsPhiAndC(
-    const double temperature, const double* const ceq, const bool found_ceq,
-    const double phi_well_scale, const int npts_phi, const int npts_c)
-{
-    // Not implemented because it is ill-defined for a three-phase system.
-}
-
-// Print out free energy as a function of phase
-// for given composition and temperature
-// File format: ASCII VTK, readble with Visit
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::printEnergyVsPhiHeader(
-    const double temperature, const int nphi, const int nc, const double cmin,
-    const double cmax, const double slopec, std::ostream& os) const
-{
-    // Not implemented because it is ill-defined for a three-phase system
-}
-
-//=======================================================================
-void CALPHADFreeEnergyFunctionsBinaryThreePhase::printEnergyVsPhi(
-    const double* const conc, const double temperature,
-    const double phi_well_scale, const int npts, const double slopec,
-    std::ostream& os)
-{
-    // Not implemented because it is ill-defined for a three-phase system
-}
 
 //=======================================================================
 // compute free energy in [J/mol]

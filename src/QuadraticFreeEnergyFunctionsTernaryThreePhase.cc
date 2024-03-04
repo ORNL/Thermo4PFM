@@ -84,6 +84,8 @@ void QuadraticFreeEnergyFunctionsTernaryThreePhase::computeDerivFreeEnergy(
     const double temperature, const double* const conc, const PhaseIndex pi,
     double* deriv)
 {
+    (void)temperature;
+
     const double* A;
     const double* ceq;
 
@@ -115,6 +117,9 @@ void QuadraticFreeEnergyFunctionsTernaryThreePhase::
     computeSecondDerivativeFreeEnergy(const double temp,
         const double* const conc, const PhaseIndex pi, double* d2fdc2)
 {
+    (void)temp;
+    (void)conc;
+
     const double* A;
 
     switch (pi)
@@ -166,7 +171,7 @@ void QuadraticFreeEnergyFunctionsTernaryThreePhase::computePhasesFreeEnergies(
     fa = computeFreeEnergy(temperature, &conca[0], PhaseIndex::phaseA, false);
 
     double concb[2] = { cauxilliary0[2], cauxilliary1[2] };
-    fb = computeFreeEnergy(temperature, &concb[2], PhaseIndex::phaseB, false);
+    fb = computeFreeEnergy(temperature, &concb[0], PhaseIndex::phaseB, false);
 }
 
 //-----------------------------------------------------------------------
@@ -175,6 +180,8 @@ int QuadraticFreeEnergyFunctionsTernaryThreePhase::computePhaseConcentrations(
     const double temperature, const double* const conc,
     const double* const hphi, double* x)
 {
+    (void)temperature;
+
     // solve two binary problems
     QuadraticConcSolverBinaryThreePhase solver0;
     solver0.setup(conc[0], hphi[0], hphi[1], hphi[2], Al_[0], ceql_[0], Aa_[0],
