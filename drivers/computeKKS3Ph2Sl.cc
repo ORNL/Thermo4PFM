@@ -29,7 +29,6 @@ int main(int argc, char* argv[])
         = Thermo4PFM::ConcInterpolationType::LINEAR;
 
     std::cout << "Temperature: " << temperature << std::endl;
-    double nominalc[2] = { 0.6, 0.035 };
 
     std::cout << "Read CALPHAD database..." << std::endl;
     pt::ptree calphad_db;

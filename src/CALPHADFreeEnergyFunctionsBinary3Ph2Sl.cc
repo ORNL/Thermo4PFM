@@ -551,10 +551,6 @@ double CALPHADFreeEnergyFunctionsBinary3Ph2Sl::fchem(
     double fa        = 0.;
     double fb        = 0.;
 
-    bool pure_phase_0 = phi[0] > tol;
-    bool pure_phase_1 = phi[1] > tol;
-    bool pure_phase_2 = phi[2] > tol;
-
     if ((1.0 - phi[0] > tol) && (1.0 - phi[1] > tol) && (1.0 - phi[2] > tol))
     {
         computePhasesFreeEnergies(temperature, hcphi, conc[0], fl, fa, fb);

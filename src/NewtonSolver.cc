@@ -36,7 +36,7 @@ bool NewtonSolver<Dimension, SolverType, JacobianDataType>::CheckTolerance(
     const double* const fvec, const double tol)
 {
     bool ret = true;
-    for (int ii = 0; ii < Dimension; ii++)
+    for (unsigned int ii = 0; ii < Dimension; ii++)
     {
         ret = (ret && (fabs(fvec[ii]) < tol));
     }
@@ -56,9 +56,9 @@ void NewtonSolver<Dimension, SolverType, JacobianDataType>::CopyMatrix(
     assert(dst != nullptr);
 #endif
 
-    for (int jj = 0; jj < Dimension; jj++)
+    for (unsigned int jj = 0; jj < Dimension; jj++)
     {
-        for (int ii = 0; ii < Dimension; ii++)
+        for (unsigned int ii = 0; ii < Dimension; ii++)
         {
             dst[jj][ii] = src[jj][ii];
         }
@@ -77,7 +77,7 @@ void NewtonSolver<Dimension, SolverType, JacobianDataType>::UpdateSolution(
 
     JacobianDataType memf[Dimension * Dimension];
     JacobianDataType* mwork[Dimension];
-    for (int ii = 0; ii < Dimension; ii++)
+    for (unsigned int ii = 0; ii < Dimension; ii++)
     {
         mwork[ii] = &memf[ii * Dimension];
     }
@@ -86,10 +86,10 @@ void NewtonSolver<Dimension, SolverType, JacobianDataType>::UpdateSolution(
     const double D_inv = 1.0 / D;
 
     // use Cramer's rule to solve linear system
-    for (int jj = 0; jj < Dimension; jj++)
+    for (unsigned int jj = 0; jj < Dimension; jj++)
     {
         CopyMatrix(mwork, fjac);
-        for (int ii = 0; ii < Dimension; ii++)
+        for (unsigned int ii = 0; ii < Dimension; ii++)
         {
             mwork[ii][jj] = fvec[ii];
         }
@@ -103,7 +103,7 @@ void NewtonSolver<Dimension, SolverType, JacobianDataType>::UpdateSolution(
         // std::cout << "del_c[" << jj << "] = " << del_c[jj] << std::endl;
     }
 
-    for (int ii = 0; ii < Dimension; ii++)
+    for (unsigned int ii = 0; ii < Dimension; ii++)
     {
         c[ii] = c[ii] - alpha * del_c[ii];
     }
@@ -120,7 +120,7 @@ int NewtonSolver<Dimension, SolverType,
     const int max_iters, const double alpha)
 {
     // assert(max_iters > 1);
-    // for (int ii = 0; ii < Dimension; ii++)
+    // for (unsigned int ii = 0; ii < Dimension; ii++)
     //    assert(conc[ii] == conc[ii]);
 
 #ifdef WITH_CONVERGENCE_HISTORY
@@ -136,7 +136,7 @@ int NewtonSolver<Dimension, SolverType,
 
     JacobianDataType ftmp[Dimension * Dimension];
     JacobianDataType* fjac[Dimension];
-    for (int ii = 0; ii < Dimension; ii++)
+    for (unsigned int ii = 0; ii < Dimension; ii++)
     {
         fjac[ii] = &ftmp[ii * Dimension];
     }
@@ -147,20 +147,20 @@ int NewtonSolver<Dimension, SolverType,
     while (1)
     {
 #ifndef HAVE_OPENMP_OFFLOAD
-        for (int ii = 0; ii < Dimension; ii++)
+        for (unsigned int ii = 0; ii < Dimension; ii++)
             assert(conc[ii] == conc[ii]);
 #endif
 #ifdef WITH_CONVERGENCE_HISTORY
-        for (int ii = 0; ii < Dimension; ii++)
+        for (unsigned int ii = 0; ii < Dimension; ii++)
             ctmp.push_back(conc[ii]);
 #endif
         internalRHS(conc, fvec);
 #ifndef HAVE_OPENMP_OFFLOAD
-        for (int ii = 0; ii < Dimension; ii++)
+        for (unsigned int ii = 0; ii < Dimension; ii++)
             assert(fvec[ii] == fvec[ii]);
 #endif
 #ifdef WITH_CONVERGENCE_HISTORY
-        for (int ii = 0; ii < Dimension; ii++)
+        for (unsigned int ii = 0; ii < Dimension; ii++)
             residual.push_back(fvec[ii]);
 #endif
 
@@ -185,12 +185,12 @@ int NewtonSolver<Dimension, SolverType,
     for (unsigned j = 0; j < ctmp.size(); j = j + Dimension)
     {
         std::cout << "  conc= ";
-        for (int ii = 0; ii < Dimension; ii++)
+        for (unsigned int ii = 0; ii < Dimension; ii++)
         {
             std::cout << ctmp[j + ii] << "   ";
         }
         std::cout << ", rhs = ";
-        for (int ii = 0; ii < Dimension; ii++)
+        for (unsigned int ii = 0; ii < Dimension; ii++)
         {
             std::cout << residual[j + ii] << "   ";
         }
@@ -198,11 +198,11 @@ int NewtonSolver<Dimension, SolverType,
     }
     std::cout << "======================" << std::endl;
     std::cout << "Final solution:" << std::endl;
-    for (int ii = 0; ii < Dimension; ii++)
+    for (unsigned int ii = 0; ii < Dimension; ii++)
     {
         std::cout << "  conc[" << ii << "] = " << conc[ii] << std::endl;
     }
-    for (int ii = 0; ii < Dimension; ii++)
+    for (unsigned int ii = 0; ii < Dimension; ii++)
     {
         std::cout << "  rhs[" << ii << "] = " << fvec[ii] << std::endl;
     }
@@ -213,7 +213,7 @@ int NewtonSolver<Dimension, SolverType,
 #ifndef HAVE_OPENMP_OFFLOAD
         std::cerr << "Error: too many iterations in NewtonSolver" << std::endl;
         std::cerr << iterations << " iterations..." << std::endl;
-        for (int ii = 0; ii < Dimension; ii++)
+        for (unsigned int ii = 0; ii < Dimension; ii++)
         {
             std::cout << "  conc[" << ii << "] = " << conc[ii] << "  rhs[" << ii
                       << "] = " << fvec[ii] << std::endl;

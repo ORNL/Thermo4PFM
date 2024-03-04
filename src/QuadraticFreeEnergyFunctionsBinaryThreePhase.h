@@ -60,18 +60,19 @@ public:
         std::ostream& os);
 
 private:
+    double Al_;
+    double ceql_;
+
+    double Aa_;
+    double ceqa_;
+
+    double Ab_;
+    double ceqb_;
+
     EnergyInterpolationType energy_interp_func_type_;
     ConcInterpolationType conc_interp_func_type_;
 
     char* fenergy_diag_filename_;
-
-    double Al_;
-    double Aa_;
-    double Ab_;
-
-    double ceql_;
-    double ceqa_;
-    double ceqb_;
 
     void computePhasesFreeEnergies(const double temperature,
         const double* const hphi, const double conc, double& fl, double& fa,
