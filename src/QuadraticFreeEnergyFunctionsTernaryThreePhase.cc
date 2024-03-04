@@ -17,10 +17,10 @@ QuadraticFreeEnergyFunctionsTernaryThreePhase::
         const EnergyInterpolationType energy_interp_func_type,
         const ConcInterpolationType conc_interp_func_type)
     : Al_{ Al[0], Al[1] },
-      ceql_{ ceql[0], ceql[1] },
       Aa_{ Aa[0], Aa[1] },
-      ceqa_{ ceqa[0], ceqa[1] },
       Ab_{ Ab[0], Ab[1] },
+      ceql_{ ceql[0], ceql[1] },
+      ceqa_{ ceqa[0], ceqa[1] },
       ceqb_{ ceqb[0], ceqb[1] },
       energy_interp_func_type_(energy_interp_func_type),
       conc_interp_func_type_(conc_interp_func_type)
@@ -242,5 +242,4 @@ double QuadraticFreeEnergyFunctionsTernaryThreePhase::fchem(
 
     return (1.0 - hfphi) * fl + hfphi * fa;
 }
-
 }

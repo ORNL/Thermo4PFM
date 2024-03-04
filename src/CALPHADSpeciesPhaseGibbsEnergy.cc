@@ -24,7 +24,7 @@ namespace Thermo4PFM
 {
 
 void read_optional(pt::ptree& db, const std::string key,
-    std::vector<double>& coeffs, const int nintervals)
+    std::vector<double>& coeffs, const unsigned int nintervals)
 {
     if (db.get_child_optional(key))
     {
@@ -57,7 +57,7 @@ void CALPHADSpeciesPhaseGibbsEnergy::initialize(
     assert(ntc > 1);
     assert(ntc < MAXNINTERVALS + 2);
 
-    for (int i = 0; i < ntc; i++)
+    for (size_t i = 0; i < ntc; i++)
         tc_[i] = tmp[i];
     nintervals_ = ntc - 1;
 

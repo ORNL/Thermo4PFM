@@ -30,16 +30,12 @@ public:
     void computeSecondDerivativeFreeEnergy(const double temp,
         const double* const conc, const PhaseIndex pi, double* d2fdc2);
 
-
     int computePhaseConcentrations(const double temperature,
         const double* const conc, const double* const phi, double* x);
     double fchem(const double* const phi, const double* const conc,
         const double temperature);
 
 private:
-    EnergyInterpolationType energy_interp_func_type_;
-    ConcInterpolationType conc_interp_func_type_;
-
     const double Al_[2];
     const double Aa_[2];
     const double Ab_[2];
@@ -47,6 +43,9 @@ private:
     const double ceql_[2];
     const double ceqa_[2];
     const double ceqb_[2];
+
+    EnergyInterpolationType energy_interp_func_type_;
+    ConcInterpolationType conc_interp_func_type_;
 
     void computePhasesFreeEnergies(const double temperature,
         const double* const hphi, const double conc0, const double conc1,

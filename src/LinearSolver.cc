@@ -27,9 +27,9 @@ void LinearSolver<Dimension, SolverType, JacobianDataType>::CopyMatrix(
     assert(dst != nullptr);
 #endif
 
-    for (int jj = 0; jj < Dimension; jj++)
+    for (unsigned int jj = 0; jj < Dimension; jj++)
     {
-        for (int ii = 0; ii < Dimension; ii++)
+        for (unsigned int ii = 0; ii < Dimension; ii++)
         {
             dst[jj][ii] = src[jj][ii];
         }
@@ -47,7 +47,7 @@ void LinearSolver<Dimension, SolverType, JacobianDataType>::UpdateSolution(
 
     JacobianDataType memf[Dimension * Dimension];
     JacobianDataType* mwork[Dimension];
-    for (int ii = 0; ii < Dimension; ii++)
+    for (unsigned int ii = 0; ii < Dimension; ii++)
     {
         mwork[ii] = &memf[ii * Dimension];
     }
@@ -56,10 +56,10 @@ void LinearSolver<Dimension, SolverType, JacobianDataType>::UpdateSolution(
     const double D_inv = 1.0 / D;
 
     // use Cramer's rule to solve linear system
-    for (int jj = 0; jj < Dimension; jj++)
+    for (unsigned int jj = 0; jj < Dimension; jj++)
     {
         CopyMatrix(mwork, fjac);
-        for (int ii = 0; ii < Dimension; ii++)
+        for (unsigned int ii = 0; ii < Dimension; ii++)
         {
             mwork[ii][jj] = fvec[ii];
         }
@@ -67,7 +67,7 @@ void LinearSolver<Dimension, SolverType, JacobianDataType>::UpdateSolution(
         del_c[jj] = D_inv * evalDeterminant<Dimension, JacobianDataType>(mwork);
     }
 
-    for (int ii = 0; ii < Dimension; ii++)
+    for (unsigned int ii = 0; ii < Dimension; ii++)
     {
         c[ii] = c[ii] - del_c[ii];
     }
@@ -88,18 +88,18 @@ int LinearSolver<Dimension, SolverType,
 
     JacobianDataType ftmp[Dimension * Dimension];
     JacobianDataType* fjac[Dimension];
-    for (int ii = 0; ii < Dimension; ii++)
+    for (unsigned int ii = 0; ii < Dimension; ii++)
     {
         fjac[ii] = &ftmp[ii * Dimension];
     }
 
 #ifndef HAVE_OPENMP_OFFLOAD
-    for (int ii = 0; ii < Dimension; ii++)
+    for (unsigned int ii = 0; ii < Dimension; ii++)
         assert(conc[ii] == conc[ii]);
 #endif
     internalRHS(conc, fvec);
 #ifndef HAVE_OPENMP_OFFLOAD
-    for (int ii = 0; ii < Dimension; ii++)
+    for (unsigned int ii = 0; ii < Dimension; ii++)
         assert(fvec[ii] == fvec[ii]);
 #endif
 
