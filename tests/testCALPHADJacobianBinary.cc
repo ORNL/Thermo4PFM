@@ -40,7 +40,7 @@ TEST_CASE("Jacobian binary", "[Jacobian binary]")
         std::cout << "Test CALPHADConcSolverBinary...\n";
         {
             Thermo4PFM::CALPHADConcSolverBinary solver;
-            solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_S, fA, fB);
+            solver.setup(c0, hphi, 1. - hphi, RTinv, Lmix_L, Lmix_S, fA, fB);
 
             solver.RHS(x, fvec1);
 

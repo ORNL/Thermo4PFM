@@ -269,7 +269,7 @@ void CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
     double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
     CALPHADConcSolverBinary solver;
-    solver.setup(conc, hphi[0], RTinv, Lmix_L, Lmix_A, fA, fB);
+    solver.setup(conc, hphi[0], 1. - hphi[0], RTinv, Lmix_L, Lmix_A, fA, fB);
     int ret = solver.ComputeConcentration(
         c, newton_tol_, newton_maxits_, newton_alpha_);
     if (ret < 0)
@@ -311,7 +311,7 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
     // solve system of equations to find (cl,cs) given conc[0] and hphi
     // x: initial guess and solution
     CALPHADConcSolverBinary solver;
-    solver.setup(conc[0], hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
+    solver.setup(conc[0], hphi, 1. - hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
     int ret = solver.ComputeConcentration(
         x, newton_tol_, newton_maxits_, newton_alpha_);
 #if 0
