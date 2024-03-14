@@ -10,6 +10,7 @@ set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADSpeciesPhaseGibbsEnergyExpansion.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinaryThreePhase.cc
+            ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinaryThreePhaseStochioB.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary3Ph2Sl.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsBinary2Ph1Sl.cc
             ${CMAKE_SOURCE_DIR}/src/CALPHADFreeEnergyFunctionsTernary.cc
@@ -52,6 +53,7 @@ set(PUBLIC_HEADERS
     CALPHADSpeciesPhaseGibbsEnergyExpansion.h
     CALPHADFreeEnergyFunctionsBinary.h
     CALPHADFreeEnergyFunctionsBinaryThreePhase.h
+    CALPHADFreeEnergyFunctionsBinaryThreePhaseStochioB.h
     CALPHADFreeEnergyFunctionsBinary3Ph2Sl.h
     CALPHADFreeEnergyFunctionsBinary2Ph1Sl.h
     CALPHADFreeEnergyFunctionsTernary.h

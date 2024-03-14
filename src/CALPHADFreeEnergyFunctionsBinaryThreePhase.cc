@@ -233,11 +233,9 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhasesFreeEnergies(
     double& fl, double& fa, double& fb)
 {
     // std::cout<<"CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies()"<<endl;
-
     double c[3] = { conc, conc, conc };
 
     int ret = computePhaseConcentrations(temperature, &conc, hphi, c);
-
     if (ret < 0)
     {
 #if 0
