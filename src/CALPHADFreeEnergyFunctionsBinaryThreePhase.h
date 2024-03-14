@@ -26,7 +26,7 @@ public:
         const EnergyInterpolationType energy_interp_func_type,
         const ConcInterpolationType conc_interp_func_type);
 
-    ~CALPHADFreeEnergyFunctionsBinaryThreePhase()
+    virtual ~CALPHADFreeEnergyFunctionsBinaryThreePhase()
     {
         delete[] fenergy_diag_filename_;
     };
@@ -40,8 +40,8 @@ public:
 
     void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.);
 
-    int computePhaseConcentrations(const double temperature, const double* conc,
-        const double* const phi, double* x);
+    virtual int computePhaseConcentrations(const double temperature,
+        const double* conc, const double* const phi, double* x);
     void printEnergyVsComposition(const double temperature, std::ostream& os,
         const double cmin, const double cmax, const int npts = 100);
     double fchem(const double* const phi, const double* const conc,
@@ -51,18 +51,19 @@ public:
         CalphadDataType* Lmix_L, CalphadDataType* Lmix_A,
         CalphadDataType* Lmix_B, CalphadDataType* fA, CalphadDataType* fB);
 
-private:
+protected:
     EnergyInterpolationType energy_interp_func_type_;
     ConcInterpolationType conc_interp_func_type_;
-
-    void readNewtonparameters(boost::property_tree::ptree& newton_db);
-
-    char* fenergy_diag_filename_;
 
     double newton_tol_;
     double newton_alpha_;
     int newton_maxits_;
     bool newton_verbose_;
+
+private:
+    void readNewtonparameters(boost::property_tree::ptree& newton_db);
+
+    char* fenergy_diag_filename_;
 
     // Single species energies in each phase
     // size 2 for species 0 and 1
