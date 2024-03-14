@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
             double hphi      = 0.5 + (i % 100) * deviation;
             double c0        = 0.3;
             Thermo4PFM::CALPHADConcSolverBinary solver;
-            solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
+            solver.setup(c0, hphi, 1. - hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
             nits[i] = solver.ComputeConcentration(&xhost[2 * i], 1.e-8, 50);
         }
         auto t2 = Clock::now();

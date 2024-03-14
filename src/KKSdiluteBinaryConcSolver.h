@@ -25,8 +25,8 @@ public:
     /// setup model paramater values to be used by solver,
     /// including composition "c0" and phase fraction "hphi"
     /// to solve for
-    void setup(
-        const double c0, const double hphi, const double fA, const double fB);
+    void setup(const double c0, const double hphi0, const double hphi1,
+        const double fA, const double fB);
 
     /// evaluate RHS of the system of eqautions to solve for
     /// specific to this solver
@@ -46,9 +46,10 @@ private:
     double c0_;
 
     ///
-    /// phase fraction to solve for
+    /// phase fractiona to solve for
     ///
-    double hphi_;
+    double hphi0_;
+    double hphi1_;
 
     ///
     /// model parameters

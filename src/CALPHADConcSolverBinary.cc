@@ -37,14 +37,14 @@ void CALPHADConcSolverBinary::computeXi(
 
 //=======================================================================
 
-// solve for c=(c_L, c_A, c_B)
+// solve for c=(c_L, c_A)
 void CALPHADConcSolverBinary::RHS(const double* const c, double* const fvec)
 {
     double xi[2] = { 0., 0. };
 
     computeXi(c, xi);
 
-    fvec[0] = -c0_ + (1.0 - hphi_) * c[0] + hphi_ * c[1];
+    fvec[0] = -c0_ + hphi1_ * c[0] + hphi0_ * c[1];
     fvec[1] = xlogx_deriv(c[0]) - xlogx_deriv(1. - c[0]) - xlogx_deriv(c[1])
               + xlogx_deriv(1. - c[1]) + (xi[0] - xi[1]);
 }
@@ -74,8 +74,8 @@ void CALPHADConcSolverBinary::Jacobian(
     double dxidc[2];
     computeDxiDc(c, dxidc);
 
-    fjac[0][0] = (1.0 - hphi_);
-    fjac[0][1] = hphi_;
+    fjac[0][0] = hphi1_;
+    fjac[0][1] = hphi0_;
 
     fjac[1][0] = dxidc[0] + xlogx_deriv2(c[0]) + xlogx_deriv2(1. - c[0]);
 
@@ -84,13 +84,14 @@ void CALPHADConcSolverBinary::Jacobian(
 
 // set values of internal variables used to evaluate
 // terms in Newton iterations
-void CALPHADConcSolverBinary::setup(const double c0, const double hphi,
-    const double RTinv, const CalphadDataType* const Lmix_L,
+void CALPHADConcSolverBinary::setup(const double c0, const double hphi0,
+    const double hphi1, const double RTinv, const CalphadDataType* const Lmix_L,
     const CalphadDataType* const Lmix_A, const CalphadDataType* const fA,
     const CalphadDataType* const fB)
 {
     c0_    = c0;
-    hphi_  = hphi;
+    hphi0_ = hphi0;
+    hphi1_ = hphi1;
     RTinv_ = RTinv;
 
     for (int ii = 0; ii < 4; ii++)
