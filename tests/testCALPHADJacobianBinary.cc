@@ -15,7 +15,6 @@ TEST_CASE("Jacobian binary", "[Jacobian binary]")
     double epsilon = 1.e-8;
     double tol     = 1.e-6;
     double RT      = 0.1;
-    double RTinv   = 1. / RT;
 
     {
         double c0   = 0.1;
@@ -40,7 +39,7 @@ TEST_CASE("Jacobian binary", "[Jacobian binary]")
         std::cout << "Test CALPHADConcSolverBinary...\n";
         {
             Thermo4PFM::CALPHADConcSolverBinary solver;
-            solver.setup(c0, hphi, 1. - hphi, RTinv, Lmix_L, Lmix_S, fA, fB);
+            solver.setup(c0, hphi, 1. - hphi, RT, Lmix_L, Lmix_S, fA, fB);
 
             solver.RHS(x, fvec1);
 
@@ -75,7 +74,7 @@ TEST_CASE("Jacobian binary", "[Jacobian binary]")
         std::cout << "Test CALPHADEqConcSolverBinary...\n";
         {
             Thermo4PFM::CALPHADEqConcSolverBinary solver;
-            solver.setup(RTinv, Lmix_L, Lmix_S, fA, fB);
+            solver.setup(RT, Lmix_L, Lmix_S, fA, fB);
 
             solver.RHS(x, fvec1);
 

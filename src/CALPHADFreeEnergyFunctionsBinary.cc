@@ -221,11 +221,11 @@ bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(
 
     computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
 
-    double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
+    double RT = GASCONSTANT_R_JPKPMOL * temperature;
 
     CALPHADEqConcSolverBinary eq_solver;
 
-    eq_solver.setup(RTinv, Lmix_L, Lmix_A, fA, fB);
+    eq_solver.setup(RT, Lmix_L, Lmix_A, fA, fB);
     int ret = eq_solver.ComputeConcentration(ceq, newton_tol_, maxits);
 
 #ifndef HAVE_OPENMP_OFFLOAD
@@ -266,10 +266,10 @@ void CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
     CalphadDataType Lmix_A[4];
     computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
 
-    double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
+    double RT = GASCONSTANT_R_JPKPMOL * temperature;
 
     CALPHADConcSolverBinary solver;
-    solver.setup(conc, hphi[0], 1. - hphi[0], RTinv, Lmix_L, Lmix_A, fA, fB);
+    solver.setup(conc, hphi[0], 1. - hphi[0], RT, Lmix_L, Lmix_A, fA, fB);
     int ret = solver.ComputeConcentration(
         c, newton_tol_, newton_maxits_, newton_alpha_);
     if (ret < 0)
@@ -297,7 +297,7 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
     const double temperature, const double* const conc, const double* const phi,
     double* x)
 {
-    const double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
+    const double RT = GASCONSTANT_R_JPKPMOL * temperature;
 
     CalphadDataType fA[2];
     CalphadDataType fB[2];
@@ -311,7 +311,7 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
     // solve system of equations to find (cl,cs) given conc[0] and hphi
     // x: initial guess and solution
     CALPHADConcSolverBinary solver;
-    solver.setup(conc[0], hphi, 1. - hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
+    solver.setup(conc[0], hphi, 1. - hphi, RT, Lmix_L, Lmix_A, fA, fB);
     int ret = solver.ComputeConcentration(
         x, newton_tol_, newton_maxits_, newton_alpha_);
 #if 0

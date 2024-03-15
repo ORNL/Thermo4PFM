@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
         Lmix_A[i] = LmixPhaseA[i][0] + temperature * LmixPhaseA[i][1];
     // for(int i=0;i<4;i++)std::cout<<"Lmix_A["<<i<<"]="<<Lmix_A[i]<<std::endl;
 
-    const double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
+    const double RT = GASCONSTANT_R_JPKPMOL * temperature;
 
     double sol[2] = { 0.5, 0.5 };
 
@@ -123,7 +123,7 @@ int main(int argc, char* argv[])
             double hphi      = 0.5 + (i % 100) * deviation;
             double c0        = 0.3;
             Thermo4PFM::CALPHADConcSolverBinary solver;
-            solver.setup(c0, hphi, 1. - hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
+            solver.setup(c0, hphi, 1. - hphi, RT, Lmix_L, Lmix_A, fA, fB);
             nits[i] = solver.ComputeConcentration(&xhost[2 * i], 1.e-8, 50);
         }
         auto t2 = Clock::now();
@@ -162,7 +162,7 @@ int main(int argc, char* argv[])
 #pragma omp target map(to : sol) \
                    map(tofrom : xdev) \
                    map(to : fA, fB, Lmix_L, Lmix_A) \
-                   map(to : RTinv) \
+                   map(to : RT) \
                    map(from : nits)                                                     \
 // clang-format on
         {
@@ -176,7 +176,7 @@ int main(int argc, char* argv[])
                 double hphi = 0.5 + (i % 100) * deviation;
                 double c0   = 0.3;
                 class Thermo4PFM::CALPHADConcSolverBinary solver;
-                solver.setup(c0, hphi, RTinv, Lmix_L, Lmix_A, fA, fB);
+                solver.setup(c0, hphi, RT, Lmix_L, Lmix_A, fA, fB);
                 nits[i] = solver.ComputeConcentration(&xdev[2 * i], 1.e-8, 50);
             }
         }
