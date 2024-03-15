@@ -72,12 +72,11 @@ void CALPHADEqConcSolverBinary::Jacobian(
 
 //=======================================================================
 
-void CALPHADEqConcSolverBinary::setup(const double RTinv,
+void CALPHADEqConcSolverBinary::setup(const double RT,
     const CalphadDataType* const Lmix_L, const CalphadDataType* const Lmix_A,
     const CalphadDataType* const fA, const CalphadDataType* const fB)
 {
-    RTinv_ = RTinv;
-    RT_    = 1. / RTinv;
+    RT_ = RT;
 
     for (int ii = 0; ii < 4; ii++)
     {

@@ -24,7 +24,7 @@ public:
 
     /// setup model paramater values to be used by solver,
     /// at a given temperature
-    void setup(const double RTinv, const CalphadDataType* const Lmix_L,
+    void setup(const double RT, const CalphadDataType* const Lmix_L,
         const CalphadDataType* const Lmix_A, const CalphadDataType* const fA,
         const CalphadDataType* const fB);
 
@@ -40,7 +40,6 @@ public:
 #endif
 
 private:
-    double RTinv_;
     double RT_;
 
     ///
