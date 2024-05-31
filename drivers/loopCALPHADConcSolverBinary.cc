@@ -176,7 +176,7 @@ int main(int argc, char* argv[])
                 double hphi = 0.5 + (i % 100) * deviation;
                 double c0   = 0.3;
                 class Thermo4PFM::CALPHADConcSolverBinary solver;
-                solver.setup(c0, hphi, RT, Lmix_L, Lmix_A, fA, fB);
+                solver.setup(c0, hphi, 1. - hphi, RT, Lmix_L, Lmix_A, fA, fB);
                 nits[i] = solver.ComputeConcentration(&xdev[2 * i], 1.e-8, 50);
             }
         }
