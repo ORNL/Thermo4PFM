@@ -513,45 +513,9 @@ void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
 
     double cauxilliary[4] = { conc0, conc1, conc0, conc1 };
 
-    CalphadDataType L_AB_L[4];
-    CalphadDataType L_AC_L[4];
-    CalphadDataType L_BC_L[4];
+    double conc[2] = { conc0, conc1 };
+    computePhaseConcentrations(temperature, conc, hphi, cauxilliary);
 
-    CalphadDataType L_ABC_L[3];
-
-    CalphadDataType L_AB_S[4];
-    CalphadDataType L_AC_S[4];
-    CalphadDataType L_BC_S[4];
-
-    CalphadDataType L_ABC_S[3];
-
-    CalphadDataType fA[2];
-    CalphadDataType fB[2];
-    CalphadDataType fC[2];
-
-    computeTdependentParameters(temperature, L_AB_L, L_AC_L, L_BC_L, L_ABC_L,
-        L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
-
-    double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
-    CALPHADConcSolverTernary solver;
-    solver.setup(conc0, conc1, hphi[0], RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S,
-        L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
-    int ret
-        = solver.ComputeConcentration(cauxilliary, newton_tol_, newton_maxits_);
-#ifndef HAVE_OPENMP_OFFLOAD
-    if (ret < 0)
-    {
-        std::cerr << "ERROR in "
-                     "CALPHADFreeEnergyFunctionsTernary::"
-                     "computePhasesFreeEnergies() "
-                     "---"
-                  << "conc0=" << conc0 << ", conc1=" << conc1
-                  << ", hphi=" << hphi[0] << std::endl;
-        abort();
-    }
-
-    assert(conc0 >= 0.);
-#endif
     double concl[2] = { cauxilliary[0], cauxilliary[1] };
     fl = computeFreeEnergy(temperature, &concl[0], PhaseIndex::phaseL, false);
 

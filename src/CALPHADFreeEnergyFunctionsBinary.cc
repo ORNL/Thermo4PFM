@@ -251,27 +251,15 @@ bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(
 //=======================================================================
 
 void CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
-    const double temperature, const double* const hphi, const double conc,
+    const double temperature, const double* const phi, const double conc,
     double& fl, double& fa)
 {
     // std::cout<<"CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies()"<<endl;
 
     double c[2] = { conc, conc };
 
-    // evaluate temperature dependent parameters
-    CalphadDataType fA[2];
-    CalphadDataType fB[2];
+    int ret = computePhaseConcentrations(temperature, &conc, phi, c);
 
-    CalphadDataType Lmix_L[4];
-    CalphadDataType Lmix_A[4];
-    computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
-
-    double RT = GASCONSTANT_R_JPKPMOL * temperature;
-
-    CALPHADConcSolverBinary solver;
-    solver.setup(conc, hphi[0], 1. - hphi[0], RT, Lmix_L, Lmix_A, fA, fB);
-    int ret = solver.ComputeConcentration(
-        c, newton_tol_, newton_maxits_, newton_alpha_);
     if (ret < 0)
     {
 #if 0

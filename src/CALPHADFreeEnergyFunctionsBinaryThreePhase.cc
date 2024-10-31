@@ -236,25 +236,8 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhasesFreeEnergies(
 
     double c[3] = { conc, conc, conc };
 
-    // evaluate temperature dependent parameters
-    CalphadDataType fA[3];
-    CalphadDataType fB[3];
+    int ret = computePhaseConcentrations(temperature, &conc, hphi, c);
 
-    CalphadDataType Lmix_L[4];
-    CalphadDataType Lmix_A[4];
-    CalphadDataType Lmix_B[4];
-
-    computeTdependentParameters(temperature, Lmix_L, Lmix_A, Lmix_B, fA, fB);
-    assert(fA[0] == fA[0]);
-    assert(Lmix_L[0] == Lmix_L[0]);
-
-    double RT = GASCONSTANT_R_JPKPMOL * temperature;
-
-    CALPHADConcSolverBinaryThreePhase solver;
-    solver.setup(
-        conc, hphi[0], hphi[1], hphi[2], RT, Lmix_L, Lmix_A, Lmix_B, fA, fB);
-    int ret = solver.ComputeConcentration(
-        c, newton_tol_, newton_maxits_, newton_alpha_);
     if (ret < 0)
     {
 #if 0

@@ -316,39 +316,7 @@ void CALPHADFreeEnergyFunctionsBinary2Ph1Sl::computePhasesFreeEnergies(
 
     double c[2] = { conc, conc };
 
-    // evaluate temperature dependent parameters
-    CalphadDataType fA[2];
-    CalphadDataType fB[2];
-
-    CalphadDataType Lmix_L[4];
-    CalphadDataType Lmix_A[4];
-    computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
-
-    double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
-
-    // Get the sublattice stoichiometry
-    int p[2];
-    int q[2];
-    p[0] = sublattice_stoichiometry_phaseL_[0];
-    p[1] = sublattice_stoichiometry_phaseA_[0];
-    q[0] = sublattice_stoichiometry_phaseL_[1];
-    q[1] = sublattice_stoichiometry_phaseA_[1];
-
-    CALPHADConcSolverBinary2Ph1Sl solver;
-    solver.setup(conc, hphi[0], RTinv, Lmix_L, Lmix_A, fA, fB, p, q);
-    int ret = solver.ComputeConcentration(
-        c, newton_tol_, newton_maxits_, newton_alpha_);
-    if (ret < 0)
-    {
-#if 0
-        std::cerr << "ERROR in "
-                     "CALPHADFreeEnergyFunctionsBinary2Ph1Sl::"
-                     "computePhasesFreeEnergies()"
-                     " ---"
-                  << "conc=" << conc << ", hphi=" << hphi << std::endl;
-        abort();
-#endif
-    }
+    int ret = computePhaseConcentrations(temperature, &conc, hphi, c);
 
     // assert(c[0] >= 0.);
     fl = computeFreeEnergy(temperature, &c[0], PhaseIndex::phaseL, false);
