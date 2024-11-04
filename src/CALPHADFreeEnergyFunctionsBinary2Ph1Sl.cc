@@ -340,8 +340,6 @@ int CALPHADFreeEnergyFunctionsBinary2Ph1Sl::computePhaseConcentrations(
 
     computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
 
-    const double hphi = interp_func(conc_interp_func_type_, phi[0]);
-
     // Get the sublattice stoichiometry
     int p[2];
     int q[2];
@@ -353,7 +351,7 @@ int CALPHADFreeEnergyFunctionsBinary2Ph1Sl::computePhaseConcentrations(
     // solve system of equations to find (cl,cs) given conc[0] and hphi
     // x: initial guess and solution
     CALPHADConcSolverBinary2Ph1Sl solver;
-    solver.setup(conc[0], hphi, RTinv, Lmix_L, Lmix_A, fA, fB, p, q);
+    solver.setup(conc[0], phi[0], RTinv, Lmix_L, Lmix_A, fA, fB, p, q);
     int ret = solver.ComputeConcentration(
         x, newton_tol_, newton_maxits_, newton_alpha_);
 #if 0

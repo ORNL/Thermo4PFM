@@ -282,8 +282,8 @@ void CALPHADFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
 //-----------------------------------------------------------------------
 
 int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
-    const double temperature, const double* const conc, const double* const phi,
-    double* x)
+    const double temperature, const double* const conc,
+    const double* const hphi, double* x)
 {
     const double RT = GASCONSTANT_R_JPKPMOL * temperature;
 
@@ -294,12 +294,10 @@ int CALPHADFreeEnergyFunctionsBinary::computePhaseConcentrations(
 
     computeTdependentParameters(temperature, Lmix_L, Lmix_A, fA, fB);
 
-    const double hphi = interp_func(conc_interp_func_type_, phi[0]);
-
     // solve system of equations to find (cl,cs) given conc[0] and hphi
     // x: initial guess and solution
     CALPHADConcSolverBinary solver;
-    solver.setup(conc[0], hphi, 1. - hphi, RT, Lmix_L, Lmix_A, fA, fB);
+    solver.setup(conc[0], hphi[0], 1. - hphi[0], RT, Lmix_L, Lmix_A, fA, fB);
     int ret = solver.ComputeConcentration(
         x, newton_tol_, newton_maxits_, newton_alpha_);
 #if 0

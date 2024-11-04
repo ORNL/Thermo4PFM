@@ -73,7 +73,9 @@ TEST_CASE("KKS ternary", "[KKS ternary]")
     // compute concentrations satisfying KKS equations
     double conc[2] = { 0.33, 0.33 };
     double phi     = 0.5;
-    cafe.computePhaseConcentrations(temperature, &conc[0], &phi, &sol[0]);
+    int nit
+        = cafe.computePhaseConcentrations(temperature, &conc[0], &phi, &sol[0]);
+    CHECK(nit >= 0);
 
     std::cout << "-------------------------------" << std::endl;
     std::cout << "Temperature: " << temperature << std::endl;

@@ -56,9 +56,13 @@ TEST_CASE("CALPHAD binary three phase, two sublattice KKS",
     double conc = 0.7;
 
     // This phi doesn't quite give Sum(h(phi)) = 1, but it is close
-    double phi[3] = { 0.3, 0.45, 0.5 };
+    double phi[3]        = { 0.3, 0.45, 0.5 };
+    const double hphi[3] = { interp_func(conc_interp_func_type, phi[0]),
+        interp_func(conc_interp_func_type, phi[1]),
+        interp_func(conc_interp_func_type, phi[2]) };
 
-    cafe.computePhaseConcentrations(temperature, &conc, phi, sol);
+    int nit = cafe.computePhaseConcentrations(temperature, &conc, hphi, sol);
+    CHECK(nit >= 0);
 
     std::cout << "-------------------------------" << std::endl;
     std::cout << "Temperature = " << temperature << std::endl;
