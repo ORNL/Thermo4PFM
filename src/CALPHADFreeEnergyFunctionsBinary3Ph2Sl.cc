@@ -314,8 +314,8 @@ void CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhasesFreeEnergies(
 //-----------------------------------------------------------------------
 
 int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
-    const double temperature, const double* const conc, const double* const phi,
-    double* x)
+    const double temperature, const double* const conc,
+    const double* const hphi, double* x)
 {
     const double RTinv = 1.0 / (GASCONSTANT_R_JPKPMOL * temperature);
 
@@ -326,10 +326,6 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
     CalphadDataType Lmix_B[4];
 
     computeTdependentParameters(temperature, Lmix_L, Lmix_A, Lmix_B, fA, fB);
-
-    const double hphi0 = interp_func(conc_interp_func_type_, phi[0]);
-    const double hphi1 = interp_func(conc_interp_func_type_, phi[1]);
-    const double hphi2 = interp_func(conc_interp_func_type_, phi[2]);
 
     // Get the sublattice stoichiometry
     int p[3];
@@ -344,8 +340,8 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
     // solve system of equations to find (cl,cs) given conc[0] and hphi
     // x: initial guess and solution
     CALPHADConcSolverBinary3Ph2Sl solver;
-    solver.setup(conc[0], hphi0, hphi1, hphi2, RTinv, Lmix_L, Lmix_A, Lmix_B,
-        fA, fB, p, q);
+    solver.setup(conc[0], hphi[0], hphi[1], hphi[2], RTinv, Lmix_L, Lmix_A,
+        Lmix_B, fA, fB, p, q);
 
     // Loop that changes the initial conditions if the solver doesn't converge
     int ret         = -1;
@@ -405,10 +401,10 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
                      "CALPHADFreeEnergyFunctionsBinary::"
                      "computePhaseConcentrations() "
                      "failed for conc="
-                  << conc[0] << ", hphi0=" << hphi0 << ", hphi1=" << hphi1
-                  << ", hphi2=" << hphi2 << ", phi0=" << phi[0]
-                  << ", phi1=" << phi[1] << ", phi2=" << phi[2] << " x=" << x[0]
-                  << ", " << x[1] << ", " << x[2] << std::endl;
+                  << conc[0] << ", hphi[0]=" << hphi[0]
+                  << ", hphi[1]=" << hphi[1] << ", hphi[2]=" << hphi[2]
+                  << ", x=" << x[0] << ", " << x[1] << ", " << x[2]
+                  << std::endl;
 #endif
         // abort();
     }
