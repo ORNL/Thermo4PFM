@@ -35,7 +35,7 @@ public:
         const double* const conc, const PhaseIndex pi, double* d2fdc2);
 
     bool computeCeqT(const double temperature, double* ceq,
-        const int maxits = 20, const bool verbose = false);
+        const int maxits = -1, const bool verbose = false);
 
     void preRunDiagnostics(const double T0 = 300., const double T1 = 3000.);
 
