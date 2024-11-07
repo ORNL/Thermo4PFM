@@ -292,8 +292,8 @@ int CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhaseConcentrations(
                      "CALPHADFreeEnergyFunctionsBinaryThreePhase::"
                      "computePhaseConcentrations() "
                      "failed for conc="
-                  << conc[0] << ", hphi0=" << hphi0 << ", hphi1=" << hphi1
-                  << ", hphi2=" << hphi2 << std::endl;
+                  << conc[0] << ", hphi0=" << hphi[0] << ", hphi1=" << hphi[1]
+                  << ", hphi2=" << hphi[2] << std::endl;
     }
 #endif
 
