@@ -212,6 +212,8 @@ bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(
 #endif
     // assert(temperature > 0.);
 
+    const int maxnits = (maxits > 0) ? maxits : newton_maxits_;
+
     // evaluate temperature dependent parameters
     CalphadDataType fA[3];
     CalphadDataType fB[3];
@@ -226,7 +228,7 @@ bool CALPHADFreeEnergyFunctionsBinary::computeCeqT(
     CALPHADEqConcSolverBinary eq_solver;
 
     eq_solver.setup(RT, Lmix_L, Lmix_A, fA, fB);
-    int ret = eq_solver.ComputeConcentration(ceq, newton_tol_, maxits);
+    int ret = eq_solver.ComputeConcentration(ceq, newton_tol_, maxnits);
 
 #ifndef HAVE_OPENMP_OFFLOAD
     if (ret >= 0)
