@@ -211,7 +211,10 @@ int NewtonSolver<Dimension, SolverType,
     if (!converged)
     {
 #ifndef HAVE_OPENMP_OFFLOAD
-        std::cerr << "Error: too many iterations in NewtonSolver" << std::endl;
+        // just print a warning message and let caller decide what to do about
+        // it
+        std::cerr << "WARNING: too many iterations in NewtonSolver"
+                  << std::endl;
         std::cerr << iterations << " iterations..." << std::endl;
         for (unsigned int ii = 0; ii < Dimension; ii++)
         {
