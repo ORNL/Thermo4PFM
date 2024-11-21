@@ -283,15 +283,17 @@ int CALPHADFreeEnergyFunctionsBinaryThreePhase::computePhaseConcentrations(
         conc[0], hphi[0], hphi[1], hphi[2], RT, Lmix_L, Lmix_A, Lmix_B, fA, fB);
     int ret = solver.ComputeConcentration(
         x, newton_tol_, newton_maxits_, newton_alpha_);
-#if 0
+#ifndef HAVE_OPENMP_OFFLOAD
     if (ret == -1)
     {
-        std::cerr << "ERROR, "
-                     "CALPHADFreeEnergyFunctionsBinary::"
+        // just print a warning message and let caller decide what to do about
+        // it
+        std::cerr << "WARNING, "
+                     "CALPHADFreeEnergyFunctionsBinaryThreePhase::"
                      "computePhaseConcentrations() "
                      "failed for conc="
-                  << conc[0] << ", hphi0=" << hphi0 << ", hphi1=" << hphi1 << ", hphi2=" << hphi2 << std::endl;
-        abort();
+                  << conc[0] << ", hphi0=" << hphi[0] << ", hphi1=" << hphi[1]
+                  << ", hphi2=" << hphi[2] << std::endl;
     }
 #endif
 

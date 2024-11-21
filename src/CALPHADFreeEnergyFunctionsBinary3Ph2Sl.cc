@@ -379,7 +379,7 @@ int CALPHADFreeEnergyFunctionsBinary3Ph2Sl::computePhaseConcentrations(
 
                 x[0] = (y0 + p[0]) / (p[0] + q[0]);
                 x[1] = (y1 + p[1]) / (p[1] + q[1]);
-                x[2] = (y0 + p[2]) / (p[2] + q[2]);
+                x[2] = (y2 + p[2]) / (p[2] + q[2]);
 
                 // std::cout << "New initial conditions: " << x[0] << " " <<
                 // x[1]
