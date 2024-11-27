@@ -38,6 +38,8 @@ add_executable(computeKKS3Ph2Sl
                ${CMAKE_SOURCE_DIR}/drivers/computeKKS3Ph2Sl.cc)
 add_executable(computeEqCompBinary2Ph1Sl
                ${CMAKE_SOURCE_DIR}/drivers/computeEqCompBinary2Ph1Sl.cc)
+add_executable(computeParabolicApproximation
+               ${CMAKE_SOURCE_DIR}/drivers/computeParabolicApproximation.cc)
 
 target_link_libraries(plotEnergyVsComposition thermo4pfm)
 target_link_libraries(plotEnergyVsCompositionThreePhase thermo4pfm)
@@ -47,6 +49,7 @@ target_link_libraries(computeKKSTernary thermo4pfm)
 target_link_libraries(computeTieLineTernary thermo4pfm)
 target_link_libraries(computeKKS3Ph2Sl thermo4pfm)
 target_link_libraries(computeEqCompBinary2Ph1Sl thermo4pfm)
+target_link_libraries(computeParabolicApproximation thermo4pfm)
 target_link_libraries(loopxlogx thermo4pfm)
 target_link_libraries(loopCALPHADSpeciesPhaseGibbsEnergy thermo4pfm)
 target_link_libraries(loopCALPHADConcSolverBinary thermo4pfm)
@@ -71,6 +74,7 @@ install(TARGETS plotEnergyVsComposition
                 computeKKSTernary
                 computeTieLineTernary
                 computeKKS3Ph2Sl
+                computeParabolicApproximation
                 loopxlogx
                 loopCALPHADSpeciesPhaseGibbsEnergy
                 loopCALPHADConcSolverBinary
