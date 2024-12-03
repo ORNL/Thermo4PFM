@@ -24,7 +24,7 @@ void QuadraticConcSolverBinaryThreePhase::RHS(
 //=======================================================================
 
 void QuadraticConcSolverBinaryThreePhase::Jacobian(
-    const double* const c, JacobianDataType** const fjac)
+    const double* const c, double** const fjac)
 {
     (void)c;
 

@@ -62,6 +62,10 @@ add_executable(testQuadraticFreeEnergyBinaryThreePhase
                ${TEST_DIR}/testQuadraticFreeEnergyBinaryThreePhase.cc )
 add_executable(testQuadraticFreeEnergyTernaryThreePhase
                ${TEST_DIR}/testQuadraticFreeEnergyTernaryThreePhase.cc )
+add_executable(testParabolicFreeEnergyBinaryThreePhase
+               ${TEST_DIR}/testParabolicFreeEnergyBinaryThreePhase.cc )
+add_executable(testParabolicConcSolverBinaryThreePhase
+               ${TEST_DIR}/testParabolicConcSolverBinaryThreePhase.cc )
 
 if(${WITH_OPENMP_OFFLOAD})
   add_executable(testOpenMPoffload
@@ -103,7 +107,8 @@ target_link_libraries(testQuadraticBinary thermo4pfm)
 target_link_libraries(testQuadraticConcSolverBinaryThreePhase thermo4pfm)
 target_link_libraries(testQuadraticFreeEnergyBinaryThreePhase thermo4pfm)
 target_link_libraries(testQuadraticFreeEnergyTernaryThreePhase thermo4pfm)
-
+target_link_libraries(testParabolicFreeEnergyBinaryThreePhase thermo4pfm)
+target_link_libraries(testParabolicConcSolverBinaryThreePhase thermo4pfm)
 target_link_libraries(testLoopCALPHADSpeciesPhaseGibbsEnergy thermo4pfm)
 target_link_libraries(testLoopCALPHADbinaryKKS thermo4pfm)
 target_link_libraries(testLoopCALPHADbinaryEquilibrium thermo4pfm)
@@ -273,6 +278,16 @@ add_test(NAME testQuadraticFreeEnergyTernaryThreePhase
           COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG}
          ${MPIEXEC_MAX_NUMPROCS} ${MPIEXEC_PREFLAGS}
          ${CMAKE_CURRENT_BINARY_DIR}/testQuadraticFreeEnergyTernaryThreePhase
+          WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testParabolicFreeEnergyBinaryThreePhase
+          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG}
+         ${MPIEXEC_MAX_NUMPROCS} ${MPIEXEC_PREFLAGS}
+         ${CMAKE_CURRENT_BINARY_DIR}/testParabolicFreeEnergyBinaryThreePhase
+          WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testParabolicConcSolverBinaryThreePhase
+          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG}
+         ${MPIEXEC_MAX_NUMPROCS} ${MPIEXEC_PREFLAGS}
+         ${CMAKE_CURRENT_BINARY_DIR}/testParabolicConcSolverBinaryThreePhase
           WORKING_DIRECTORY ${TEST_DIR})
 
 if(${WITH_OPENMP_OFFLOAD})
