@@ -1,3 +1,4 @@
+#include "ParabolicConcSolverBinaryThreePhase.h"
 #include "QuadraticConcSolverBinaryThreePhase.h"
 
 #include "Determinant.h"
@@ -109,8 +110,9 @@ int LinearSolver<Dimension, SolverType,
     return 0;
 }
 
-template class LinearSolver<3, QuadraticConcSolverBinaryThreePhase,
-    JacobianDataType>;
+template class LinearSolver<3, QuadraticConcSolverBinaryThreePhase, double>;
+template class LinearSolver<3, ParabolicConcSolverBinaryThreePhase, double>;
+
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif

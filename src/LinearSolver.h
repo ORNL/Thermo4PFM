@@ -3,7 +3,7 @@
 
 namespace Thermo4PFM
 {
-template <unsigned int Dimension, class SolverType, typename JacobianDataType>
+template <unsigned int Dimension, class SolverType, typename MatrixDataType>
 class LinearSolver
 {
 public:
@@ -22,8 +22,8 @@ private:
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
 #endif
-    void UpdateSolution(double* const x, const double* const fvec,
-        JacobianDataType** const fjac);
+    void UpdateSolution(
+        double* const x, const double* const fvec, MatrixDataType** const fjac);
 
     int ComputeSolutionInternal(double* const conc);
 
@@ -35,7 +35,7 @@ private:
     template <typename ScalarType>
     void CopyMatrix(ScalarType** const dst, ScalarType** const src);
 
-    void internalJacobian(const double* const x, JacobianDataType** const fjac)
+    void internalJacobian(const double* const x, MatrixDataType** const fjac)
     {
         static_cast<SolverType*>(this)->Jacobian(x, fjac);
     }

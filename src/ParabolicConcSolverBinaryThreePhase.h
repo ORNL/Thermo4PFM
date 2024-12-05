@@ -1,13 +1,13 @@
-#ifndef Thermo4PFM_included_QuadraticConcSolverBinaryThreePhase
-#define Thermo4PFM_included_QuadraticConcSolverBinaryThreePhase
+#ifndef Thermo4PFM_included_ParabolicConcSolverBinaryThreePhase
+#define Thermo4PFM_included_ParabolicConcSolverBinaryThreePhase
 
 #include "LinearSolver.h"
 #include "datatypes.h"
 
 namespace Thermo4PFM
 {
-class QuadraticConcSolverBinaryThreePhase
-    : public LinearSolver<3, QuadraticConcSolverBinaryThreePhase, double>
+class ParabolicConcSolverBinaryThreePhase
+    : public LinearSolver<3, ParabolicConcSolverBinaryThreePhase, double>
 {
 public:
 #ifdef HAVE_OPENMP_OFFLOAD
@@ -25,8 +25,8 @@ public:
     /// including composition "c0" and phase fraction "hphi"
     /// to solve for
     void setup(const double c0, const double hphi0, const double hphi1,
-        const double hphi2, const double Al, const double ceql, const double Aa,
-        const double ceqa, const double Ab, const double ceqb);
+        const double hphi2, const double temperature, const double coeffL[][2],
+        const double coeffA[][2], const double coeffB[][2]);
 
     /// evaluate RHS of the system of eqautions to solve for
     /// specific to this solver
@@ -52,22 +52,28 @@ private:
     double hphi1_;
     double hphi2_;
 
-    double scaledRT_;
+    double temperature_;
 
-    ///
-    /// factors for quadratic energy for 3 possible phases (L, A, B)
-    ///
-    double Al_;
-    double Aa_;
-    double Ab_;
+    /*
+     * Phase L coefficients
+     * g(c,T) = (aL1_*T+aL0_)*c*c + (bL1_*T+bL0_)*c + cL1_*T+cL0_
+     */
+    double aL_[2];
+    double bL_[2];
 
-    ///
-    /// equilibrium compositions for quadratic energy for 3 possible phases (L,
-    /// A,B)
-    ///
-    double ceql_;
-    double ceqa_;
-    double ceqb_;
+    /*
+     * Phase A coefficients
+     * g(c,T) = (aL1_*T+aL0_)*c*c + (bL1_*T+bL0_)*c + cL1_*T+cL0_
+     */
+    double aA_[2];
+    double bA_[2];
+
+    /*
+     * Phase B coefficients
+     * g(c,T) = (aL1_*T+aL0_)*c*c + (bL1_*T+bL0_)*c + cL1_*T+cL0_
+     */
+    double aB_[2];
+    double bB_[2];
 };
 }
 #endif

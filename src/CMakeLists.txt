@@ -29,6 +29,8 @@ set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
             ${CMAKE_SOURCE_DIR}/src/QuadraticFreeEnergyFunctionsBinaryThreePhase.cc
             ${CMAKE_SOURCE_DIR}/src/QuadraticConcSolverBinaryThreePhase.cc
             ${CMAKE_SOURCE_DIR}/src/QuadraticFreeEnergyFunctionsTernaryThreePhase.cc
+            ${CMAKE_SOURCE_DIR}/src/ParabolicFreeEnergyFunctionsBinaryThreePhase.cc
+            ${CMAKE_SOURCE_DIR}/src/ParabolicConcSolverBinaryThreePhase.cc
             ${CMAKE_SOURCE_DIR}/src/xlogx.cc)
 
 if(${SHARED_LIB})
