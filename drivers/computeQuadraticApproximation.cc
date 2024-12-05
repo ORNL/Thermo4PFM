@@ -131,7 +131,7 @@ int main(int argc, char* argv[])
         }
 
         {
-            std::ofstream os("ParabolicDataLiquid.csv");
+            std::ofstream os("QuadraticDataLiquid.csv");
             os << "T, c0, f(c0), d2f\n";
             for (int iT = 0; iT < nT; iT++)
             {
@@ -141,7 +141,7 @@ int main(int argc, char* argv[])
             }
         }
         {
-            std::ofstream os("ParabolicDataSolid.csv");
+            std::ofstream os("QuadraticDataSolid.csv");
             os << "T, c0, f(c0), d2f\n";
             for (int iT = 0; iT < nT; iT++)
             {
