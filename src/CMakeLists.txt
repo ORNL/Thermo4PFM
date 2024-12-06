@@ -72,6 +72,7 @@ set(PUBLIC_HEADERS
     QuadraticFreeEnergyFunctionsBinary.h
     QuadraticFreeEnergyFunctionsBinaryThreePhase.h
     QuadraticFreeEnergyFunctionsTernaryThreePhase.h
+    ParabolicFreeEnergyFunctionsBinaryThreePhase.h
    )
 set(THERMODATA
     ${CMAKE_SOURCE_DIR}/thermodynamic_data/calphadAlCuLFccTheta.json
