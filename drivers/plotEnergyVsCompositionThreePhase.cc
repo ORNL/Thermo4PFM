@@ -44,7 +44,7 @@ int main(int argc, char* argv[])
     boost::optional<pt::ptree&> newton_db;
 
     const int npts = 100;
-    std::ofstream os("FvsC.dat", std::ios::out);
+    std::ofstream os("FvsC.csv", std::ios::out);
     std::cout << " Compute energies..." << std::endl;
 
     if (Thermo4PFM::checkSublattice(calphad_db))
