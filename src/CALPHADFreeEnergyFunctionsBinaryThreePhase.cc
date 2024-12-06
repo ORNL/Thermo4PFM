@@ -353,39 +353,21 @@ void CALPHADFreeEnergyFunctionsBinaryThreePhase::printEnergyVsComposition(
     const double temperature, std::ostream& os, const double cmin,
     const double cmax, const int npts)
 {
-    const double dc = (cmax - cmin) / (double)(npts - 1);
+    const double dc      = (cmax - cmin) / (double)(npts - 1);
+    const double phil[3] = { 1., 0., 0. };
+    const double phia[3] = { 0., 1., 0. };
+    const double phib[3] = { 0., 0., 1. };
 
-    os << "#phi0=1" << std::endl;
+    os << "c, fL, fA, fB" << std::endl;
     for (int i = 0; i < npts; i++)
     {
         const double conc = i * dc + cmin;
 
-        const double phi[3] = { 1., 0., 0. };
+        double el = fchem(phil, &conc, temperature);
+        double ea = fchem(phia, &conc, temperature);
+        double eb = fchem(phib, &conc, temperature);
 
-        double e = fchem(phi, &conc, temperature);
-        os << conc << "\t" << e << std::endl;
-    }
-    os << std::endl << std::endl;
-
-    os << "#phi1=1" << std::endl;
-    for (int i = 0; i < npts; i++)
-    {
-        const double conc = i * dc + cmin;
-
-        const double phi[3] = { 0., 1., 0. };
-        double e            = fchem(phi, &conc, temperature);
-        os << conc << "\t" << e << std::endl;
-    }
-    os << std::endl << std::endl;
-
-    os << "#phi2=1" << std::endl;
-    for (int i = 0; i < npts; i++)
-    {
-        const double conc = i * dc + cmin;
-
-        const double phi[3] = { 0., 0., 1. };
-        double e            = fchem(phi, &conc, temperature);
-        os << conc << "\t" << e << std::endl;
+        os << conc << ", " << el << ", " << ea << ", " << eb << std::endl;
     }
 }
 
