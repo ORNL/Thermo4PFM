@@ -230,10 +230,6 @@ int ParabolicFreeEnergyFunctionsBinaryThreePhase::computePhaseConcentrations(
         = { { aA_[0], aA_[1] }, { bA_[0], bA_[1] }, { cA_[0], cA_[1] } };
     double coeffB[3][2]
         = { { aB_[0], aB_[1] }, { bB_[0], bB_[1] }, { cB_[0], cB_[1] } };
-    std::cout << " aB_[0]=" << aB_[0] << std::endl;
-    std::cout << " aB_[1]=" << aB_[1] << std::endl;
-    std::cout << " cB_[0]=" << cB_[0] << std::endl;
-    std::cout << " cB_[1]=" << cB_[1] << std::endl;
 
     ParabolicConcSolverBinaryThreePhase solver;
     solver.setup(conc[0], hphi0, hphi1, hphi2, temperature - Tref_, coeffL,
@@ -307,39 +303,21 @@ void ParabolicFreeEnergyFunctionsBinaryThreePhase::printEnergyVsComposition(
     const double temperature, std::ostream& os, const double cmin,
     const double cmax, const int npts)
 {
-    const double dc = (cmax - cmin) / (double)(npts - 1);
+    const double dc      = (cmax - cmin) / (double)(npts - 1);
+    const double phil[3] = { 1., 0., 0. };
+    const double phia[3] = { 0., 1., 0. };
+    const double phib[3] = { 0., 0., 1. };
 
-    os << "#phi0=1" << std::endl;
+    os << "c, fL, fA, fB" << std::endl;
     for (int i = 0; i < npts; i++)
     {
         const double conc = i * dc + cmin;
 
-        const double phi[3] = { 1., 0., 0. };
+        double el = fchem(phil, &conc, temperature);
+        double ea = fchem(phia, &conc, temperature);
+        double eb = fchem(phib, &conc, temperature);
 
-        double e = fchem(phi, &conc, temperature);
-        os << conc << "\t" << e << std::endl;
-    }
-    os << std::endl << std::endl;
-
-    os << "#phi1=1" << std::endl;
-    for (int i = 0; i < npts; i++)
-    {
-        const double conc = i * dc + cmin;
-
-        const double phi[3] = { 0., 1., 0. };
-        double e            = fchem(phi, &conc, temperature);
-        os << conc << "\t" << e << std::endl;
-    }
-    os << std::endl << std::endl;
-
-    os << "#phi2=1" << std::endl;
-    for (int i = 0; i < npts; i++)
-    {
-        const double conc = i * dc + cmin;
-
-        const double phi[3] = { 0., 0., 1. };
-        double e            = fchem(phi, &conc, temperature);
-        os << conc << "\t" << e << std::endl;
+        os << conc << ", " << el << ", " << ea << ", " << eb << std::endl;
     }
 }
 }
