@@ -12,9 +12,11 @@ int main(int argc, char* argv[])
 {
     std::string databasename(argv[1]);
     double temperature = atof(argv[2]);
-    double cmin        = 0.;
-    double cmax        = 1.;
-    if (argc > 3)
+    const int npts     = atof(argv[3]);
+
+    double cmin = 0.;
+    double cmax = 1.;
+    if (argc > 4)
     {
         cmin = atof(argv[3]);
         cmax = atof(argv[4]);
@@ -43,8 +45,11 @@ int main(int argc, char* argv[])
 
     boost::optional<pt::ptree&> newton_db;
 
-    const int npts = 100;
-    std::ofstream os("FvsC.csv", std::ios::out);
+    std::stringstream ss;
+    ss << std::fixed;
+    ss << std::setprecision(2);
+    ss << temperature;
+    std::ofstream os("FvsC" + ss.str() + ".csv", std::ios::out);
     std::cout << " Compute energies..." << std::endl;
 
     if (Thermo4PFM::checkSublattice(calphad_db))
