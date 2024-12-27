@@ -8,6 +8,7 @@
 #include "CALPHADEqConcSolverTernary.h"
 #include "CALPHADTieLineConcSolverTernary.h"
 #include "KKSdiluteBinaryConcSolver.h"
+#include "ParabolicEqConcSolverBinary.h"
 
 #include "Determinant.h"
 #include "NewtonSolver.h"
@@ -240,6 +241,7 @@ template class NewtonSolver<2, KKSdiluteBinaryConcSolver, JacobianDataType>;
 template class NewtonSolver<2, CALPHADConcSolverBinary2Ph1Sl, JacobianDataType>;
 template class NewtonSolver<2, CALPHADEqConcSolverBinary2Ph1Sl,
     JacobianDataType>;
+template class NewtonSolver<2, ParabolicEqConcSolverBinary, JacobianDataType>;
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp end declare target
 #endif
