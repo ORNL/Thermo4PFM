@@ -55,7 +55,7 @@ void ParabolicEqConcSolverBinary::Jacobian(
 
     fjac[0][0] = (aA_[1] * t + aA_[0]) * cA + (bA_[1] * t + bA_[0]) - muA
                  + (cB - cA) * dmuAdcA;
-    fjac[0][1] = (aB_[1] * t + aB_[0]) * cB + bB_[1] * t + bB_[0] - muA;
+    fjac[0][1] = muA - ((aB_[1] * t + aB_[0]) * cB + bB_[1] * t + bB_[0]);
 
     fjac[1][0] = EQSCALING * dmuAdcA;
     fjac[1][1] = EQSCALING * (-aB_[1] * t - aB_[0]);
