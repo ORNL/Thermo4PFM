@@ -66,6 +66,8 @@ add_executable(testParabolicFreeEnergyBinaryThreePhase
                ${TEST_DIR}/testParabolicFreeEnergyBinaryThreePhase.cc )
 add_executable(testParabolicConcSolverBinaryThreePhase
                ${TEST_DIR}/testParabolicConcSolverBinaryThreePhase.cc )
+add_executable(testParabolicEqConcSolverBinary
+               ${TEST_DIR}/testParabolicEqConcSolverBinary.cc )
 
 if(${WITH_OPENMP_OFFLOAD})
   add_executable(testOpenMPoffload
@@ -109,6 +111,7 @@ target_link_libraries(testQuadraticFreeEnergyBinaryThreePhase thermo4pfm)
 target_link_libraries(testQuadraticFreeEnergyTernaryThreePhase thermo4pfm)
 target_link_libraries(testParabolicFreeEnergyBinaryThreePhase thermo4pfm)
 target_link_libraries(testParabolicConcSolverBinaryThreePhase thermo4pfm)
+target_link_libraries(testParabolicEqConcSolverBinary thermo4pfm)
 target_link_libraries(testLoopCALPHADSpeciesPhaseGibbsEnergy thermo4pfm)
 target_link_libraries(testLoopCALPHADbinaryKKS thermo4pfm)
 target_link_libraries(testLoopCALPHADbinaryEquilibrium thermo4pfm)
@@ -288,6 +291,11 @@ add_test(NAME testParabolicConcSolverBinaryThreePhase
           COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG}
          ${MPIEXEC_MAX_NUMPROCS} ${MPIEXEC_PREFLAGS}
          ${CMAKE_CURRENT_BINARY_DIR}/testParabolicConcSolverBinaryThreePhase
+          WORKING_DIRECTORY ${TEST_DIR})
+add_test(NAME testParabolicEqConcSolverBinary
+          COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG}
+         ${MPIEXEC_MAX_NUMPROCS} ${MPIEXEC_PREFLAGS}
+         ${CMAKE_CURRENT_BINARY_DIR}/testParabolicEqConcSolverBinary
           WORKING_DIRECTORY ${TEST_DIR})
 
 if(${WITH_OPENMP_OFFLOAD})
