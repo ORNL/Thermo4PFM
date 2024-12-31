@@ -1,3 +1,4 @@
+#include "ParabolicConcSolverBinary.h"
 #include "ParabolicConcSolverBinaryThreePhase.h"
 #include "QuadraticConcSolverBinaryThreePhase.h"
 
@@ -111,6 +112,7 @@ int LinearSolver<Dimension, SolverType,
 }
 
 template class LinearSolver<3, QuadraticConcSolverBinaryThreePhase, double>;
+template class LinearSolver<2, ParabolicConcSolverBinary, double>;
 template class LinearSolver<3, ParabolicConcSolverBinaryThreePhase, double>;
 
 #ifdef HAVE_OPENMP_OFFLOAD

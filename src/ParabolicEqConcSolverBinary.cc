@@ -49,7 +49,6 @@ void ParabolicEqConcSolverBinary::Jacobian(
     const double t  = temperature_;
 
     const double muA = (aA_[1] * t + aA_[0]) * cA + (bA_[1] * t + bA_[0]);
-    const double muB = (aB_[1] * t + aB_[0]) * cB + (bB_[1] * t + bB_[0]);
 
     const double dmuAdcA = aA_[1] * t + aA_[0];
 
