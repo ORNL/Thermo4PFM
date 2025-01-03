@@ -39,6 +39,8 @@ public:
         const double cmin, const double cmax, const int npts = 100);
     double fchem(const double* const phi, const double* const conc,
         const double temperature);
+    bool computeCeqT(const double temperature, double* ceq, const int maxits,
+        const bool verbose);
 
 private:
     double Tref_;
@@ -46,20 +48,19 @@ private:
      * Phase L coefficients
      * g(c,T) = (aL1_*T+aL0_)*c*c + (bL1_*T+bL0_)*c + cL1_*T+cL0_
      */
-    double aL_[2];
-    double bL_[2];
-    double cL_[2];
+    double coeffL_[3][2];
 
     /*
      * Phase A coefficients
      * g(c,T) = (aL1_*T+aL0_)*c*c + (bL1_*T+bL0_)*c + cL1_*T+cL0_
      */
-    double aA_[2];
-    double bA_[2];
-    double cA_[2];
+    double coeffA_[3][2];
 
     EnergyInterpolationType energy_interp_func_type_;
     ConcInterpolationType conc_interp_func_type_;
+
+    void getPhaseCoeffs(const PhaseIndex pi, double& a0, double& a1, double& b0,
+        double& b1, double& c0, double& c1);
 
     char* fenergy_diag_filename_;
 

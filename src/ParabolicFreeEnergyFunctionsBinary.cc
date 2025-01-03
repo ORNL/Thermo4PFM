@@ -1,5 +1,6 @@
 #include "ParabolicFreeEnergyFunctionsBinary.h"
 #include "ParabolicConcSolverBinary.h"
+#include "ParabolicEqConcSolverBinary.h"
 #include "functions.h"
 
 #include <iomanip>
@@ -16,19 +17,19 @@ ParabolicFreeEnergyFunctionsBinary::ParabolicFreeEnergyFunctionsBinary(
       energy_interp_func_type_(energy_interp_func_type),
       conc_interp_func_type_(conc_interp_func_type)
 {
-    aL_[0] = coeffL[0][0];
-    aL_[1] = coeffL[0][1];
-    bL_[0] = coeffL[1][0];
-    bL_[1] = coeffL[1][1];
-    cL_[0] = coeffL[2][0];
-    cL_[1] = coeffL[2][1];
+    coeffL_[0][0] = coeffL[0][0];
+    coeffL_[0][1] = coeffL[0][1];
+    coeffL_[1][0] = coeffL[1][0];
+    coeffL_[1][1] = coeffL[1][1];
+    coeffL_[2][0] = coeffL[2][0];
+    coeffL_[2][1] = coeffL[2][1];
 
-    aA_[0] = coeffA[0][0];
-    aA_[1] = coeffA[0][1];
-    bA_[0] = coeffA[1][0];
-    bA_[1] = coeffA[1][1];
-    cA_[0] = coeffA[2][0];
-    cA_[1] = coeffA[2][1];
+    coeffA_[0][0] = coeffA[0][0];
+    coeffA_[0][1] = coeffA[0][1];
+    coeffA_[1][0] = coeffA[1][0];
+    coeffA_[1][1] = coeffA[1][1];
+    coeffA_[2][0] = coeffA[2][0];
+    coeffA_[2][1] = coeffA[2][1];
 
     std::string fenergy_diag_filename("energy.vtk");
     fenergy_diag_filename_ = new char[fenergy_diag_filename.length() + 1];
@@ -39,32 +40,43 @@ ParabolicFreeEnergyFunctionsBinary::ParabolicFreeEnergyFunctionsBinary(
 #ifdef HAVE_OPENMP_OFFLOAD
 #pragma omp declare target
 #endif
+void ParabolicFreeEnergyFunctionsBinary::getPhaseCoeffs(const PhaseIndex pi,
+    double& a0, double& a1, double& b0, double& b1, double& c0, double& c1)
+{
+    switch (pi)
+    {
+        case PhaseIndex::phaseL:
+            a0 = coeffL_[0][0];
+            a1 = coeffL_[0][1];
+            b0 = coeffL_[1][0];
+            b1 = coeffL_[1][1];
+            c0 = coeffL_[2][0];
+            c1 = coeffL_[2][1];
+            break;
+        case PhaseIndex::phaseA:
+            a0 = coeffA_[0][0];
+            a1 = coeffA_[0][1];
+            b0 = coeffA_[1][0];
+            b1 = coeffA_[1][1];
+            c0 = coeffA_[2][0];
+            c1 = coeffA_[2][1];
+            break;
+        default:
+            break;
+    }
+}
+
 double ParabolicFreeEnergyFunctionsBinary::computeFreeEnergy(
     const double temperature, const double* const conc, const PhaseIndex pi,
     const bool gp)
 {
-    double a0, a1, b0, b1, c0, c1;
-    switch (pi)
-    {
-        case PhaseIndex::phaseL:
-            a0 = aL_[0];
-            a1 = aL_[1];
-            b0 = bL_[0];
-            b1 = bL_[1];
-            c0 = cL_[0];
-            c1 = cL_[1];
-            break;
-        case PhaseIndex::phaseA:
-            a0 = aA_[0];
-            a1 = aA_[1];
-            b0 = bA_[0];
-            b1 = bA_[1];
-            c0 = cA_[0];
-            c1 = cA_[1];
-            break;
-        default:
-            return 0.;
-    }
+    double a0 = NAN;
+    double a1 = NAN;
+    double b0 = NAN;
+    double b1 = NAN;
+    double c0 = NAN;
+    double c1 = NAN;
+    getPhaseCoeffs(pi, a0, a1, b0, b1, c0, c1);
 
     const double c = conc[0];
     const double t = (temperature - Tref_);
@@ -90,16 +102,16 @@ void ParabolicFreeEnergyFunctionsBinary::computeDerivFreeEnergy(
     switch (pi)
     {
         case PhaseIndex::phaseL:
-            a0 = aL_[0];
-            a1 = aL_[1];
-            b0 = bL_[0];
-            b1 = bL_[1];
+            a0 = coeffL_[0][0];
+            a1 = coeffL_[0][1];
+            b0 = coeffL_[1][0];
+            b1 = coeffL_[1][1];
             break;
         case PhaseIndex::phaseA:
-            a0 = aA_[0];
-            a1 = aA_[1];
-            b0 = bA_[0];
-            b1 = bA_[1];
+            a0 = coeffA_[0][0];
+            a1 = coeffA_[0][1];
+            b0 = coeffA_[1][0];
+            b1 = coeffA_[1][1];
             break;
         default:
 #ifndef HAVE_OPENMP_OFFLOAD
@@ -126,12 +138,12 @@ void ParabolicFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
     switch (pi)
     {
         case PhaseIndex::phaseL:
-            a0 = aL_[0];
-            a1 = aL_[1];
+            a0 = coeffL_[0][0];
+            a1 = coeffL_[0][1];
             break;
         case PhaseIndex::phaseA:
-            a0 = aA_[0];
-            a1 = aA_[1];
+            a0 = coeffA_[0][0];
+            a1 = coeffA_[0][1];
             break;
         default:
 #ifndef HAVE_OPENMP_OFFLOAD
@@ -144,6 +156,20 @@ void ParabolicFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
 
 //=======================================================================
 
+bool ParabolicFreeEnergyFunctionsBinary::computeCeqT(
+    const double temperature, double* ceq, const int maxits, const bool verbose)
+{
+    ParabolicEqConcSolverBinary eq_solver;
+
+    eq_solver.setup(temperature, coeffL_, coeffA_);
+    const double newton_tol = 1.e-8;
+    int ret = eq_solver.ComputeConcentration(ceq, newton_tol, maxits);
+
+    return (ret >= 0);
+}
+
+//=======================================================================
+
 void ParabolicFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
     const double temperature, const double* const hphi, const double conc,
     double& fl, double& fa)
@@ -152,12 +178,8 @@ void ParabolicFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
 
     double c[2] = { conc, conc };
 
-    double coeffL[3][2]
-        = { { aL_[0], aL_[1] }, { bL_[0], bL_[1] }, { cL_[0], cL_[1] } };
-    double coeffA[3][2]
-        = { { aA_[0], aA_[1] }, { bA_[0], bA_[1] }, { cA_[0], cA_[1] } };
     ParabolicConcSolverBinary solver;
-    solver.setup(conc, hphi[0], hphi[1], temperature - Tref_, coeffL, coeffA);
+    solver.setup(conc, hphi[0], hphi[1], temperature - Tref_, coeffL_, coeffA_);
     int ret = solver.ComputeConcentration(c);
     if (ret < 0)
     {
@@ -189,13 +211,8 @@ int ParabolicFreeEnergyFunctionsBinary::computePhaseConcentrations(
 
     // solve system of equations to find (cl,cs) given conc[0] and hphi
     // x: initial guess and solution
-    double coeffL[3][2]
-        = { { aL_[0], aL_[1] }, { bL_[0], bL_[1] }, { cL_[0], cL_[1] } };
-    double coeffA[3][2]
-        = { { aA_[0], aA_[1] }, { bA_[0], bA_[1] }, { cA_[0], cA_[1] } };
-
     ParabolicConcSolverBinary solver;
-    solver.setup(conc[0], hphi0, hphi1, temperature - Tref_, coeffL, coeffA);
+    solver.setup(conc[0], hphi0, hphi1, temperature - Tref_, coeffL_, coeffA_);
     int ret = solver.ComputeConcentration(x);
 #if 0
     if (ret == -1)
