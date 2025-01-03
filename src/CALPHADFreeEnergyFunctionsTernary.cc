@@ -526,8 +526,8 @@ void CALPHADFreeEnergyFunctionsTernary::computePhasesFreeEnergies(
 //-----------------------------------------------------------------------
 // output: x
 int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
-    const double temperature, const double* const conc, const double* const phi,
-    double* x)
+    const double temperature, const double* const conc,
+    const double* const hphi, double* x)
 {
     // assert(conc[0] == conc[0]);
     // assert(conc[1] == conc[1]);
@@ -554,11 +554,9 @@ int CALPHADFreeEnergyFunctionsTernary::computePhaseConcentrations(
         L_AB_S, L_AC_S, L_BC_S, L_ABC_S, fA, fB, fC);
     // assert(fC[0] == fC[0]);
 
-    const double hphi = interp_func(conc_interp_func_type_, phi[0]);
-
     CALPHADConcSolverTernary solver;
-    solver.setup(conc[0], conc[1], hphi, RTinv, L_AB_L, L_AC_L, L_BC_L, L_AB_S,
-        L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
+    solver.setup(conc[0], conc[1], hphi[0], RTinv, L_AB_L, L_AC_L, L_BC_L,
+        L_AB_S, L_AC_S, L_BC_S, L_ABC_L, L_ABC_S, fA, fB, fC);
     int ret = solver.ComputeConcentration(x, newton_tol_, newton_maxits_);
 #ifndef HAVE_OPENMP_OFFLOAD
     if (ret == -1)

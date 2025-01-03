@@ -170,20 +170,16 @@ void QuadraticFreeEnergyFunctionsBinaryThreePhase::computePhasesFreeEnergies(
 //-----------------------------------------------------------------------
 
 int QuadraticFreeEnergyFunctionsBinaryThreePhase::computePhaseConcentrations(
-    const double temperature, const double* const conc, const double* const phi,
-    double* x)
+    const double temperature, const double* const conc,
+    const double* const hphi, double* x)
 {
     (void)temperature;
-
-    const double hphi0 = interp_func(conc_interp_func_type_, phi[0]);
-    const double hphi1 = interp_func(conc_interp_func_type_, phi[1]);
-    const double hphi2 = interp_func(conc_interp_func_type_, phi[2]);
 
     // solve system of equations to find (cl,cs) given conc[0] and hphi
     // x: initial guess and solution
     QuadraticConcSolverBinaryThreePhase solver;
     solver.setup(
-        conc[0], hphi0, hphi1, hphi2, Al_, ceql_, Aa_, ceqa_, Ab_, ceqb_);
+        conc[0], hphi[0], hphi[1], hphi[2], Al_, ceql_, Aa_, ceqa_, Ab_, ceqb_);
     int ret = solver.ComputeConcentration(x);
 #if 0
     if (ret == -1)

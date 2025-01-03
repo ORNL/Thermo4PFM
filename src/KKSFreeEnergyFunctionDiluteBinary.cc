@@ -227,8 +227,8 @@ void KKSFreeEnergyFunctionDiluteBinary::computePhasesFreeEnergies(
 //-----------------------------------------------------------------------
 
 int KKSFreeEnergyFunctionDiluteBinary::computePhaseConcentrations(
-    const double temperature, const double* const conc, const double* const phi,
-    double* x)
+    const double temperature, const double* const conc,
+    const double* const hphi, double* x)
 
 {
 #ifndef HAVE_OPENMP_OFFLOAD
@@ -239,15 +239,13 @@ int KKSFreeEnergyFunctionDiluteBinary::computePhaseConcentrations(
     assert(maxiters_ > 1);
 #endif
 
-    const double hphi = interp_func(conc_interp_func_type_, phi[0]);
-
     const double fB = computeFB(temperature);
 
     // conc could be outside of [0.,1.] in a trial step
     double c0 = conc[0] >= 0. ? conc[0] : 0.;
     c0        = c0 <= 1. ? c0 : 1.;
     KKSdiluteBinaryConcSolver solver;
-    solver.setup(c0, hphi, 1. - hphi, fA_, fB);
+    solver.setup(c0, hphi[0], 1. - hphi[0], fA_, fB);
     int ret = solver.ComputeConcentration(x, tol_, maxiters_);
 
     return ret;
