@@ -203,16 +203,14 @@ void ParabolicFreeEnergyFunctionsBinary::computePhasesFreeEnergies(
 //-----------------------------------------------------------------------
 
 int ParabolicFreeEnergyFunctionsBinary::computePhaseConcentrations(
-    const double temperature, const double* const conc, const double* const phi,
-    double* x)
+    const double temperature, const double* const conc,
+    const double* const hphi, double* x)
 {
-    const double hphi0 = interp_func(conc_interp_func_type_, phi[0]);
-    const double hphi1 = interp_func(conc_interp_func_type_, phi[1]);
-
     // solve system of equations to find (cl,cs) given conc[0] and hphi
     // x: initial guess and solution
     ParabolicConcSolverBinary solver;
-    solver.setup(conc[0], hphi0, hphi1, temperature - Tref_, coeffL_, coeffA_);
+    solver.setup(
+        conc[0], hphi[0], hphi[1], temperature - Tref_, coeffL_, coeffA_);
     int ret = solver.ComputeConcentration(x);
 #if 0
     if (ret == -1)
