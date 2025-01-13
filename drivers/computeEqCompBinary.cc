@@ -11,13 +11,22 @@ int main(int argc, char* argv[])
 {
     if (argc < 3)
     {
-        std::cerr << "ERROR: program needs 2 argument (database + temperature "
-                  << std::endl;
+        std::cerr
+            << "ERROR: needs at least 2 arguments (database + temperature)"
+            << std::endl;
         return 1;
     }
 
     std::string databasename(argv[1]);
     double temperature = atof(argv[2]);
+
+    double cl = 0.;
+    double cs = 0.;
+    if (argc > 3)
+    {
+        cl = atof(argv[3]);
+        cs = atof(argv[4]);
+    }
 
     Thermo4PFM::EnergyInterpolationType energy_interp_func_type
         = Thermo4PFM::EnergyInterpolationType::PBG;
@@ -42,7 +51,7 @@ int main(int argc, char* argv[])
     Thermo4PFM::CALPHADFreeEnergyFunctionsBinary cafe(
         calphad_db, newton_db, energy_interp_func_type, conc_interp_func_type);
 
-    double conc[2];
+    double conc[2] = { cl, cs };
     cafe.computeCeqT(temperature, conc);
 
     std::cout << "Equilibrium compositions: cl = " << conc[0]
