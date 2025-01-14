@@ -39,7 +39,7 @@ jobs:
       - name: Get Boost
         if: steps.boost-cache.outputs.cache-hit != 'true'
         run: |
-             wget --quiet https://boostorg.jfrog.io/artifactory/main/release/1.75.0/source/boost_1_75_0.tar.bz2 \
+             wget --quiet https://archives.boost.io/release/1.87.0/source/boost_1_87_0.tar.bz2 \
                   --output-document=boost.tar.bz2
              mkdir boost
              tar -xf boost.tar.bz2 -C boost --strip-components=1
