@@ -55,11 +55,12 @@ double QuadraticFreeEnergyFunctionsTernaryThreePhase::computeFreeEnergy(
             ceq = ceqb_;
             break;
         default:
-            //            std::cout <<
-            //            "QuadraticFreeEnergyFunctionsTernaryThreePhase::"
-            //                         "computeFreeEnergy(), undefined phase!!!"
-            //                      << std::endl;
-            // abort();
+#ifndef HAVE_OPENMP_OFFLOAD
+            std::cout << "QuadraticFreeEnergyFunctionsTernaryThreePhase::"
+                         "computeFreeEnergy(), undefined phase!!!"
+                      << std::endl;
+            abort();
+#endif
             return 0.;
     }
 
