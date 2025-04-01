@@ -316,7 +316,7 @@ void CALPHADFreeEnergyFunctionsBinary2Ph1Sl::computePhasesFreeEnergies(
 
     double c[2] = { conc, conc };
 
-    int ret = computePhaseConcentrations(temperature, &conc, hphi, c);
+    computePhaseConcentrations(temperature, &conc, hphi, c);
 
     // assert(c[0] >= 0.);
     fl = computeFreeEnergy(temperature, &c[0], PhaseIndex::phaseL, false);

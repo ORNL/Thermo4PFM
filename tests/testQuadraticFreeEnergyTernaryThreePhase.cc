@@ -38,6 +38,8 @@ TEST_CASE("Quadratic conc solver binary three phase KKS, two-phase consistancy",
     // Run the solver
     double sol_test[6];
     int ret = qfe.computePhaseConcentrations(0., conc, hphi, sol_test);
+    std::cout << "Nb. iterations: " << ret << std::endl;
+    std::cout << "Phase concentrations:" << std::endl;
     std::cout << sol_test[0] << ", " << sol_test[1] << ", " << sol_test[2]
               << ", " << sol_test[3] << ", " << sol_test[4] << ", "
               << sol_test[5] << std::endl;

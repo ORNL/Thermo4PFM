@@ -83,8 +83,8 @@ template <unsigned int Dimension, typename SolverType,
 int LinearSolver<Dimension, SolverType,
     JacobianDataType>::ComputeSolutionInternal(double* conc)
 {
-    // for (int ii = 0; ii < Dimension; ii++)
-    //    assert(conc[ii] == conc[ii]);
+    for (unsigned int ii = 0; ii < Dimension; ii++)
+        conc[ii] = 0.;
 
     double fvec[Dimension];
 
@@ -106,6 +106,7 @@ int LinearSolver<Dimension, SolverType,
 #endif
 
     internalJacobian(conc, fjac);
+
     UpdateSolution(conc, fvec, fjac);
 
     return 0;
