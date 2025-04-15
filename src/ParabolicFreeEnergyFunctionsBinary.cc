@@ -117,6 +117,7 @@ void ParabolicFreeEnergyFunctionsBinary::computeDerivFreeEnergy(
 #ifndef HAVE_OPENMP_OFFLOAD
             abort();
 #endif
+	    return;
     }
 
     const double c = conc[0];
@@ -149,6 +150,7 @@ void ParabolicFreeEnergyFunctionsBinary::computeSecondDerivativeFreeEnergy(
 #ifndef HAVE_OPENMP_OFFLOAD
             abort();
 #endif
+	    return;
     }
 
     d2fdc2[0] = (a1 * (temp - Tref_) + a0);
