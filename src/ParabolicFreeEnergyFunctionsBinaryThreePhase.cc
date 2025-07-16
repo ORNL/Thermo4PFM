@@ -185,7 +185,6 @@ void ParabolicFreeEnergyFunctionsBinaryThreePhase::computePhasesFreeEnergies(
         = { { aA_[0], aA_[1] }, { bA_[0], bA_[1] }, { cA_[0], cA_[1] } };
     double coeffB[3][2]
         = { { aB_[0], aB_[1] }, { bB_[0], bB_[1] }, { cB_[0], cB_[1] } };
-    std::cout << " bB_[0]=" << bB_[0] << std::endl;
     ParabolicConcSolverBinaryThreePhase solver;
     solver.setup(conc, hphi[0], hphi[1], hphi[2], temperature - Tref_, coeffL,
         coeffA, coeffB);
