@@ -21,7 +21,7 @@ jobs:
         distro: ['ubuntu:latest']
         cxx: ['g++']
         cmake_build_type: ['Debug', 'Release']
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     container: ghcr.io/ecp-copa/ci-containers/${{ matrix.distro }}
     steps:
       - name: Install bzip2
