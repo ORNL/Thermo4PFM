@@ -33,8 +33,7 @@ set(SOURCES ${CMAKE_SOURCE_DIR}/src/InterpolationType.cc
             ${CMAKE_SOURCE_DIR}/src/ParabolicFreeEnergyFunctionsBinaryThreePhase.cc
             ${CMAKE_SOURCE_DIR}/src/ParabolicConcSolverBinaryThreePhase.cc
             ${CMAKE_SOURCE_DIR}/src/ParabolicConcSolverBinary.cc
-            ${CMAKE_SOURCE_DIR}/src/ParabolicEqConcSolverBinary.cc
-            ${CMAKE_SOURCE_DIR}/src/xlogx.cc)
+            ${CMAKE_SOURCE_DIR}/src/ParabolicEqConcSolverBinary.cc)
 
 if(${SHARED_LIB})
   add_library(thermo4pfm SHARED ${SOURCES})
